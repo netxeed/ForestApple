@@ -15,7 +15,7 @@ class Room:
     Mientras queden enemigos vivos las puertas están cerradas.
     """
 
-    LETTERS = {"S": "strawberry"}
+    LETTERS = {"S": "strawberry", "P": "pineapple", "B": "banana"}
 
     def __init__(self, room_id, data, doors):
         self.id = room_id
