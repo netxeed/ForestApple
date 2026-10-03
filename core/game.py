@@ -2,7 +2,8 @@ import pygame
 
 from core import settings as S
 from entities.player import Player
-from rooms.room import Room
+from rooms.floor import Floor
+from rooms.layout import OPPOSITE
 
 
 class Game:
@@ -12,6 +13,8 @@ class Game:
         self.window = pygame.display.set_mode((S.SCREEN_W * S.SCALE, S.SCREEN_H * S.SCALE))
         # Se dibuja todo en baja resolución y se escala (look pixelado)
         self.canvas = pygame.Surface((S.SCREEN_W, S.SCREEN_H))
+        self.fade = pygame.Surface((S.SCREEN_W, S.SCREEN_H))
+        self.fade.fill((0, 0, 0))
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 20)
         self.running = True
@@ -19,8 +22,14 @@ class Game:
 
     def reset(self):
         self.player_shots = pygame.sprite.Group()
-        self.room = Room()
+        self.floor = Floor.load("floor1")
         self.player = Player((S.SCREEN_W // 2, S.SCREEN_H // 2), self.player_shots)
+        self.transition = None      # {"dir": ..., "t": ..., "swapped": ...} mientras se cruza una puerta
+        self.banner = None          # [texto, segundos restantes]
+
+    @property
+    def room(self):
+        return self.floor.current_room
 
     # ---------- loop ----------
     def run(self):
@@ -40,41 +49,118 @@ class Game:
                     self.running = False
                 elif event.key == pygame.K_r:
                     self.reset()
+                elif event.key == pygame.K_k and S.DEBUG_KEYS:
+                    for enemy in list(self.room.enemies):
+                        enemy.kill()
 
     def update(self, dt):
         if not self.player.alive:
             return
-        self.player.update(dt, self.room.walls)
-        self.player_shots.update(dt)
-        self.room.update(dt, self.player)
+        if self.banner:
+            self.banner[1] -= dt
+            if self.banner[1] <= 0:
+                self.banner = None
+        if self.transition:
+            self.update_transition(dt)
+            return
 
-        # Disparos del jugador contra paredes y enemigos
+        room = self.room
+        self.player.update(dt, room.solids)
+        self.player_shots.update(dt)
+        room.update(dt, self.player)
+
+        # Disparos del jugador contra paredes/obstáculos y enemigos
         for shot in list(self.player_shots):
-            if shot.rect.collidelist(self.room.walls) != -1:
+            if shot.rect.collidelist(room.solids) != -1:
                 shot.kill()
                 continue
-            for enemy in self.room.enemies:
+            for enemy in room.enemies:
                 if shot.rect.colliderect(enemy.rect):
                     enemy.take_damage(shot.damage)
                     shot.kill()
                     break
 
+        # Aviso al limpiar la sala
+        if room.cleared and not room.announced:
+            room.announced = True
+            if room.had_enemies:
+                text = "¡Piso completado! (la sandía llega pronto)" if room.kind == "boss" else "¡Sala limpia!"
+                self.banner = [text, S.BANNER_TIME]
+
+        # Cruzar una puerta abierta
+        direction = room.exit_direction(self.player.rect)
+        if direction:
+            self.transition = {"dir": direction, "t": 0.0, "swapped": False}
+
+    def update_transition(self, dt):
+        tr = self.transition
+        tr["t"] += dt
+        if not tr["swapped"] and tr["t"] >= S.FADE_TIME:
+            tr["swapped"] = True
+            self.floor.move(tr["dir"])
+            self.player_shots.empty()
+            self.player.teleport(self.room.entry_point(OPPOSITE[tr["dir"]]))
+            self.banner = None
+        if tr["t"] >= 2 * S.FADE_TIME:
+            self.transition = None
+
+    # ---------- dibujo ----------
     def draw(self):
         self.room.draw(self.canvas)
         self.player_shots.draw(self.canvas)
         if self.player.alive:
             self.canvas.blit(self.player.image, self.player.rect)
         self.draw_hud()
+        self.draw_fade()
 
         pygame.transform.scale(self.canvas, self.window.get_size(), self.window)
         pygame.display.flip()
 
+    def draw_fade(self):
+        if not self.transition:
+            return
+        t = self.transition["t"]
+        progress = t / S.FADE_TIME if t < S.FADE_TIME else 2 - t / S.FADE_TIME
+        self.fade.set_alpha(int(255 * max(0.0, min(1.0, progress))))
+        self.canvas.blit(self.fade, (0, 0))
+
     def draw_hud(self):
         hp = self.font.render(f"HP: {self.player.hp}/{self.player.max_hp}", True, S.WHITE)
-        self.canvas.blit(hp, (S.TILE + 4, 4))
+        self.canvas.blit(hp, (S.TILE + 4, 8))
+        self.draw_minimap()
+
         if not self.player.alive:
             msg = self.font.render("Te exprimieron... (R para reiniciar)", True, S.WHITE)
             self.canvas.blit(msg, msg.get_rect(center=(S.SCREEN_W // 2, S.SCREEN_H // 2)))
-        elif self.room.cleared:
-            msg = self.font.render("¡Sala limpia!", True, S.WHITE)
-            self.canvas.blit(msg, msg.get_rect(center=(S.SCREEN_W // 2, S.TILE * 1.5)))
+        elif self.banner:
+            msg = self.font.render(self.banner[0], True, S.WHITE)
+            rect = msg.get_rect(center=(S.SCREEN_W // 2, S.TILE * 2))
+            pygame.draw.rect(self.canvas, S.BG, rect.inflate(12, 8), border_radius=4)
+            self.canvas.blit(msg, rect)
+
+    def draw_minimap(self):
+        layout = self.floor.layout
+        cols = max(c for c, _ in layout.cells) + 1
+        step_x = S.MAP_CELL_W + S.MAP_GAP
+        step_y = S.MAP_CELL_H + S.MAP_GAP
+        origin_x = S.SCREEN_W - cols * step_x - 4
+        origin_y = 3
+
+        for cell in self.floor.known_cells():
+            rect = pygame.Rect(
+                origin_x + cell[0] * step_x,
+                origin_y + cell[1] * step_y,
+                S.MAP_CELL_W,
+                S.MAP_CELL_H,
+            )
+            is_boss = layout.room_data(cell).get("type") == "boss"
+            if cell == self.floor.pos:
+                pygame.draw.rect(self.canvas, S.WHITE, rect)
+            elif cell in self.floor.visited:
+                visited_room = self.floor.room_at(cell)
+                color = S.MAP_CLEARED if visited_room.cleared else S.MAP_VISITED
+                pygame.draw.rect(self.canvas, color, rect)
+            else:
+                pygame.draw.rect(self.canvas, S.MAP_UNKNOWN, rect, width=1)
+            if is_boss and cell != self.floor.pos:
+                pygame.draw.rect(self.canvas, S.MAP_BOSS, rect, width=1)

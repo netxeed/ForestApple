@@ -1,0 +1,9 @@
+{
+  "name": "Piso 1",
+  "start": [1, 1],
+  "grid": [
+    [null,      "cruz",   null],
+    ["pilares", "inicio", "pasillo"],
+    [null,      "ventana", "jefe"]
+  ]
+}

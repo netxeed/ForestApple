@@ -1,0 +1,152 @@
+"""Estructura del piso: qué salas hay, dónde están y qué puertas tienen.
+
+Este módulo NO usa pygame a propósito, para poder testearlo rápido
+(ver tests/test_layout.py) y para que quien arma salas pueda validarlas
+sin abrir el juego:
+
+    python -m rooms.layout            # valida data/floor1.json
+"""
+
+import json
+from collections import deque
+from pathlib import Path
+
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+
+COLS = 15
+ROWS = 9
+
+# Dirección -> desplazamiento en la grilla del piso (col, fila)
+DIRECTIONS = {"up": (0, -1), "down": (0, 1), "left": (-1, 0), "right": (1, 0)}
+OPPOSITE = {"up": "down", "down": "up", "left": "right", "right": "left"}
+
+# Baldosa (col, fila) de la puerta en cada pared de la sala
+DOOR_TILE = {
+    "up": (COLS // 2, 0),
+    "down": (COLS // 2, ROWS - 1),
+    "left": (0, ROWS // 2),
+    "right": (COLS - 1, ROWS // 2),
+}
+# Baldosa justo adentro de cada puerta: tiene que estar libre (piso)
+APPROACH_TILE = {
+    "up": (COLS // 2, 1),
+    "down": (COLS // 2, ROWS - 2),
+    "left": (1, ROWS // 2),
+    "right": (COLS - 2, ROWS // 2),
+}
+
+# '#' pared, '.' piso, 'X' obstáculo. Las letras de enemigos las define Room.LETTERS
+BASE_TILES = set("#.X")
+ROOM_TYPES = {"start", "normal", "boss"}
+
+
+class FloorLayout:
+    def __init__(self, floor_data, rooms_data):
+        self.name = floor_data.get("name", "Piso")
+        self.rooms = rooms_data
+        self.start = tuple(floor_data["start"])
+        self.cells = {}  # (col, fila) -> id de sala
+        for row, line in enumerate(floor_data["grid"]):
+            for col, room_id in enumerate(line):
+                if room_id is not None:
+                    self.cells[(col, row)] = room_id
+
+    # ---------- consultas ----------
+    def neighbor(self, cell, direction):
+        dx, dy = DIRECTIONS[direction]
+        nxt = (cell[0] + dx, cell[1] + dy)
+        return nxt if nxt in self.cells else None
+
+    def doors(self, cell):
+        """Direcciones en las que esta sala tiene puerta (hay sala vecina)."""
+        return {d for d in DIRECTIONS if self.neighbor(cell, d) is not None}
+
+    def room_data(self, cell):
+        return self.rooms[self.cells[cell]]
+
+    # ---------- validación ----------
+    def validate(self, enemy_letters=()):
+        """Revisa que todo esté bien armado. Tira ValueError con TODOS los problemas."""
+        valid_chars = BASE_TILES | set(enemy_letters)
+        errors = []
+
+        if self.start not in self.cells:
+            errors.append(f"La sala inicial {self.start} no existe en la grilla.")
+
+        for cell, room_id in sorted(self.cells.items()):
+            if room_id not in self.rooms:
+                errors.append(f"La grilla usa '{room_id}' en {cell} pero no está en rooms.json.")
+
+        for room_id in sorted({r for r in self.cells.values() if r in self.rooms}):
+            errors.extend(self._validate_room(room_id, valid_chars))
+
+        errors.extend(self._validate_connectivity())
+
+        if errors:
+            raise ValueError("Problemas en el piso:\n- " + "\n- ".join(errors))
+
+    def _validate_room(self, room_id, valid_chars):
+        errors = []
+        data = self.rooms[room_id]
+        layout = data.get("layout")
+        if not layout:
+            return [f"[{room_id}] no tiene 'layout'."]
+
+        if data.get("type", "normal") not in ROOM_TYPES:
+            errors.append(f"[{room_id}] tipo '{data.get('type')}' inválido (usar {sorted(ROOM_TYPES)}).")
+
+        if len(layout) != ROWS:
+            return errors + [f"[{room_id}] tiene {len(layout)} filas, debe tener {ROWS}."]
+        bad_width = [i for i, line in enumerate(layout) if len(line) != COLS]
+        if bad_width:
+            return errors + [f"[{room_id}] filas {bad_width} no miden {COLS} caracteres."]
+
+        for row, line in enumerate(layout):
+            for col, ch in enumerate(line):
+                if ch not in valid_chars:
+                    errors.append(f"[{room_id}] carácter desconocido '{ch}' en fila {row}, col {col}.")
+                on_border = row in (0, ROWS - 1) or col in (0, COLS - 1)
+                if on_border and ch != "#":
+                    errors.append(f"[{room_id}] el borde debe ser '#' (fila {row}, col {col}).")
+
+        for direction, (col, row) in APPROACH_TILE.items():
+            if layout[row][col] != ".":
+                errors.append(
+                    f"[{room_id}] la baldosa de entrada '{direction}' (fila {row}, col {col}) "
+                    f"debe ser '.', hay '{layout[row][col]}'."
+                )
+        return errors
+
+    def _validate_connectivity(self):
+        if self.start not in self.cells:
+            return []
+        seen = {self.start}
+        queue = deque([self.start])
+        while queue:
+            cell = queue.popleft()
+            for d in DIRECTIONS:
+                nxt = self.neighbor(cell, d)
+                if nxt and nxt not in seen:
+                    seen.add(nxt)
+                    queue.append(nxt)
+        unreachable = sorted(set(self.cells) - seen)
+        if unreachable:
+            return [f"Salas inalcanzables desde el inicio: {unreachable}."]
+        return []
+
+
+def load_floor_layout(name="floor1"):
+    with open(DATA_DIR / f"{name}.json", encoding="utf-8") as f:
+        floor_data = json.load(f)
+    with open(DATA_DIR / "rooms.json", encoding="utf-8") as f:
+        rooms_data = json.load(f)
+    return FloorLayout(floor_data, rooms_data)
+
+
+if __name__ == "__main__":
+    import sys
+
+    floor_name = sys.argv[1] if len(sys.argv) > 1 else "floor1"
+    layout = load_floor_layout(floor_name)
+    layout.validate(enemy_letters="S")
+    print(f"OK: {layout.name} ({len(layout.cells)} salas, inicio en {layout.start})")

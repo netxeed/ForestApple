@@ -39,6 +39,11 @@ class Player(pygame.sprite.Sprite):
     def alive(self):
         return self.hp > 0
 
+    def teleport(self, center):
+        """Mueve al jugador a una posición (se usa al cruzar una puerta)."""
+        self.pos.update(center)
+        self.rect.center = (round(self.pos.x), round(self.pos.y))
+
     def take_damage(self, amount):
         if self._invuln > 0 or not self.alive:
             return

@@ -19,6 +19,24 @@ KID = (240, 190, 120)          # niño
 STRAWBERRY = (235, 80, 110)
 SEED = (250, 230, 120)
 PLAYER_SHOT = (255, 140, 140)
+OBSTACLE = (122, 98, 138)
+DOOR_CLOSED = (150, 96, 70)
+DOOR_OPEN = (20, 14, 26)
+
+# Minimapa
+MAP_CELL_W = 10
+MAP_CELL_H = 7
+MAP_GAP = 2
+MAP_UNKNOWN = (110, 100, 120)
+MAP_VISITED = (150, 140, 165)
+MAP_CLEARED = (110, 190, 130)
+MAP_BOSS = (230, 90, 90)
+
+# Salas
+ENEMY_WAKE_DELAY = 0.8         # seg que los enemigos tardan en "despertar" al entrar
+FADE_TIME = 0.15               # seg de cada mitad del fundido al cruzar una puerta
+BANNER_TIME = 2.0              # seg que dura el aviso de "sala limpia"
+DEBUG_KEYS = True              # K = eliminar todos los enemigos de la sala (para probar)
 
 # Jugador
 PLAYER_SPEED = 120             # px/seg

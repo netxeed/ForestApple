@@ -1,6 +1,6 @@
-# Manzana (título provisorio)
+# ForestApple
 
-Juego top-down estilo The Binding of Isaac, con diálogos estilo Undertale.
+Juego de mazmorras estilo The Binding of Isaac
 Sos una manzana (y un niño) que avanza de sala en sala contra frutas hostiles.
 
 ## Cómo correrlo
@@ -18,8 +18,57 @@ python main.py
 |---|---|
 | Moverse | W A S D |
 | Disparar | Flechas |
-| Reiniciar sala | R |
+| Reiniciar | R |
 | Salir | Esc |
+| (debug) Eliminar enemigos de la sala | K |
+
+La tecla de debug se apaga con `DEBUG_KEYS = False` en `core/settings.py`.
+
+## Cómo funciona el piso
+
+- El piso 1 son 6 salas en una grilla (`data/floor1.json`). Si dos salas están
+  una al lado de la otra, **las puertas aparecen solas** entre ellas.
+- Al entrar a una sala con enemigos las puertas se cierran (se ven marrones) y
+  los enemigos tardan unos instantes en despertar. Al matarlos todos se abren.
+- Las salas limpias quedan limpias al volver.
+- El minimapa (arriba a la derecha) muestra la sala actual en blanco, las
+  limpias en verde y las que todavía no visitaste como contorno. El jefe
+  tiene contorno rojo.
+- La sala del jefe es un **placeholder** con frutillas hasta que esté la sandía.
+
+## Cómo agregar o editar salas (sin tocar código)
+
+Las salas viven en `data/rooms.json`. Cada una es una grilla de 15x9 caracteres:
+
+| Carácter | Significa |
+|---|---|
+| `#` | pared (el borde entero tiene que ser `#`) |
+| `.` | piso |
+| `X` | obstáculo (bloquea al jugador y a los disparos) |
+| `S` | frutilla |
+
+No dibujen las puertas: se generan según los vecinos en `data/floor1.json`.
+Solo asegúrense de que las 4 casillas de entrada (centro de cada pared, una
+hacia adentro) sean `.`, para que nadie aparezca dentro de un obstáculo.
+Tampoco pongan enemigos a menos de 3 casillas de una puerta.
+
+Para armar o cambiar el mapa del piso, editen la grilla de `data/floor1.json`
+(`null` = no hay sala). Después validen todo con:
+
+```bash
+python -m rooms.layout
+```
+
+Tira un listado con todos los problemas si algo está mal (tamaño, bordes,
+caracteres raros, salas inalcanzables).
+
+## Tests
+
+```bash
+python -m unittest discover tests -v
+```
+
+Los tests de estructura no necesitan pygame.
 
 ## Estructura
 
@@ -27,9 +76,11 @@ python main.py
 main.py          punto de entrada
 core/            configuración global y game loop
 entities/        jugador, proyectiles, enemigos
-rooms/           salas (enemigos, paredes, puertas)
+rooms/           layout.py (estructura del piso, sin pygame),
+                 room.py (una sala con puertas), floor.py (el piso entero)
 dialogue/        sistema de diálogo (pendiente)
-data/            stats de enemigos en JSON (se editan sin tocar código)
+data/            enemies.json, rooms.json, floor1.json
+tests/           tests de la estructura del piso
 assets/          sprites y sonidos (por ahora todo son cuadrados de colores)
 ```
 
@@ -38,7 +89,7 @@ assets/          sprites y sonidos (por ahora todo son cuadrados de colores)
 1. Agregar sus stats en `data/enemies.json`.
 2. Crear `entities/<nombre>.py` con una clase que herede de `Enemy` y redefina `update_behavior()`.
 3. Registrarlo en `entities/__init__.py` (diccionario `ENEMY_TYPES`).
-4. Ponerlo en una sala desde `rooms/room.py`.
+4. Asignarle una letra en `Room.LETTERS` (`rooms/room.py`) y usarla en `data/rooms.json`.
 
 Mirá `entities/strawberry.py` como ejemplo.
 
@@ -48,9 +99,10 @@ Mirá `entities/strawberry.py` como ejemplo.
 - Todo cambio entra por Pull Request revisado por otra persona.
 - Tamaño de sprite acordado: **32x32** (no cambiar sin avisar).
 
-## Próximos hitos
+## Hitos
 
-- [ ] Varias salas conectadas por puertas
+- [x] Una sala, jugador + frutilla
+- [x] Varias salas conectadas por puertas, minimapa
 - [ ] Piña, banana, durazno y limón
 - [ ] Cambio manzana / niño
 - [ ] Sistema de diálogo
