@@ -39,7 +39,7 @@ BANNER_TIME = 2.0              # seg que dura el aviso de "sala limpia"
 DEBUG_KEYS = True              # K = eliminar todos los enemigos de la sala (para probar)
 
 # Jugador
-PLAYER_SPEED = 132             # px/seg (~10% más rápido)
+PLAYER_SPEED = 124             # px/seg
 PLAYER_HP = 6
 PLAYER_FIRE_RATE = 0.35        # seg entre disparos
 PLAYER_SHOT_SPEED = 220

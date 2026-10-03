@@ -127,6 +127,10 @@ class Game:
     def draw_hud(self):
         hp = self.font.render(f"HP: {self.player.hp}/{self.player.max_hp}", True, S.WHITE)
         self.canvas.blit(hp, (S.TILE + 4, 8))
+        if S.DEBUG_KEYS:
+            speed = self.player.velocity.length()
+            speed_text = self.font.render(f"Velocidad: {speed:.1f} px/s", True, S.WHITE)
+            self.canvas.blit(speed_text, (S.TILE + 4, 26))
         self.draw_minimap()
 
         if not self.player.alive:
