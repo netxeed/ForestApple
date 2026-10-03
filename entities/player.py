@@ -15,10 +15,14 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface((self.SIZE, self.SIZE), pygame.SRCALPHA)
         self.rect = self.image.get_rect(center=pos)
         self.pos = pygame.Vector2(pos)
+        self.velocity = pygame.Vector2()
 
         self.max_hp = S.PLAYER_HP
         self.hp = self.max_hp
         self.speed = S.PLAYER_SPEED
+        # Aceleración y Frenado
+        self.acceleration = self.speed * 6
+        self.friction = self.speed * 5
         self.fire_rate = S.PLAYER_FIRE_RATE
         self.shot_speed = S.PLAYER_SHOT_SPEED
         self.damage = S.PLAYER_SHOT_DAMAGE
@@ -42,6 +46,7 @@ class Player(pygame.sprite.Sprite):
     def teleport(self, center):
         """Mueve al jugador a una posición (se usa al cruzar una puerta)."""
         self.pos.update(center)
+        self.velocity.update(0, 0)
         self.rect.center = (round(self.pos.x), round(self.pos.y))
 
     def take_damage(self, amount):
@@ -59,8 +64,21 @@ class Player(pygame.sprite.Sprite):
             keys[pygame.K_s] - keys[pygame.K_w],
         )
         if move.length_squared() > 0:
-            move = move.normalize() * self.speed * dt
-        self._move(move, walls)
+            move = move.normalize()
+            self.velocity += move * self.acceleration * dt
+        else:
+            # El rozamiento reduce la velocidad a cero sin invertir su dirección.
+            speed = self.velocity.length()
+            if speed <= self.friction * dt:
+                self.velocity.update(0, 0)
+            elif speed > 0:
+                self.velocity.scale_to_length(speed - self.friction * dt)
+
+        # Limitar siempre la magnitud total evita ganar velocidad al girar.
+        if self.velocity.length_squared() > self.speed * self.speed:
+            self.velocity.scale_to_length(self.speed)
+
+        self._move(self.velocity * dt, walls)
 
         # Disparo (flechas)
         self._cooldown = max(0.0, self._cooldown - dt)
@@ -89,6 +107,7 @@ class Player(pygame.sprite.Sprite):
                 elif delta.x < 0:
                     self.rect.left = w.right
                 self.pos.x = self.rect.centerx
+                self.velocity.x = 0
 
         self.pos.y += delta.y
         self.rect.centery = round(self.pos.y)
@@ -99,6 +118,7 @@ class Player(pygame.sprite.Sprite):
                 elif delta.y < 0:
                     self.rect.top = w.bottom
                 self.pos.y = self.rect.centery
+                self.velocity.y = 0
 
     def _shoot(self, aim):
         # Un solo eje a la vez, como en Isaac.
