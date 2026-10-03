@@ -42,11 +42,33 @@ ROOM_TYPES = {"start", "normal", "boss"}
 
 class FloorLayout:
     def __init__(self, floor_data, rooms_data):
+        if not isinstance(floor_data, dict):
+            raise ValueError("El archivo del piso debe contener un objeto JSON.")
+        if not isinstance(rooms_data, dict):
+            raise ValueError("rooms.json debe contener un objeto JSON.")
+
+        grid = floor_data.get("grid")
+        if not isinstance(grid, list) or not grid:
+            raise ValueError("El piso debe tener una grilla no vacía.")
+        if any(not isinstance(row, list) for row in grid):
+            raise ValueError("Cada fila de la grilla del piso debe ser una lista.")
+        width = len(grid[0])
+        if width == 0 or any(len(row) != width for row in grid):
+            raise ValueError("Todas las filas de la grilla del piso deben tener el mismo ancho.")
+
+        start = floor_data.get("start")
+        if (
+            not isinstance(start, (list, tuple))
+            or len(start) != 2
+            or any(not isinstance(value, int) or isinstance(value, bool) for value in start)
+        ):
+            raise ValueError("'start' debe ser una coordenada [columna, fila] entera.")
+
         self.name = floor_data.get("name", "Piso")
         self.rooms = rooms_data
-        self.start = tuple(floor_data["start"])
+        self.start = tuple(start)
         self.cells = {}  # (col, fila) -> id de sala
-        for row, line in enumerate(floor_data["grid"]):
+        for row, line in enumerate(grid):
             for col, room_id in enumerate(line):
                 if room_id is not None:
                     self.cells[(col, row)] = room_id
@@ -74,10 +96,10 @@ class FloorLayout:
             errors.append(f"La sala inicial {self.start} no existe en la grilla.")
 
         for cell, room_id in sorted(self.cells.items()):
-            if room_id not in self.rooms:
+            if not isinstance(room_id, str) or room_id not in self.rooms:
                 errors.append(f"La grilla usa '{room_id}' en {cell} pero no está en rooms.json.")
 
-        for room_id in sorted({r for r in self.cells.values() if r in self.rooms}):
+        for room_id in sorted({r for r in self.cells.values() if isinstance(r, str) and r in self.rooms}):
             errors.extend(self._validate_room(room_id, valid_chars))
 
         errors.extend(self._validate_connectivity())
@@ -88,8 +110,10 @@ class FloorLayout:
     def _validate_room(self, room_id, valid_chars):
         errors = []
         data = self.rooms[room_id]
+        if not isinstance(data, dict):
+            return [f"[{room_id}] debe ser un objeto en rooms.json."]
         layout = data.get("layout")
-        if not layout:
+        if not isinstance(layout, list) or not layout:
             return [f"[{room_id}] no tiene 'layout'."]
 
         if data.get("type", "normal") not in ROOM_TYPES:
@@ -97,6 +121,9 @@ class FloorLayout:
 
         if len(layout) != ROWS:
             return errors + [f"[{room_id}] tiene {len(layout)} filas, debe tener {ROWS}."]
+        bad_rows = [i for i, line in enumerate(layout) if not isinstance(line, str)]
+        if bad_rows:
+            return errors + [f"[{room_id}] las filas {bad_rows} deben ser texto."]
         bad_width = [i for i, line in enumerate(layout) if len(line) != COLS]
         if bad_width:
             return errors + [f"[{room_id}] filas {bad_width} no miden {COLS} caracteres."]
