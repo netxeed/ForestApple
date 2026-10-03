@@ -55,3 +55,27 @@ class Enemy(pygame.sprite.Sprite):
     def update_behavior(self, dt, player, walls):
         """Cada enemigo define acá su IA."""
         pass
+
+    def _move(self, delta, walls):
+        """Mueve por eje y solo corrige el eje que realmente chocó."""
+        if delta.x:
+            self.pos.x += delta.x
+            self.rect.centerx = round(self.pos.x)
+            for wall in walls:
+                if self.rect.colliderect(wall):
+                    if delta.x > 0:
+                        self.rect.right = wall.left
+                    else:
+                        self.rect.left = wall.right
+                    self.pos.x = self.rect.centerx
+
+        if delta.y:
+            self.pos.y += delta.y
+            self.rect.centery = round(self.pos.y)
+            for wall in walls:
+                if self.rect.colliderect(wall):
+                    if delta.y > 0:
+                        self.rect.bottom = wall.top
+                    else:
+                        self.rect.top = wall.bottom
+                    self.pos.y = self.rect.centery

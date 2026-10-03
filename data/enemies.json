@@ -8,5 +8,23 @@
     "fire_rate": 1.6,
     "shot_speed": 110,
     "shot_damage": 1
+  },
+  "pineapple": {
+    "hp": 10,
+    "speed": 38,
+    "contact_damage": 1,
+    "size": 28,
+    "color": [224, 174, 54]
+  },
+  "banana": {
+    "hp": 5,
+    "speed": 52,
+    "contact_damage": 1,
+    "size": 22,
+    "color": [245, 220, 75],
+    "guard_range": 120,
+    "charge_speed": 165,
+    "charge_time": 0.3,
+    "charge_cooldown": 1.4
   }
 }
