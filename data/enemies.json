@@ -1,0 +1,12 @@
+{
+  "strawberry": {
+    "hp": 3,
+    "speed": 0,
+    "contact_damage": 1,
+    "size": 22,
+    "color": [235, 80, 110],
+    "fire_rate": 1.6,
+    "shot_speed": 110,
+    "shot_damage": 1
+  }
+}
