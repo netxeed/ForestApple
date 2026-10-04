@@ -32,6 +32,11 @@ MAP_VISITED = (150, 140, 165)
 MAP_CLEARED = (110, 190, 130)
 MAP_BOSS = (230, 90, 90)
 
+# Barra de vida del jefe (arriba, entre el HP y el minimapa)
+BOSS_BAR_W = 200
+BOSS_BAR_H = 8
+BOSS_BAR_Y = 12
+
 # Salas
 ENEMY_WAKE_DELAY = 0.5         # seg que los enemigos tardan en "despertar" al entrar
 FADE_TIME = 0.15               # seg de cada mitad del fundido al cruzar una puerta

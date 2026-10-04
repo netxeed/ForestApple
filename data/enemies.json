@@ -42,5 +42,42 @@
     "contact_damage": 1,
     "size": 23,
     "color": [240, 145, 145]
+  },
+  "watermelon": {
+    "_nota": "Jefe del piso 1. Todos los números son PROVISORIOS: ajustar jugando. Tiempos en segundos, velocidades en px/s, ángulos en grados.",
+    "hp": 90,
+    "speed": 30,
+    "contact_damage": 1,
+    "size": 36,
+    "color": [74, 160, 84],
+    "shot_damage": 1,
+
+    "phase_thresholds": [0.66, 0.33],
+    "grace_after_phase": 1.0,
+    "walk_time": 1.6,
+    "keep_distance": 90,
+
+    "fan_count": 5,
+    "fan_spread": 50,
+    "fan_speed": 105,
+    "fan_telegraph": 0.5,
+    "fan_cooldown": 1.6,
+
+    "roll_speed": 150,
+    "roll_bounces": 3,
+    "roll_telegraph": 0.6,
+    "stun_time": 1.5,
+    "stun_damage_multiplier": 2,
+
+    "spiral_time": 2.0,
+    "spiral_interval": 0.14,
+    "spiral_speed": 90,
+    "spiral_step": 18,
+    "spiral_telegraph": 0.5,
+    "spiral_cooldown": 1.2,
+
+    "phase3_speed": 45,
+    "juice_interval": 0.8,
+    "juice_lifetime": 3.0
   }
 }

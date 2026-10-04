@@ -35,6 +35,12 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
         self.pos = pygame.Vector2(pos)
         self._flash = 0.0
+        self.room = None  # lo completa Room con attach()
+
+    def attach(self, room):
+        """Room lo llama al crear al enemigo. Sirve para enemigos que necesitan hablar
+        con la sala (pedir diálogos, dejar charcos, etc.)."""
+        self.room = room
 
     def take_damage(self, amount):
         self.hp -= amount

@@ -11,10 +11,10 @@ class AcidPuddle(pygame.sprite.Sprite):
 
     is_ground_hazard = True
 
-    def __init__(self, pos, lifetime=2.6):
+    def __init__(self, pos, lifetime=2.6, color=ACID):
         super().__init__()
         self.image = pygame.Surface((14, 14), pygame.SRCALPHA)
-        pygame.draw.circle(self.image, ACID, (7, 7), 6)
+        pygame.draw.circle(self.image, color, (7, 7), 6)
         self.rect = self.image.get_rect(center=pos)
         self.damage = 1
         self.lifetime = lifetime

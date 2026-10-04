@@ -24,6 +24,7 @@ python main.py
 | Elegir opción del menú | ↑ / ↓ o W / S, Enter o Espacio |
 | Reiniciar | R (durante la partida) o desde el menú de pausa |
 | Salir | Desde el menú de pausa |
+| Avanzar un diálogo (la primera pulsación muestra la línea completa) | Espacio, Enter o Z |
 | (debug) Eliminar enemigos de la sala | K |
 
 La tecla de debug se apaga con `DEBUG_KEYS = False` en `core/settings.py`.
@@ -38,7 +39,39 @@ La tecla de debug se apaga con `DEBUG_KEYS = False` en `core/settings.py`.
 - El minimapa (arriba a la derecha) muestra la sala actual en blanco, las
   limpias en verde y las que todavía no visitaste como contorno. El jefe
   tiene contorno rojo.
-- La sala del jefe es un **placeholder** con frutillas hasta que esté la sandía.
+- La sala del jefe tiene a la **sandía** (ver abajo). Mientras se pelea, la barra
+  de vida del jefe aparece arriba, al centro.
+
+## La sandía (jefe del piso 1)
+
+Tiene 3 fases según su vida (66 % y 33 %). Al empezar cada fase la pelea se
+frena y habla (diálogo provisorio), y es invulnerable 1 segundo.
+
+| Fase | Qué hace | Cómo se juega |
+|---|---|---|
+| 1. La predicadora | Camina lento hacia vos (se frena a cierta distancia) y escupe abanicos de 5 semillas. | Esquivar entre los huecos del abanico. |
+| 2. La rodante | Se sacude (aviso), rueda rebotando 3 veces y queda aturdida. | Esquivar la rodada y dispararle mientras está aturdida: ahí recibe **doble daño**. |
+| 3. La abierta | Más rápida, alterna abanicos con espirales de semillas y deja charcos de jugo que dañan. | Moverse sin parar: los charcos achican el espacio. |
+
+Todos los números (vida, velocidades, tiempos de aviso) están en
+`data/enemies.json` → `watermelon` (la clave `_nota` explica las unidades).
+**Son provisorios y no están balanceados jugando**: ajústenlos probando. Los
+pilares de la sala sirven de cobertura contra las semillas.
+
+## Diálogos
+
+Los textos están en `data/dialogues.json` (provisorios). Cada clave es un diálogo
+con `speaker` (quién habla) y `lines` (las cajas de texto, en orden). Para
+revisar que el archivo esté bien armado:
+
+```bash
+python -m dialogue.lines
+```
+
+La caja de diálogo (`dialogue/box.py`) es **provisoria**: máquina de escribir y
+nada más. Cuando esté el sistema definitivo se reemplaza manteniendo su interfaz
+(`start`, `update`, `advance`, `draw`, `active`). Para que algo muestre un diálogo
+desde el código: `room.say("clave")`; el juego se pausa mientras se lee.
 
 ## Cómo agregar o editar salas (sin tocar código)
 
@@ -54,6 +87,7 @@ Las salas viven en `data/rooms.json`. Cada una es una grilla de 15x9 caracteres:
 | `B` | banana |
 | `L` | limón |
 | `D` | durazno |
+| `W` | sandía (jefe: una sola por sala, solo en la sala del jefe) |
 
 No dibujen las puertas: se generan según los vecinos en `data/floor1.json`.
 Solo asegúrense de que las 4 casillas de entrada (centro de cada pared, una
@@ -79,19 +113,21 @@ caracteres raros, enemigos pegados a una puerta, salas inalcanzables).
 python -m unittest discover tests -v
 ```
 
-Los tests de estructura no necesitan pygame.
+Los tests de estructura, fases y diálogos no necesitan pygame. Los del
+comportamiento del jefe (`tests/test_boss.py`) sí lo usan y se saltean solos si
+no está instalado.
 
 ## Estructura
 
 ```
 main.py          punto de entrada
-core/            configuración global y game loop
-entities/        jugador, proyectiles, enemigos
+core/            configuración global, game loop y phases.py (fases de jefes, sin pygame)
+entities/        jugador, proyectiles, enemigos, patterns.py (abanico/espiral), watermelon.py (jefe)
 rooms/           layout.py (estructura del piso, sin pygame),
                  room.py (una sala con puertas), floor.py (el piso entero)
-dialogue/        sistema de diálogo (pendiente)
-data/            enemies.json, rooms.json, floor1.json
-tests/           tests de la estructura del piso
+dialogue/        lines.py (carga de textos, sin pygame) y box.py (caja provisoria)
+data/            enemies.json, rooms.json, floor1.json, dialogues.json
+tests/           estructura del piso, fases, diálogos y comportamiento del jefe
 assets/          sprites y sonidos (por ahora todo son cuadrados de colores)
 ```
 
@@ -117,6 +153,6 @@ Mirá `entities/strawberry.py` como ejemplo.
 - [x] Varias salas conectadas por puertas, minimapa
 - [x] Piña, banana, durazno y limón
 - [ ] Cambio manzana / niño
-- [ ] Sistema de diálogo
-- [ ] Sandía (jefe)
+- [ ] Sistema de diálogo (hay una caja provisoria; falta el sistema definitivo)
+- [x] Sandía (jefe, números sin balancear)
 - [ ] Arte final, sonido y menús
