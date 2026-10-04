@@ -2,20 +2,20 @@ import pygame
 
 from core import settings as S
 from entities import ENEMY_TYPES
-from rooms.layout import DIRECTIONS, DOOR_TILE
+from rooms.layout import DIRECTIONS, DOOR_TILE, ENEMY_LETTERS
 
 
 class Room:
     """Una sala: paredes, obstáculos, puertas y enemigos.
 
     Layout (ver data/rooms.json): '#' pared, '.' piso, 'X' obstáculo,
-    letras = enemigos (ver LETTERS). Las puertas NO se dibujan en el layout:
-    se ponen solas donde el piso tiene una sala vecina.
+    letras = enemigos (ver ENEMY_LETTERS en rooms/layout.py). Las puertas NO se
+    dibujan en el layout: se ponen solas donde el piso tiene una sala vecina.
 
     Mientras queden enemigos vivos las puertas están cerradas.
     """
 
-    LETTERS = {"S": "strawberry", "P": "pineapple", "B": "banana", "L": "lemon", "D": "peach"}
+    LETTERS = ENEMY_LETTERS
 
     def __init__(self, room_id, data, doors):
         self.id = room_id
