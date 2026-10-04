@@ -11,7 +11,9 @@ from rooms.layout import OPPOSITE
 class Game:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Manzana")
+        pygame.display.set_caption("ForestApple")
+        icon = pygame.image.load("assets/icon.png")
+        pygame.display.set_icon(icon)
         self.window = pygame.display.set_mode((S.SCREEN_W * S.SCALE, S.SCREEN_H * S.SCALE))
         # Se dibuja todo en baja resolución y se escala (look pixelado)
         self.canvas = pygame.Surface((S.SCREEN_W, S.SCREEN_H))
