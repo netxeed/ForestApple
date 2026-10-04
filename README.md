@@ -20,6 +20,10 @@ python main.py
 | Disparar | Flechas |
 | Reiniciar | R |
 | Salir | Esc |
+| Menú de pausa / continuar | Esc |
+| Elegir opción del menú | ↑ / ↓ o W / S, Enter o Espacio |
+| Reiniciar | R (durante la partida) o desde el menú de pausa |
+| Salir | Desde el menú de pausa |
 | (debug) Eliminar enemigos de la sala | K |
 
 La tecla de debug se apaga con `DEBUG_KEYS = False` en `core/settings.py`.
