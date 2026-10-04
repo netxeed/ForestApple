@@ -1,6 +1,8 @@
 import pygame
 
 from core import settings as S
+from dialogue.box import DialogueBox
+from dialogue.lines import load_dialogue
 from entities.player import Player
 from rooms.floor import Floor
 from rooms.layout import OPPOSITE
@@ -26,6 +28,7 @@ class Game:
         self.player = Player((S.SCREEN_W // 2, S.SCREEN_H // 2), self.player_shots)
         self.transition = None      # {"dir": ..., "t": ..., "swapped": ...} mientras se cruza una puerta
         self.banner = None          # [texto, segundos restantes]
+        self.dialogue = DialogueBox()
 
     @property
     def room(self):
@@ -52,10 +55,27 @@ class Game:
                 elif event.key == pygame.K_k and S.DEBUG_KEYS:
                     for enemy in list(self.room.enemies):
                         enemy.kill()
+                elif event.key in (pygame.K_SPACE, pygame.K_RETURN, pygame.K_z):
+                    self.dialogue.advance()
+
+    def start_pending_dialogue(self):
+        """Si la sala pidió un diálogo (ej. el jefe cambió de fase), lo empieza."""
+        pending = self.room.pending_dialogues
+        if pending:
+            dialogue = load_dialogue(pending.pop(0))
+            self.dialogue.start(dialogue.speaker, dialogue.lines)
 
     def update(self, dt):
         if not self.player.alive:
             return
+        # Mientras hay un diálogo en pantalla el juego queda en pausa
+        if self.dialogue.active:
+            self.dialogue.update(dt)
+            return
+        if not self.transition:
+            self.start_pending_dialogue()
+            if self.dialogue.active:
+                return
         if self.banner:
             self.banner[1] -= dt
             if self.banner[1] <= 0:
@@ -84,7 +104,7 @@ class Game:
         if room.cleared and not room.announced:
             room.announced = True
             if room.had_enemies:
-                text = "¡Piso completado! (la sandía llega pronto)" if room.kind == "boss" else "¡Sala limpia!"
+                text = "¡Piso completado!" if room.kind == "boss" else "¡Sala limpia!"
                 self.banner = [text, S.BANNER_TIME]
 
         # Cruzar una puerta abierta
@@ -111,6 +131,7 @@ class Game:
         if self.player.alive:
             self.canvas.blit(self.player.image, self.player.rect)
         self.draw_hud()
+        self.dialogue.draw(self.canvas, self.font)
         self.draw_fade()
 
         pygame.transform.scale(self.canvas, self.window.get_size(), self.window)
@@ -132,6 +153,7 @@ class Game:
             speed_text = self.font.render(f"Velocidad: {speed:.1f} px/s", True, S.WHITE)
             self.canvas.blit(speed_text, (S.TILE + 4, 26))
         self.draw_minimap()
+        self.draw_boss_bar()
 
         if not self.player.alive:
             msg = self.font.render("Te exprimieron... (R para reiniciar)", True, S.WHITE)
@@ -141,6 +163,17 @@ class Game:
             rect = msg.get_rect(center=(S.SCREEN_W // 2, S.TILE * 2))
             pygame.draw.rect(self.canvas, S.BG, rect.inflate(12, 8), border_radius=4)
             self.canvas.blit(msg, rect)
+
+    def draw_boss_bar(self):
+        boss = next((e for e in self.room.enemies if getattr(e, "is_boss", False)), None)
+        if boss is None or boss.phase == 0:  # fase 0 = la pelea todavía no empezó
+            return
+        x = (S.SCREEN_W - S.BOSS_BAR_W) // 2
+        y = S.BOSS_BAR_Y
+        ratio = max(0.0, min(1.0, boss.hp / boss.max_hp))
+        pygame.draw.rect(self.canvas, S.BG, (x - 2, y - 2, S.BOSS_BAR_W + 4, S.BOSS_BAR_H + 4))
+        pygame.draw.rect(self.canvas, S.MAP_BOSS, (x, y, round(S.BOSS_BAR_W * ratio), S.BOSS_BAR_H))
+        pygame.draw.rect(self.canvas, S.WHITE, (x - 2, y - 2, S.BOSS_BAR_W + 4, S.BOSS_BAR_H + 4), width=1)
 
     def draw_minimap(self):
         layout = self.floor.layout

@@ -29,6 +29,7 @@ class Room:
         self.enemies = pygame.sprite.Group()
         self.enemy_shots = pygame.sprite.Group()
         self.acid_puddles = pygame.sprite.Group()
+        self.pending_dialogues = []               # claves de data/dialogues.json que Game va mostrando
 
         self.wake_timer = 0.0
         self.announced = False
@@ -57,6 +58,7 @@ class Room:
                         enemy = ENEMY_TYPES[kind](rect.center, self.enemy_shots, self.acid_puddles)
                     else:
                         enemy = ENEMY_TYPES[kind](rect.center, self.enemy_shots)
+                    enemy.attach(self)
                     self.enemies.add(enemy)
 
     # ---------- estado ----------
@@ -81,6 +83,10 @@ class Room:
         self.acid_puddles.empty()
         if not self.cleared:
             self.wake_timer = S.ENEMY_WAKE_DELAY
+
+    def say(self, dialogue_key):
+        """Pide mostrar un diálogo (clave de data/dialogues.json). Game lo muestra y pausa el juego."""
+        self.pending_dialogues.append(dialogue_key)
 
     def entry_point(self, door_dir):
         """Centro donde aparece el jugador al entrar por la puerta `door_dir`."""
