@@ -175,5 +175,5 @@ if __name__ == "__main__":
 
     floor_name = sys.argv[1] if len(sys.argv) > 1 else "floor1"
     layout = load_floor_layout(floor_name)
-    layout.validate(enemy_letters="S")
+    layout.validate(enemy_letters="SPBLD")
     print(f"OK: {layout.name} ({len(layout.cells)} salas, inicio en {layout.start})")

@@ -33,7 +33,7 @@ MAP_CLEARED = (110, 190, 130)
 MAP_BOSS = (230, 90, 90)
 
 # Salas
-ENEMY_WAKE_DELAY = 0.8         # seg que los enemigos tardan en "despertar" al entrar
+ENEMY_WAKE_DELAY = 0.5         # seg que los enemigos tardan en "despertar" al entrar
 FADE_TIME = 0.15               # seg de cada mitad del fundido al cruzar una puerta
 BANNER_TIME = 2.0              # seg que dura el aviso de "sala limpia"
 DEBUG_KEYS = True              # K = eliminar todos los enemigos de la sala (para probar)

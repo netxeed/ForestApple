@@ -21,8 +21,8 @@ class Player(pygame.sprite.Sprite):
         self.hp = self.max_hp
         self.speed = S.PLAYER_SPEED
         # Aceleración y Frenado
-        self.acceleration = self.speed * 6
-        self.friction = self.speed * 5
+        self.acceleration = self.speed * 8
+        self.friction = self.speed * 8
         self.fire_rate = S.PLAYER_FIRE_RATE
         self.shot_speed = S.PLAYER_SHOT_SPEED
         self.damage = S.PLAYER_SHOT_DAMAGE

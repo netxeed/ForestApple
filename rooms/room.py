@@ -15,7 +15,7 @@ class Room:
     Mientras queden enemigos vivos las puertas están cerradas.
     """
 
-    LETTERS = {"S": "strawberry", "P": "pineapple", "B": "banana"}
+    LETTERS = {"S": "strawberry", "P": "pineapple", "B": "banana", "L": "lemon", "D": "peach"}
 
     def __init__(self, room_id, data, doors):
         self.id = room_id
@@ -28,6 +28,7 @@ class Room:
         self.door_rects = {}                      # dirección -> Rect
         self.enemies = pygame.sprite.Group()
         self.enemy_shots = pygame.sprite.Group()
+        self.acid_puddles = pygame.sprite.Group()
 
         self.wake_timer = 0.0
         self.announced = False
@@ -52,7 +53,11 @@ class Room:
                     self.obstacles.append(rect)
                 elif ch in self.LETTERS:
                     kind = self.LETTERS[ch]
-                    self.enemies.add(ENEMY_TYPES[kind](rect.center, self.enemy_shots))
+                    if kind == "lemon":
+                        enemy = ENEMY_TYPES[kind](rect.center, self.enemy_shots, self.acid_puddles)
+                    else:
+                        enemy = ENEMY_TYPES[kind](rect.center, self.enemy_shots)
+                    self.enemies.add(enemy)
 
     # ---------- estado ----------
     @property
@@ -73,6 +78,7 @@ class Room:
     def enter(self):
         """Se llama al entrar a la sala: los enemigos tardan un momento en despertar."""
         self.enemy_shots.empty()
+        self.acid_puddles.empty()
         if not self.cleared:
             self.wake_timer = S.ENEMY_WAKE_DELAY
 
@@ -102,6 +108,7 @@ class Room:
         solids = self.solids
         self.enemies.update(dt, player, solids)
         self.enemy_shots.update(dt)
+        self.acid_puddles.update(dt)
 
         # Proyectiles enemigos: chocan con paredes y con el jugador
         for shot in list(self.enemy_shots):
@@ -110,6 +117,11 @@ class Room:
             elif shot.rect.colliderect(player.rect):
                 player.take_damage(shot.damage)
                 shot.kill()
+
+        # Los charcos persisten y hacen daño al contacto hasta desvanecerse.
+        for puddle in self.acid_puddles:
+            if puddle.rect.colliderect(player.rect):
+                player.take_damage(puddle.damage)
 
         # Contacto con enemigos
         for enemy in self.enemies:
@@ -125,6 +137,7 @@ class Room:
         self._draw_doors(surface)
         self.enemies.draw(surface)
         self.enemy_shots.draw(surface)
+        self.acid_puddles.draw(surface)
 
     def _draw_doors(self, surface):
         locked = not self.cleared
