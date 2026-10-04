@@ -54,7 +54,10 @@ Las salas viven en `data/rooms.json`. Cada una es una grilla de 15x9 caracteres:
 No dibujen las puertas: se generan según los vecinos en `data/floor1.json`.
 Solo asegúrense de que las 4 casillas de entrada (centro de cada pared, una
 hacia adentro) sean `.`, para que nadie aparezca dentro de un obstáculo.
-Tampoco pongan enemigos a menos de 3 casillas de una puerta.
+Los enemigos tienen que quedar a **2,5 casillas o más** del punto donde aparece
+el jugador al entrar por cada puerta (2 casillas hacia adentro de la puerta).
+Si no, el jugador recibe daño apenas llega. El validador lo revisa solo para las
+puertas que de verdad existen en esa sala.
 
 Para armar o cambiar el mapa del piso, editen la grilla de `data/floor1.json`
 (`null` = no hay sala). Después validen todo con:
@@ -64,7 +67,7 @@ python -m rooms.layout
 ```
 
 Tira un listado con todos los problemas si algo está mal (tamaño, bordes,
-caracteres raros, salas inalcanzables).
+caracteres raros, enemigos pegados a una puerta, salas inalcanzables).
 
 ## Tests
 
@@ -93,7 +96,8 @@ assets/          sprites y sonidos (por ahora todo son cuadrados de colores)
 1. Agregar sus stats en `data/enemies.json`.
 2. Crear `entities/<nombre>.py` con una clase que herede de `Enemy` y redefina `update_behavior()`.
 3. Registrarlo en `entities/__init__.py` (diccionario `ENEMY_TYPES`).
-4. Asignarle una letra en `Room.LETTERS` (`rooms/room.py`) y usarla en `data/rooms.json`.
+4. Asignarle una letra en `ENEMY_LETTERS` (`rooms/layout.py`, es el único lugar donde se define)
+   y usarla en `data/rooms.json`.
 
 Mirá `entities/strawberry.py` como ejemplo.
 

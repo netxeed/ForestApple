@@ -8,6 +8,7 @@ sin abrir el juego:
 """
 
 import json
+import math
 from collections import deque
 from pathlib import Path
 
@@ -35,9 +36,24 @@ APPROACH_TILE = {
     "right": (COLS - 2, ROWS // 2),
 }
 
-# '#' pared, '.' piso, 'X' obstáculo. Las letras de enemigos las define Room.LETTERS
+# '#' pared, '.' piso, 'X' obstáculo
 BASE_TILES = set("#.X")
 ROOM_TYPES = {"start", "normal", "boss"}
+
+# Letra de cada enemigo en los layouts -> clave en data/enemies.json y en ENEMY_TYPES.
+# Es el ÚNICO lugar donde se define: Room, el validador y los tests la leen de acá.
+# Para sumar un enemigo (ej. la sandía) agregar su letra acá.
+ENEMY_LETTERS = {
+    "S": "strawberry",
+    "P": "pineapple",
+    "B": "banana",
+    "L": "lemon",
+    "D": "peach",
+}
+
+# Distancia mínima (en casillas) entre cualquier enemigo y el punto donde aparece el
+# jugador al entrar por una puerta. Con menos que esto el jugador recibe daño al llegar.
+MIN_ENEMY_DOOR_DISTANCE = 2.5
 
 
 class FloorLayout:
@@ -87,9 +103,15 @@ class FloorLayout:
         return self.rooms[self.cells[cell]]
 
     # ---------- validación ----------
-    def validate(self, enemy_letters=()):
-        """Revisa que todo esté bien armado. Tira ValueError con TODOS los problemas."""
-        valid_chars = BASE_TILES | set(enemy_letters)
+    def validate(self, enemy_letters=None):
+        """Revisa que todo esté bien armado. Tira ValueError con TODOS los problemas.
+
+        `enemy_letters`: letras de enemigos válidas (por defecto, ENEMY_LETTERS).
+        """
+        if enemy_letters is None:
+            enemy_letters = ENEMY_LETTERS
+        enemy_letters = set(enemy_letters)
+        valid_chars = BASE_TILES | enemy_letters
         errors = []
 
         if self.start not in self.cells:
@@ -99,9 +121,15 @@ class FloorLayout:
             if not isinstance(room_id, str) or room_id not in self.rooms:
                 errors.append(f"La grilla usa '{room_id}' en {cell} pero no está en rooms.json.")
 
+        well_formed = set()
         for room_id in sorted({r for r in self.cells.values() if isinstance(r, str) and r in self.rooms}):
-            errors.extend(self._validate_room(room_id, valid_chars))
+            room_errors = self._validate_room(room_id, valid_chars)
+            errors.extend(room_errors)
+            if not room_errors:
+                well_formed.add(room_id)
 
+        # Solo se revisa la distancia en salas con la estructura correcta
+        errors.extend(self._validate_enemy_spacing(well_formed, enemy_letters))
         errors.extend(self._validate_connectivity())
 
         if errors:
@@ -144,6 +172,31 @@ class FloorLayout:
                 )
         return errors
 
+    def _validate_enemy_spacing(self, room_ids, enemy_letters):
+        """Ningún enemigo puede quedar pegado al punto de entrada de una puerta real."""
+        errors = []
+        for cell, room_id in sorted(self.cells.items()):
+            if not isinstance(room_id, str) or room_id not in room_ids:
+                continue
+            layout = self.rooms[room_id]["layout"]
+            for direction in sorted(self.doors(cell)):
+                col, row = DOOR_TILE[direction]
+                dx, dy = DIRECTIONS[direction]
+                # Igual que Room.entry_point: 2 casillas hacia adentro de la puerta
+                spawn_x, spawn_y = col + 0.5 - dx * 2, row + 0.5 - dy * 2
+                for r, line in enumerate(layout):
+                    for c, ch in enumerate(line):
+                        if ch not in enemy_letters:
+                            continue
+                        dist = math.hypot(spawn_x - (c + 0.5), spawn_y - (r + 0.5))
+                        if dist < MIN_ENEMY_DOOR_DISTANCE:
+                            errors.append(
+                                f"[{room_id}] el enemigo '{ch}' (fila {r}, col {c}) está a {dist:.1f} "
+                                f"casillas de donde aparece el jugador por la puerta '{direction}' "
+                                f"(mínimo {MIN_ENEMY_DOOR_DISTANCE})."
+                            )
+        return errors
+
     def _validate_connectivity(self):
         if self.start not in self.cells:
             return []
@@ -175,5 +228,5 @@ if __name__ == "__main__":
 
     floor_name = sys.argv[1] if len(sys.argv) > 1 else "floor1"
     layout = load_floor_layout(floor_name)
-    layout.validate(enemy_letters="SPBLD")
+    layout.validate()
     print(f"OK: {layout.name} ({len(layout.cells)} salas, inicio en {layout.start})")
