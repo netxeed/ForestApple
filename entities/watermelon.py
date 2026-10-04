@@ -1,4 +1,5 @@
 import math
+import random
 
 import pygame
 
@@ -29,6 +30,7 @@ class Watermelon(Enemy):
 
     PHASE_COLORS = {1: (74, 160, 84), 2: (46, 120, 66), 3: (222, 86, 104)}
     STUN_COLOR = (205, 235, 130)
+    ROLL_RADIAL_COUNT = 8
 
     def __init__(self, pos, enemy_shots):
         super().__init__(pos, enemy_shots)
@@ -39,6 +41,7 @@ class Watermelon(Enemy):
         self.grace = 0.0               # invulnerable un instante al empezar cada fase
         self.velocity = pygame.Vector2()
         self.bounces = 0
+        self.roll_bounces_target = self.stats["roll_bounces"]
         self.color = self.PHASE_COLORS[1]
         self._blink = 0.0
         self._spiral_angle = 0.0
@@ -51,6 +54,8 @@ class Watermelon(Enemy):
     def take_damage(self, amount):
         if self.phase == 0 or self.grace > 0:
             return
+        if self.phase == 3:
+            amount *= self.stats["phase3_damage_multiplier"]
         if self.state == "stunned":
             amount *= self.stats["stun_damage_multiplier"]
         if self.hp - amount <= 0:
@@ -82,8 +87,47 @@ class Watermelon(Enemy):
         self.grace = self.stats["grace_after_phase"]
         self._spiral_next = False
         self._clear_hazards()
+        if phase == 3:
+            self._spawn_phase3_enemies()
         if self.room:
             self.room.say(PHASE_DIALOGUE[phase])
+
+    def _spawn_phase3_enemies(self):
+        """Hace aparecer los refuerzos configurados al empezar la fase final."""
+        if not self.room or not hasattr(self.room, "spawn_enemy"):
+            return
+
+        player = getattr(self.room, "current_player", None)
+        occupied = [self.rect]
+        if player is not None:
+            occupied.append(player.rect)
+        candidates = []
+        for row, line in enumerate(self.room.layout):
+            for col, tile in enumerate(line):
+                if tile != ".":
+                    continue
+                pos = ((col + 0.5) * S.TILE, (row + 0.5) * S.TILE)
+                rect = pygame.Rect(0, 0, 28, 28)
+                rect.center = pos
+                if any(rect.colliderect(other.inflate(24, 24)) for other in occupied):
+                    continue
+                candidates.append(pos)
+
+        for kind in self.stats.get("phase3_reinforcements", []):
+            if not candidates:
+                break
+            centers = [self.rect.center]
+            if player is not None:
+                centers.append(player.rect.center)
+            pos = max(
+                candidates,
+                key=lambda p: min(
+                    (pygame.Vector2(p) - pygame.Vector2(center)).length_squared()
+                    for center in centers
+                ),
+            )
+            candidates.remove(pos)
+            self.room.spawn_enemy(kind, pos)
 
     def _clear_hazards(self):
         """Saca del aire las semillas y charcos para que el cambio de fase sea justo."""
@@ -152,6 +196,7 @@ class Watermelon(Enemy):
         elif self.attack == "roll":
             self.velocity = direction * self.stats["roll_speed"]
             self.bounces = 0
+            self.roll_bounces_target = random.randint(2, 4) if self.phase == 2 else self.stats["roll_bounces"]
             self.state = "roll"
         else:  # spiral
             self._spiral_angle = math.degrees(math.atan2(direction.y, direction.x))
@@ -161,7 +206,7 @@ class Watermelon(Enemy):
 
     def _state_roll(self, dt, player, walls):
         self._move_and_bounce(dt, walls)
-        if self.bounces >= self.stats["roll_bounces"]:
+        if self.bounces >= self.roll_bounces_target:
             self.velocity.update(0, 0)
             self.color = self.STUN_COLOR
             self.state = "stunned"
@@ -208,6 +253,7 @@ class Watermelon(Enemy):
                     self.pos.x = self.rect.centerx
                     self.velocity.x *= -1
                     self.bounces += 1
+                    self._fire_collision_radial()
                     break
 
         if self.velocity.y:
@@ -222,7 +268,23 @@ class Watermelon(Enemy):
                     self.pos.y = self.rect.centery
                     self.velocity.y *= -1
                     self.bounces += 1
+                    self._fire_collision_radial()
                     break
+
+    def _fire_collision_radial(self):
+        """En fase 2, suelta un anillo de semillas cada vez que rebota contra una pared."""
+        if self.phase != 2:
+            return
+        for i in range(self.ROLL_RADIAL_COUNT):
+            self.enemy_shots.add(
+                shot_at_angle(
+                    self.rect.center,
+                    i * 360 / self.ROLL_RADIAL_COUNT,
+                    self.stats["fan_speed"],
+                    self.stats["shot_damage"],
+                    S.SEED,
+                )
+            )
 
     def _drop_juice(self, dt):
         self._juice_timer -= dt

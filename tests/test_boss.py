@@ -21,7 +21,7 @@ WATERMELON_STATS = (
     "fan_count", "fan_spread", "fan_speed", "fan_telegraph", "fan_cooldown",
     "roll_speed", "roll_bounces", "roll_telegraph", "stun_time", "stun_damage_multiplier",
     "spiral_time", "spiral_interval", "spiral_speed", "spiral_step", "spiral_telegraph",
-    "spiral_cooldown", "phase3_speed", "juice_interval", "juice_lifetime",
+    "spiral_cooldown", "phase3_speed", "phase3_damage_multiplier", "juice_interval", "juice_lifetime",
 )
 
 
