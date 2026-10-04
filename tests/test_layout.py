@@ -18,7 +18,7 @@ from rooms.layout import (
     load_floor_layout,
 )
 
-ENEMY_LETTERS = "S"
+ENEMY_LETTERS = "SPBLD"
 
 
 def blank_room(kind="normal"):
