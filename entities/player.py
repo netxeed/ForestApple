@@ -2,6 +2,7 @@ import pygame
 
 from core import settings as S
 from entities.projectile import Projectile
+from entities.trinkets import create_trinket
 
 
 class Player(pygame.sprite.Sprite):
@@ -28,6 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.damage = S.PLAYER_SHOT_DAMAGE
 
         self.shots = shots_group
+        self.trinkets = []
         self._cooldown = 0.0
         self._invuln = 0.0
         self._draw()
@@ -54,6 +56,20 @@ class Player(pygame.sprite.Sprite):
             return
         self.hp = max(0, self.hp - amount)
         self._invuln = S.PLAYER_INVULN_TIME
+
+    def has_trinket(self, trinket_id):
+        return any(trinket.id == trinket_id for trinket in self.trinkets)
+
+    def add_trinket(self, trinket_id):
+        if not self.has_trinket(trinket_id):
+            self.trinkets.append(create_trinket(trinket_id))
+
+    def consume_trinket(self, trinket_id):
+        for index, trinket in enumerate(self.trinkets):
+            if trinket.id == trinket_id and trinket.consumable:
+                del self.trinkets[index]
+                return True
+        return False
 
     def update(self, dt, walls):
         keys = pygame.key.get_pressed()

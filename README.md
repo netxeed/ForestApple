@@ -25,6 +25,7 @@ python main.py
 | Reiniciar | R (durante la partida) o desde el menú de pausa |
 | Salir | Desde el menú de pausa |
 | Avanzar un diálogo (la primera pulsación muestra la línea completa) | Espacio, Enter o Z |
+| Recoger/usar la llave o entrar al agujero tras el jefe | E |
 | (debug) Eliminar enemigos de la sala | K |
 
 La tecla de debug se apaga con `DEBUG_KEYS = False` en `core/settings.py`.
@@ -41,6 +42,16 @@ La tecla de debug se apaga con `DEBUG_KEYS = False` en `core/settings.py`.
   tiene contorno rojo.
 - La sala del jefe tiene a la **sandía** (ver abajo). Mientras se pelea, la barra
   de vida del jefe aparece arriba, al centro.
+- La puerta plateada de la sandía queda cerrada hasta limpiar las otras siete
+  salas (incluida la inicial). Al limpiar la última aparece la llave en el
+  centro de esa sala: acércate y pulsa **E** para recogerla. Luego úsala con
+  **E** junto a la puerta para gastarla y entrar.
+- Al derrotar a la sandía aparece un agujero en el centro de su sala. Acércate
+  y pulsa **E** para oscurecer la pantalla y mostrar el diálogo sin nombre
+  «La batalla continuará...». El piso 2 todavía no tiene contenido.
+- El minimapa aparece arriba a la derecha y los trinkets se muestran debajo
+  como iconos. La llave es el primero; aún no hay trinkets que mejoren las
+  estadísticas de la manzana.
 
 ## La sandía (jefe del piso 1)
 
@@ -49,9 +60,9 @@ frena y habla (diálogo provisorio), y es invulnerable 1 segundo.
 
 | Fase | Qué hace | Cómo se juega |
 |---|---|---|
-| 1. La predicadora | Camina lento hacia vos (se frena a cierta distancia) y escupe abanicos de 5 semillas. | Esquivar entre los huecos del abanico. |
-| 2. La rodante | Se sacude (aviso), rueda rebotando 3 veces y queda aturdida. | Esquivar la rodada y dispararle mientras está aturdida: ahí recibe **doble daño**. |
-| 3. La abierta | Más rápida, alterna abanicos con espirales de semillas y deja charcos de jugo que dañan. | Moverse sin parar: los charcos achican el espacio. |
+| 1 | Camina lento hacia vos (se frena a cierta distancia) y escupe abanicos de 5 semillas. | Esquivar entre los huecos del abanico. |
+| 2 | Se sacude (aviso), rueda rebotando 3 veces y queda aturdida. | Esquivar la rodada y dispararle mientras está aturdida: ahí recibe **doble daño**. |
+| 3 | Es más rápida, alterna abanicos con espirales de semillas y deja charcos de jugo que dañan. | Moverse sin parar: los charcos achican el espacio. |
 
 Todos los números (vida, velocidades, tiempos de aviso) están en
 `data/enemies.json` → `watermelon` (la clave `_nota` explica las unidades).
@@ -122,7 +133,7 @@ no está instalado.
 ```
 main.py          punto de entrada
 core/            configuración global, game loop y phases.py (fases de jefes, sin pygame)
-entities/        jugador, proyectiles, enemigos, patterns.py (abanico/espiral), watermelon.py (jefe)
+entities/        jugador, trinkets.py, proyectiles, enemigos, patterns.py (abanico/espiral), watermelon.py (jefe)
 rooms/           layout.py (estructura del piso, sin pygame),
                  room.py (una sala con puertas), floor.py (el piso entero)
 dialogue/        lines.py (carga de textos, sin pygame) y box.py (caja provisoria)
@@ -147,12 +158,11 @@ Mirá `entities/strawberry.py` como ejemplo.
 - Todo cambio entra por Pull Request revisado por otra persona.
 - Tamaño de sprite acordado: **32x32** (no cambiar sin avisar).
 
-## Hitos
+## Estado del demo
 
-- [x] Una sala, jugador + frutilla
-- [x] Varias salas conectadas por puertas, minimapa
-- [x] Piña, banana, durazno y limón
-- [ ] Cambio manzana / niño
-- [ ] Sistema de diálogo (hay una caja provisoria; falta el sistema definitivo)
-- [x] Sandía (jefe, números sin balancear)
-- [ ] Arte final, sonido y menús
+- Piso 1 del acto 2: ocho salas conectadas, minimapa y cinco enemigos regulares.
+- Sandía con tres fases, diálogos provisorios y números todavía sin balancear.
+- Llave consumible para entrar al jefe y agujero placeholder tras derrotarlo.
+- Arte, música, balance y textos todavía provisionales. El niño, el acto 1,
+  el acto 3, el piso 2 y los trinkets que mejoran a la manzana son desarrollo
+  futuro.

@@ -1,5 +1,5 @@
 {
-  "_nota": "Textos Provisorios. Cada clave es un diálogo: 'speaker' es quien habla y 'lines' son las cajas de texto, en orden. Se validan con: python -m dialogue.lines",
+  "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Se validan con: python -m dialogue.lines",
 
   "sandia_intro": {
     "speaker": "Sandía",
@@ -29,6 +29,15 @@
     "speaker": "Sandía",
     "lines": [
       "..."
+    ]
+  },
+  "hole_continue": {
+    "speaker": "",
+    "lines": [
+      "...",
+      "Mientras desciende, la manzana se pregunta si podrá cumplir su objetivo.",
+      "No será fácil.",
+      "Continuará."
     ]
   }
 }

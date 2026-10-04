@@ -33,6 +33,8 @@ class Game:
         self.transition = None      # {"dir": ..., "t": ..., "swapped": ...} mientras se cruza una puerta
         self.banner = None          # [texto, segundos restantes]
         self.dialogue = DialogueBox()
+        self.dialogue_dark = False
+        self.hole_dialogue_shown = False
 
     @property
     def room(self):
@@ -67,8 +69,42 @@ class Game:
                 elif event.key == pygame.K_k and S.DEBUG_KEYS:
                     for enemy in list(self.room.enemies):
                         enemy.kill()
+                elif event.key == pygame.K_e:
+                    self.interact()
                 elif event.key in (pygame.K_SPACE, pygame.K_RETURN, pygame.K_z):
                     self.dialogue.advance()
+                    if not self.dialogue.active:
+                        self.dialogue_dark = False
+
+    def use_key_at_boss_door(self):
+        if self.floor.boss_unlocked or not self.player.has_trinket("key"):
+            return
+        for direction in self.floor.boss_door_directions():
+            door = self.room.door_rects.get(direction)
+            if door and self.player.rect.colliderect(door.inflate(32, 32)):
+                if self.floor.use_key_at_boss_door(self.player):
+                    self.banner = ["¡La llave abrió la puerta!", S.BANNER_TIME]
+                return
+
+    def interact(self):
+        """E recoge objetos, usa la llave o activa el agujero del jefe."""
+        if self.dialogue.active:
+            return
+        if self.floor.collect_key(self.player):
+            self.banner = ["¡Recogiste la llave!", S.BANNER_TIME]
+            return
+        if (
+            self.room.kind == "boss"
+            and self.room.cleared
+            and not self.hole_dialogue_shown
+            and self.player.rect.colliderect(self.room.hole_rect.inflate(28, 28))
+        ):
+            dialogue = load_dialogue("hole_continue")
+            self.dialogue.start(dialogue.speaker, dialogue.lines)
+            self.dialogue_dark = True
+            self.hole_dialogue_shown = True
+            return
+        self.use_key_at_boss_door()
 
     def start_pending_dialogue(self):
         """Si la sala pidió un diálogo (ej. el jefe cambió de fase), lo empieza."""
@@ -112,12 +148,15 @@ class Game:
                     shot.kill()
                     break
 
+        if self.floor.drop_key_if_ready():
+            self.banner = ["Hay una llave en el centro de la sala", S.BANNER_TIME]
+
         # Aviso al limpiar la sala (si queda un diálogo pendiente, ej. las últimas
         # palabras del jefe, el aviso espera a que termine)
         if room.cleared and not room.announced and not room.pending_dialogues:
             room.announced = True
             if room.had_enemies:
-                text = "¡Piso completado!" if room.kind == "boss" else "¡Sala limpia!"
+                text = "¡Piso completado!" if room.kind == "boss" else "Sala despejada."
                 self.banner = [text, S.BANNER_TIME]
 
         # Cruzar una puerta abierta
@@ -144,6 +183,10 @@ class Game:
         if self.player.alive:
             self.canvas.blit(self.player.image, self.player.rect)
         self.draw_hud()
+        if self.dialogue_dark:
+            overlay = pygame.Surface((S.SCREEN_W, S.SCREEN_H), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 190))
+            self.canvas.blit(overlay, (0, 0))
         self.dialogue.draw(self.canvas, self.font)
         self.draw_fade()
         if self.paused:
@@ -188,8 +231,30 @@ class Game:
             speed = self.player.velocity.length()
             speed_text = self.font.render(f"Velocidad: {speed:.1f} px/s", True, S.WHITE)
             self.canvas.blit(speed_text, (S.TILE + 4, 26))
+        self.draw_trinkets()
         self.draw_minimap()
         self.draw_boss_bar()
+
+        if not self.floor.boss_unlocked and self.floor.boss_door_directions():
+            if any(
+                self.player.rect.colliderect(self.room.door_rects[d].inflate(32, 32))
+                for d in self.floor.boss_door_directions()
+                if d in self.room.door_rects
+            ):
+                hint = "E: usar llave" if self.player.has_trinket("key") else "Necesito una llave para entrar ahí"
+                label = self.font.render(hint, True, S.WHITE)
+                self.canvas.blit(label, label.get_rect(center=(S.SCREEN_W // 2, S.SCREEN_H - 18)))
+        if self.room.key_drop and self.player.rect.colliderect(self.room.key_rect.inflate(28, 28)):
+            label = self.font.render("E: recoger llave", True, S.WHITE)
+            self.canvas.blit(label, label.get_rect(center=(S.SCREEN_W // 2, S.SCREEN_H - 18)))
+        if (
+            self.room.kind == "boss"
+            and self.room.cleared
+            and not self.hole_dialogue_shown
+            and self.player.rect.colliderect(self.room.hole_rect.inflate(28, 28))
+        ):
+            label = self.font.render("E: entrar en el agujero", True, S.WHITE)
+            self.canvas.blit(label, label.get_rect(center=(S.SCREEN_W // 2, S.SCREEN_H - 18)))
 
         if not self.player.alive:
             msg = self.font.render("Te exprimieron... (R para reiniciar)", True, S.WHITE)
@@ -237,3 +302,14 @@ class Game:
                 pygame.draw.rect(self.canvas, S.MAP_UNKNOWN, rect, width=1)
             if is_boss and cell != self.floor.pos:
                 pygame.draw.rect(self.canvas, S.MAP_BOSS, rect, width=1)
+
+    def draw_trinkets(self):
+        """Muestra los trinkets poseídos debajo del minimapa."""
+        gap = 4
+        total_width = len(self.player.trinkets) * 12 + max(0, len(self.player.trinkets) - 1) * gap
+        x = S.SCREEN_W - total_width - 5
+        rows = max(row for _, row in self.floor.layout.cells) + 1
+        y = 3 + rows * (S.MAP_CELL_H + S.MAP_GAP) + 4
+        for trinket in self.player.trinkets:
+            self.canvas.blit(trinket.icon, (x, y))
+            x += 12 + gap
