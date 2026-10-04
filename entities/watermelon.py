@@ -6,7 +6,7 @@ from core import settings as S
 from entities.enemy import Enemy
 from entities.lemon import AcidPuddle
 from entities.patterns import fan, shot_at_angle
-from entities.phases import DEATH_DIALOGUE, PHASE_DIALOGUE, phase_for_hp
+from core.phases import DEATH_DIALOGUE, PHASE_DIALOGUE, phase_for_hp
 
 JUICE = (214, 52, 84)
 
@@ -102,7 +102,11 @@ class Watermelon(Enemy):
 
     # ---------- estados ----------
     def _state_walk(self, dt, player, walls):
-        self._move(self._direction_to(player) * self._walk_speed() * dt, walls)
+        # Se acerca, pero se frena a cierta distancia: encima del jugador sus
+        # abanicos serían imposibles de esquivar.
+        distance = (pygame.Vector2(player.rect.center) - self.pos).length()
+        if distance > self.stats["keep_distance"]:
+            self._move(self._direction_to(player) * self._walk_speed() * dt, walls)
         if self.phase == 3:
             self._drop_juice(dt)
         self.timer -= dt

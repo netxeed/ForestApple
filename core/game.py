@@ -112,8 +112,9 @@ class Game:
                     shot.kill()
                     break
 
-        # Aviso al limpiar la sala
-        if room.cleared and not room.announced:
+        # Aviso al limpiar la sala (si queda un diálogo pendiente, ej. las últimas
+        # palabras del jefe, el aviso espera a que termine)
+        if room.cleared and not room.announced and not room.pending_dialogues:
             room.announced = True
             if room.had_enemies:
                 text = "¡Piso completado!" if room.kind == "boss" else "¡Sala limpia!"

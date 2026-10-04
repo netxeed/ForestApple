@@ -95,7 +95,24 @@ conviene la (b) con el sistema que ya existe.
 | **Banana** | Guardia que ataca cuerpo a cuerpo. |
 | **Durazno** | Rueda hacia el jugador. |
 | **Limón** | Lanza ácido. |
-| **Sandía** | Jefe. |
+| **Sandía** | Jefe del piso 1, tres fases (ver abajo). *(Hecha, sin balancear)* |
+
+### Sandía (jefe del piso 1) [Propuesta, implementada]
+
+No pelea por odio sino por **fe**: quiere convencer a la manzana de que ser
+comido lleva al cielo de las frutas. Las tres fases van de predicar, a perder la
+paciencia, a ofrecerse a ser comida. Tiene cientos de semillas y la manzana se
+lleva solo dos de ella: contraste que se puede usar en el final.
+
+| Fase | Vida | Nombre | Qué hace |
+|---|---|---|---|
+| 1 | 100 % a 66 % | La predicadora | Camina lento y escupe abanicos de 5 semillas. |
+| 2 | 66 % a 33 % | La rodante | Se sacude (aviso), rueda rebotando 3 veces y queda aturdida (doble daño). |
+| 3 | 33 % a 0 % | La abierta | Más rápida; alterna abanicos y espirales y deja charcos de jugo que dañan. |
+
+Entre fases se frena la pelea y habla (diálogo, hoy provisorio en
+`data/dialogues.json`). Al morir dice sus últimas palabras y recién después
+aparece el aviso de piso completado. Los números son provisorios.
 
 ## 6. Alcance
 

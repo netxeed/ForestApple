@@ -9,8 +9,9 @@ def phase_for_hp(hp, max_hp, thresholds):
     """Fase actual (1, 2, 3...) según la vida que le queda al jefe.
 
     `thresholds` son las fracciones de vida en las que se pasa a la fase siguiente,
-    de mayor a menor. Con [0.66, 0.33] y 90 de vida: fase 1 hasta 60 de vida,
-    fase 2 hasta 29 y fase 3 desde ahí.
+    de mayor a menor. Se pasa de fase cuando la vida llega a esa fracción o menos.
+    Con [0.66, 0.33] y 90 de vida: fase 1 con 60 o más de vida, fase 2 entre 59 y 30,
+    fase 3 con 29 o menos.
     """
     fraction = hp / max_hp
     phase = 1

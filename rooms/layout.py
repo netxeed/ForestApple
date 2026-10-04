@@ -49,6 +49,7 @@ ENEMY_LETTERS = {
     "B": "banana",
     "L": "lemon",
     "D": "peach",
+    "W": "watermelon",
 }
 
 # Distancia mínima (en casillas) entre cualquier enemigo y el punto donde aparece el
