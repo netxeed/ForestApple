@@ -55,7 +55,7 @@ class DialogueBox:
             self.active = False
 
     # ---------- dibujo ----------
-    def draw(self, surface, font):
+    def draw(self, surface, font, text_sink=None):
         if not self.active:
             return
         rect = pygame.Rect(
@@ -67,8 +67,16 @@ class DialogueBox:
         pygame.draw.rect(surface, S.BG, rect)
         pygame.draw.rect(surface, S.WHITE, rect, width=2)
 
-        name = font.render(self._speaker, True, S.SEED)
-        surface.blit(name, (rect.x + 10, rect.y + 6))
+        def draw_text(text, color, position, anchor="topleft"):
+            if text_sink:
+                text_sink(text, font, color, position, anchor)
+                return
+            rendered = font.render(text, True, color)
+            target = rendered.get_rect()
+            setattr(target, anchor, position)
+            surface.blit(rendered, target)
+
+        draw_text(self._speaker, S.SEED, (rect.x + 10, rect.y + 6))
 
         # Se arma el párrafo completo y después se revela letra por letra,
         # así las palabras no saltan de renglón mientras se escriben.
@@ -77,13 +85,12 @@ class DialogueBox:
         for line in self._wrap(self._text, font, rect.width - 20):
             if remaining <= 0:
                 break
-            surface.blit(font.render(line[:remaining], True, S.WHITE), (rect.x + 10, y))
+            draw_text(line[:remaining], S.WHITE, (rect.x + 10, y))
             remaining -= len(line) + 1
             y += self.LINE_HEIGHT
 
         if self.line_complete:
-            hint = font.render("[Espacio]", True, S.MAP_UNKNOWN)
-            surface.blit(hint, (rect.right - hint.get_width() - 10, rect.bottom - 20))
+            draw_text("[Espacio]", S.MAP_UNKNOWN, (rect.right - 10, rect.bottom - 20), "topright")
 
     @staticmethod
     def _wrap(text, font, max_width):
