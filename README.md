@@ -26,7 +26,7 @@ La tecla de debug se apaga con `DEBUG_KEYS = False` en `core/settings.py`.
 
 ## Cómo funciona el piso
 
-- El piso 1 son 6 salas en una grilla (`data/floor1.json`). Si dos salas están
+- El piso 1 son 8 salas en una grilla (`data/floor1.json`). Si dos salas están
   una al lado de la otra, **las puertas aparecen solas** entre ellas.
 - Al entrar a una sala con enemigos las puertas se cierran (se ven marrones) y
   los enemigos tardan unos instantes en despertar. Al matarlos todos se abren.
@@ -46,6 +46,10 @@ Las salas viven en `data/rooms.json`. Cada una es una grilla de 15x9 caracteres:
 | `.` | piso |
 | `X` | obstáculo (bloquea al jugador y a los disparos) |
 | `S` | frutilla |
+| `P` | piña |
+| `B` | banana |
+| `L` | limón |
+| `D` | durazno |
 
 No dibujen las puertas: se generan según los vecinos en `data/floor1.json`.
 Solo asegúrense de que las 4 casillas de entrada (centro de cada pared, una
@@ -103,7 +107,7 @@ Mirá `entities/strawberry.py` como ejemplo.
 
 - [x] Una sala, jugador + frutilla
 - [x] Varias salas conectadas por puertas, minimapa
-- [ ] Piña, banana, durazno y limón
+- [x] Piña, banana, durazno y limón
 - [ ] Cambio manzana / niño
 - [ ] Sistema de diálogo
 - [ ] Sandía (jefe)
