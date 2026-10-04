@@ -61,6 +61,16 @@ class Room:
                     enemy.attach(self)
                     self.enemies.add(enemy)
 
+    def spawn_enemy(self, kind, pos):
+        """Crea y agrega un enemigo dinámicamente, con dependencias de la sala."""
+        if kind == "lemon":
+            enemy = ENEMY_TYPES[kind](pos, self.enemy_shots, self.acid_puddles)
+        else:
+            enemy = ENEMY_TYPES[kind](pos, self.enemy_shots)
+        enemy.attach(self)
+        self.enemies.add(enemy)
+        return enemy
+
     # ---------- estado ----------
     @property
     def cleared(self):
@@ -107,6 +117,7 @@ class Room:
 
     # ---------- loop ----------
     def update(self, dt, player):
+        self.current_player = player
         if self.wake_timer > 0:
             self.wake_timer -= dt
             return
