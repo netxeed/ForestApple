@@ -26,5 +26,21 @@
     "charge_speed": 165,
     "charge_time": 0.3,
     "charge_cooldown": 1.4
+  },
+  "lemon": {
+    "hp": 5,
+    "speed": 34,
+    "contact_damage": 1,
+    "size": 22,
+    "color": [170, 220, 55],
+    "fire_rate": 1.9,
+    "shot_speed": 120
+  },
+  "peach": {
+    "hp": 4,
+    "speed": 205,
+    "contact_damage": 1,
+    "size": 23,
+    "color": [240, 145, 145]
   }
 }
