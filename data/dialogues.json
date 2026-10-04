@@ -1,35 +1,34 @@
 {
-  "_nota": "Textos PROVISORIOS. Cada clave es un diálogo: 'speaker' es quien habla y 'lines' son las cajas de texto, en orden. Se validan con: python -m dialogue.lines",
+  "_nota": "Textos Provisorios. Cada clave es un diálogo: 'speaker' es quien habla y 'lines' son las cajas de texto, en orden. Se validan con: python -m dialogue.lines",
 
   "sandia_intro": {
     "speaker": "Sandía",
     "lines": [
-      "Así que tú eres la manzana que dice que morir es pudrirse.",
-      "Qué tontería. Todas vamos al cielo de las frutas.",
-      "Déjame mostrarte el camino."
+      "Así que vos sos la manzana que dice que morir es pudrirse.",
+      "Qué tontería. Todos vamos al cielo de las frutas.",
+      "Déjame mostrarte como se ve."
     ]
   },
   "sandia_fase2": {
     "speaker": "Sandía",
     "lines": [
-      "¡Basta! ¡Nadie me escucha!",
-      "El cielo existe. ¡Tiene que existir!",
-      "Entonces rodaré hasta que lo entiendas."
+      "¡Basta!",
+      "El cielo de las frutas existe.",
+      "Lo entenderás en un momento."
     ]
   },
   "sandia_fase3": {
     "speaker": "Sandía",
     "lines": [
       "Mira... estoy abierta. Por dentro soy dulce.",
-      "Cómeme, manzana. Así se acaba esto.",
-      "Así llego al cielo."
+      "Mátame, manzana. Así se acaba esto.",
+      "INTÉNTALO"
     ]
   },
   "sandia_death": {
     "speaker": "Sandía",
     "lines": [
-      "Ya lo veo... el cielo...",
-      "Qué dulce se ve desde acá."
+      "..."
     ]
   }
 }
