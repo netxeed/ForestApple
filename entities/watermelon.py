@@ -15,10 +15,10 @@ JUICE = (214, 52, 84)
 class Watermelon(Enemy):
     """Sandía, jefe del piso 1. Tres fases según su vida (ver docs/diseno.md):
 
-    1. La predicadora: camina lento y escupe abanicos de semillas.
-    2. La rodante: se sacude, rueda rebotando por la sala y queda aturdida
+    1: camina lento y escupe abanicos de semillas.
+    2 se sacude, rueda rebotando por la sala y queda aturdida
        (recibe el doble de daño mientras está aturdida).
-    3. La abierta: más rápida, escupe espirales, alterna con abanicos y deja
+    3: más rápida, escupe espirales, alterna con abanicos y deja
        charcos de jugo que dañan.
 
     Al cambiar de fase se frena la pelea y pide un diálogo (data/dialogues.json).
