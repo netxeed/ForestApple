@@ -29,8 +29,8 @@ def validate_dialogues(data):
             errors.append(f"[{key}] debe ser un objeto con 'speaker' y 'lines'.")
             continue
         speaker = entry.get("speaker")
-        if not isinstance(speaker, str) or not speaker.strip():
-            errors.append(f"[{key}] falta 'speaker' (quién habla).")
+        if not isinstance(speaker, str):
+            errors.append(f"[{key}] 'speaker' debe ser texto (puede estar vacío si no hay nombre).")
         lines = entry.get("lines")
         if not isinstance(lines, list) or not lines:
             errors.append(f"[{key}] 'lines' debe ser una lista con al menos una línea.")

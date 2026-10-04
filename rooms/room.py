@@ -2,6 +2,7 @@ import pygame
 
 from core import settings as S
 from entities import ENEMY_TYPES
+from entities.trinkets import create_trinket
 from rooms.layout import DIRECTIONS, DOOR_TILE, ENEMY_LETTERS
 
 
@@ -22,6 +23,7 @@ class Room:
         self.kind = data.get("type", "normal")   # start / normal / boss
         self.layout = data["layout"]
         self.doors = set(doors)
+        self.locked_doors = set()
 
         self.walls = []
         self.obstacles = []
@@ -30,11 +32,15 @@ class Room:
         self.enemy_shots = pygame.sprite.Group()
         self.acid_puddles = pygame.sprite.Group()
         self.pending_dialogues = []               # claves de data/dialogues.json que Game va mostrando
+        self.key_drop = False
+        self.key_rect = None
+        self.key_icon = create_trinket("key").icon
+        self.hole_rect = pygame.Rect(S.SCREEN_W // 2 - 28, S.SCREEN_H // 2 - 14, 56, 28)
 
         self.wake_timer = 0.0
         self.announced = False
         self._solids = []
-        self._solids_locked = None
+        self._solids_state = None
 
         self._build()
         self.had_enemies = len(self.enemies) > 0
@@ -79,13 +85,50 @@ class Room:
     @property
     def solids(self):
         """Rects que bloquean al jugador y a los proyectiles (incluye puertas cerradas)."""
-        locked = not self.cleared
-        if self._solids_locked != locked:
-            self._solids_locked = locked
+        state = (not self.cleared, frozenset(self.locked_doors))
+        if self._solids_state != state:
+            self._solids_state = state
             self._solids = self.walls + self.obstacles
-            if locked:
-                self._solids = self._solids + list(self.door_rects.values())
+            self._solids += [
+                rect for direction, rect in self.door_rects.items()
+                if state[0] or direction in self.locked_doors
+            ]
         return self._solids
+
+    def set_locked_doors(self, directions):
+        self.locked_doors = set(directions)
+
+    def drop_key(self):
+        """Deja la llave en la baldosa libre más cercana al centro de la sala."""
+        if self.key_drop:
+            return
+        center_col = len(self.layout[0]) // 2
+        center_row = len(self.layout) // 2
+        floor_tiles = [
+            (col, row)
+            for row, line in enumerate(self.layout)
+            for col, tile in enumerate(line)
+            if tile == "."
+        ]
+        col, row = min(
+            floor_tiles,
+            key=lambda tile: (tile[0] - center_col) ** 2 + (tile[1] - center_row) ** 2,
+        )
+        self.key_rect = pygame.Rect(
+            col * S.TILE + (S.TILE - 16) // 2,
+            row * S.TILE + (S.TILE - 16) // 2,
+            16,
+            16,
+        )
+        self.key_drop = True
+
+    def collect_key(self, player):
+        if self.key_drop and self.key_rect.colliderect(player.rect.inflate(28, 28)):
+            player.add_trinket("key")
+            self.key_drop = False
+            self.key_rect = None
+            return True
+        return False
 
     def enter(self):
         """Se llama al entrar a la sala: los enemigos tardan un momento en despertar."""
@@ -111,7 +154,7 @@ class Room:
         if not self.cleared:
             return None
         for direction, door in self.door_rects.items():
-            if rect.colliderect(door):
+            if direction not in self.locked_doors and rect.colliderect(door):
                 return direction
         return None
 
@@ -151,16 +194,27 @@ class Room:
             pygame.draw.rect(surface, S.WALL, w)
         for o in self.obstacles:
             pygame.draw.rect(surface, S.OBSTACLE, o.inflate(-4, -4), border_radius=4)
+        if self.key_drop:
+            pygame.draw.rect(surface, S.BG, self.key_rect.inflate(4, 4))
+            surface.blit(self.key_icon, self.key_icon.get_rect(center=self.key_rect.center))
+        if self.kind == "boss" and self.cleared:
+            pygame.draw.ellipse(surface, (29, 23, 35), self.hole_rect)
+            pygame.draw.ellipse(surface, (13, 11, 19), self.hole_rect.inflate(-14, -8))
+            pygame.draw.ellipse(surface, (87, 70, 99), self.hole_rect, 2)
         self._draw_doors(surface)
         self.enemies.draw(surface)
         self.enemy_shots.draw(surface)
         self.acid_puddles.draw(surface)
 
     def _draw_doors(self, surface):
-        locked = not self.cleared
-        for rect in self.door_rects.values():
+        for direction, rect in self.door_rects.items():
+            locked = not self.cleared or direction in self.locked_doors
             if locked:
-                pygame.draw.rect(surface, S.DOOR_CLOSED, rect)
-                pygame.draw.rect(surface, S.WALL, rect, width=2)
+                if direction in self.locked_doors:
+                    pygame.draw.rect(surface, (184, 190, 202), rect)
+                    pygame.draw.rect(surface, (105, 112, 126), rect, width=2)
+                else:
+                    pygame.draw.rect(surface, S.DOOR_CLOSED, rect)
+                    pygame.draw.rect(surface, S.WALL, rect, width=2)
             else:
                 pygame.draw.rect(surface, S.DOOR_OPEN, rect)

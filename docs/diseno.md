@@ -55,6 +55,13 @@ Cada acto tiene un estilo de juego distinto.
 - Es lo que ya está hecho: salas, puertas, enemigos, jefe por piso.
 - Se **desciende por la heladera**, de estante en estante.
 - El niño acompaña en miniatura como **apoyo**: cura o hace de escudo/tanque.
+- Cada piso del acto 2 tendrá **ítems/trinkets** que mejoran a la manzana. Se
+  muestran con su sprite debajo del minimapa, como en *The Binding of Isaac*.
+  El primer trinket es una llave consumible para entrar a la sala de la sandía;
+  todavía no hay mejoras permanentes para la manzana.
+- Al derrotar al jefe aparece un agujero en el centro de la sala. Al acercarse
+  y pulsar `E`, la pantalla se oscurece y aparece un diálogo sin nombre que dice
+  «La batalla continuará...». El piso 2 todavía no está hecho.
 - Las frutas derrotadas mueren, pero la manzana **se lleva dos semillas de cada
   una** para plantarlas junto a ella al final.
 - Antes de cada pelea importante puede haber un diálogo tipo Undertale
@@ -86,7 +93,24 @@ conviene la (b) con el sistema que ya existe.
 - **Pisos por estante (ejemplo):** estante superior → estante medio → cajón de
   verduras → fondo. Cada piso con 5-6 salas y un jefe.
 
-## 5. Enemigos (Acto 2)
+## 5. Acto 2: piso 1 y enemigos
+
+El piso 1 es una grilla conectada de ocho salas: una inicial, seis normales y
+la sala del jefe. Las puertas se cierran durante los combates y las salas
+limpias permanecen limpias al volver. La sandía queda inaccesible hasta limpiar
+todas las demás salas. Al completar la última, aparece una llave plateada
+provisoria en el centro de esa sala. La manzana debe acercarse y pulsar `E` para
+recogerla; luego se usa con `E` junto a la puerta de la sandía y desaparece al
+abrirla. La puerta cerrada con llave se distingue por su color plateado. Al
+derrotar a la sandía aparece el agujero de salida; al pulsar `E` junto a él se
+oscurece la pantalla y aparece un diálogo sin nombre: «La batalla continuará...».
+El descenso al piso 2 aún no está conectado.
+
+El inventario de trinkets aparece debajo del minimapa y admite mostrar varios
+iconos. Todo el acto 2 tendrá trinkets que mejoren a la manzana; por ahora la
+llave de acceso es el único implementado y no otorga una mejora de combate.
+
+### Enemigos
 
 | Fruta | Comportamiento |
 |---|---|
@@ -95,40 +119,42 @@ conviene la (b) con el sistema que ya existe.
 | **Banana** | Guardia que ataca cuerpo a cuerpo. |
 | **Durazno** | Rueda hacia el jugador. |
 | **Limón** | Lanza ácido. |
-| **Sandía** | Jefe del piso 1, tres fases (ver abajo). *(Hecha, sin balancear)* |
+| **Sandía** | Jefe del piso 1, tres fases. *(Hecha, sin balancear)* |
 
-### Sandía (jefe del piso 1) [Propuesta, implementada]
+### Sandía (jefe del piso 1) [Implementada]
 
 No pelea por odio sino por **fe**: quiere convencer a la manzana de que ser
 comido lleva al cielo de las frutas. Las tres fases van de predicar, a perder la
 paciencia, a ofrecerse a ser comida. Tiene cientos de semillas y la manzana se
 lleva solo dos de ella: contraste que se puede usar en el final.
 
-| Fase | Vida | Nombre | Qué hace |
-|---|---|---|---|
-| 1 | 100 % a 66 % | La predicadora | Camina lento y escupe abanicos de 5 semillas. |
-| 2 | 66 % a 33 % | La rodante | Se sacude (aviso), rueda rebotando 3 veces y queda aturdida (doble daño). |
-| 3 | 33 % a 0 % | La abierta | Más rápida; alterna abanicos y espirales y deja charcos de jugo que dañan. |
+| Fase | Vida | Qué hace |
+|---|---|---|
+| 1 | 100 % a 66 % | Camina lento y escupe abanicos de 5 semillas. |
+| 2 | 66 % a 33 % | Se sacude (aviso), rueda rebotando 3 veces y queda aturdida (doble daño). |
+| 3 | 33 % a 0 % | Es más rápida; alterna abanicos y espirales y deja charcos de jugo que dañan. |
 
 Entre fases se frena la pelea y habla (diálogo, hoy provisorio en
 `data/dialogues.json`). Al morir dice sus últimas palabras y recién después
 aparece el aviso de piso completado. Los números son provisorios.
 
-## 6. Alcance
+## 6. Estado del demo
 
-**MVP (primero):**
-1. Acto 2 jugable con un piso completo: salas, 3 enemigos, 1 jefe.
-2. Sistema de diálogo estilo Undertale (caja de texto, máquina de escribir).
-3. Acto 1 mínimo: una sola escena caminable con 2-3 frutas que hablan.
-4. Acto 3 mínimo: un jefe con tres fases y el final.
+El primer demo se concentra en completar el piso 1 del acto 2: ocho salas,
+cinco tipos de enemigos regulares, la sandía con tres fases, diálogos
+provisorios, llave de acceso y salida visual hacia el piso 2. Hay movimiento,
+disparo, minimapa, puertas, pausa y HUD. El balance, arte, música y diálogos
+siguen siendo provisionales.
 
-**Después:** más pisos, niño como apoyo con habilidades, ítems-fruta, ruta
-pacifista, arte y música finales.
+Acto 1, acto 3, más pisos y trinkets que den mejoras a la manzana siguen para
+más adelante. El sistema muestra los trinkets y soporta la llave consumible; aún
+no existen mejoras de combate.
 
 ## 7. Implicaciones técnicas
 
-- El juego necesita **estados** (exploración, combate, batalla final, diálogo),
-  porque cada acto se juega distinto. Hoy solo existe el modo combate.
+- El juego necesitará **estados** (exploración, combate, batalla final,
+  diálogo), porque cada acto se juega distinto. Hoy está implementado el piso
+  de combate del acto 2 y la caja provisoria de diálogo.
 - El sistema de diálogo pasa a ser clave desde temprano: lo usan el Acto 1, las
   peleas del Acto 2 y el final.
 - Los textos van en `data/` (JSON) para que quien escriba no toque código.
