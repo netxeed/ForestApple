@@ -22,11 +22,16 @@ class Game:
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 20)
         self.menu_font = pygame.font.Font(None, 28)
+        self.title_font = pygame.font.Font(None, 42)
+        self.footer_font = pygame.font.Font(None, 15)
         self.running = True
+        self.screen = "menu"
+        self.menu_selection = 0
+        self.menu_options = ("Jugar", "Opciones", "Salir")
+        self.options_open = False
         self.paused = False
         self.pause_selection = 0
         self.pause_options = ("Continuar", "Reiniciar", "Salir")
-        self.reset()
 
     def reset(self):
         self.player_shots = pygame.sprite.Group()
@@ -47,7 +52,7 @@ class Game:
         while self.running:
             dt = min(self.clock.tick(S.FPS) / 1000.0, 0.05)
             self.handle_events()
-            if not self.paused:
+            if self.screen == "game" and not self.paused:
                 self.update(dt)
             self.draw()
         pygame.quit()
@@ -57,7 +62,9 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if self.screen == "menu":
+                    self.handle_menu_key(event.key)
+                elif event.key == pygame.K_ESCAPE:
                     self.paused = not self.paused
                 elif self.paused:
                     if event.key in (pygame.K_UP, pygame.K_w):
@@ -74,9 +81,38 @@ class Game:
                 elif event.key == pygame.K_e:
                     self.interact()
                 elif event.key in (pygame.K_SPACE, pygame.K_RETURN, pygame.K_z):
+                    dialogue_was_active = self.dialogue.active
                     self.dialogue.advance()
                     if not self.dialogue.active:
                         self.dialogue_dark = False
+                        if dialogue_was_active and self.hole_dialogue_shown:
+                            self.return_to_menu()
+
+    def handle_menu_key(self, key):
+        if self.options_open:
+            if key == pygame.K_ESCAPE:
+                self.options_open = False
+            return
+        if key == pygame.K_ESCAPE:
+            self.running = False
+        elif key in (pygame.K_UP, pygame.K_w):
+            self.menu_selection = (self.menu_selection - 1) % len(self.menu_options)
+        elif key in (pygame.K_DOWN, pygame.K_s):
+            self.menu_selection = (self.menu_selection + 1) % len(self.menu_options)
+        elif key in (pygame.K_RETURN, pygame.K_SPACE):
+            if self.menu_selection == 0:
+                self.reset()
+                self.screen = "game"
+            elif self.menu_selection == 1:
+                self.options_open = True
+            else:
+                self.running = False
+
+    def return_to_menu(self):
+        self.screen = "menu"
+        self.options_open = False
+        self.menu_selection = 0
+        self.paused = False
 
     def use_key_at_boss_door(self):
         if self.floor.boss_unlocked or not self.player.has_trinket("key"):
@@ -180,6 +216,12 @@ class Game:
 
     # ---------- dibujo ----------
     def draw(self):
+        if self.screen == "menu":
+            self.draw_main_menu()
+            pygame.transform.scale(self.canvas, self.window.get_size(), self.window)
+            pygame.display.flip()
+            return
+
         self.room.draw(self.canvas)
         self.player_shots.draw(self.canvas)
         if self.player.alive:
@@ -196,6 +238,26 @@ class Game:
 
         pygame.transform.scale(self.canvas, self.window.get_size(), self.window)
         pygame.display.flip()
+
+    def draw_main_menu(self):
+        self.canvas.fill(S.BG)
+        title = self.title_font.render("ForestApple", True, S.WHITE)
+        self.canvas.blit(title, title.get_rect(center=(S.SCREEN_W // 2, 46)))
+
+        if self.options_open:
+            label = self.menu_font.render("Opciones", True, S.WHITE)
+            self.canvas.blit(label, label.get_rect(center=(S.SCREEN_W // 2, S.SCREEN_H // 2)))
+        else:
+            for index, option in enumerate(self.menu_options):
+                color = S.SEED if index == self.menu_selection else S.WHITE
+                label = self.menu_font.render(option, True, color)
+                self.canvas.blit(label, label.get_rect(center=(S.SCREEN_W // 2, 126 + index * 34)))
+
+        version = self.footer_font.render("Versión 0.0", True, S.WHITE)
+        self.canvas.blit(version, (8, S.SCREEN_H - version.get_height() - 6))
+        credits = self.footer_font.render("Santino Zerda, Gael Ledesma y Ara Prociuk", True, S.WHITE)
+        credits_rect = credits.get_rect(bottomright=(S.SCREEN_W - 8, S.SCREEN_H - 6))
+        self.canvas.blit(credits, credits_rect)
 
     def select_pause_option(self):
         if self.pause_selection == 0:  # Continuar
