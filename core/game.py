@@ -17,7 +17,11 @@ class Game:
         self.fade.fill((0, 0, 0))
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 20)
+        self.menu_font = pygame.font.Font(None, 28)
         self.running = True
+        self.paused = False
+        self.pause_selection = 0
+        self.pause_options = ("Continuar", "Reiniciar", "Salir")
         self.reset()
 
     def reset(self):
@@ -36,7 +40,8 @@ class Game:
         while self.running:
             dt = min(self.clock.tick(S.FPS) / 1000.0, 0.05)
             self.handle_events()
-            self.update(dt)
+            if not self.paused:
+                self.update(dt)
             self.draw()
         pygame.quit()
 
@@ -46,7 +51,14 @@ class Game:
                 self.running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.running = False
+                    self.paused = not self.paused
+                elif self.paused:
+                    if event.key in (pygame.K_UP, pygame.K_w):
+                        self.pause_selection = (self.pause_selection - 1) % len(self.pause_options)
+                    elif event.key in (pygame.K_DOWN, pygame.K_s):
+                        self.pause_selection = (self.pause_selection + 1) % len(self.pause_options)
+                    elif event.key in (pygame.K_RETURN, pygame.K_SPACE):
+                        self.select_pause_option()
                 elif event.key == pygame.K_r:
                     self.reset()
                 elif event.key == pygame.K_k and S.DEBUG_KEYS:
@@ -112,9 +124,32 @@ class Game:
             self.canvas.blit(self.player.image, self.player.rect)
         self.draw_hud()
         self.draw_fade()
+        if self.paused:
+            self.draw_pause_menu()
 
         pygame.transform.scale(self.canvas, self.window.get_size(), self.window)
         pygame.display.flip()
+
+    def select_pause_option(self):
+        if self.pause_selection == 0:  # Continuar
+            self.paused = False
+        elif self.pause_selection == 1:  # Reiniciar
+            self.reset()
+            self.paused = False
+        else:  # Salir
+            self.running = False
+
+    def draw_pause_menu(self):
+        overlay = pygame.Surface((S.SCREEN_W, S.SCREEN_H), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 170))
+        self.canvas.blit(overlay, (0, 0))
+
+        title = self.menu_font.render("Pausa", True, S.WHITE)
+        self.canvas.blit(title, title.get_rect(center=(S.SCREEN_W // 2, S.SCREEN_H // 2 - 52)))
+        for index, option in enumerate(self.pause_options):
+            color = S.SEED if index == self.pause_selection else S.WHITE
+            label = self.menu_font.render(option, True, color)
+            self.canvas.blit(label, label.get_rect(center=(S.SCREEN_W // 2, S.SCREEN_H // 2 - 12 + index * 32)))
 
     def draw_fade(self):
         if not self.transition:
