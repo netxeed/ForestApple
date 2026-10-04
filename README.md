@@ -1,6 +1,6 @@
 # ForestApple
 
-Juego de mazmorras estilo The Binding of Isaac
+Juego de mazmorras estilo The Binding of Isaac.
 Sos una manzana (y un niño) que avanza de sala en sala contra frutas hostiles.
 
 ## Cómo correrlo
