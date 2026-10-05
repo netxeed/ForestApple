@@ -11,6 +11,7 @@ class HUDView:
         if S.DEBUG_KEYS:
             speed = game.player.velocity.length()
             game.queue_text(f"Velocidad: {speed:.1f} px/s", game.font, S.WHITE, (S.TILE + 4, 26))
+            game.queue_text(f"FPS: {game.clock.get_fps():.0f}", game.font, S.WHITE, (S.TILE + 4, 44))
         self._draw_trinkets(game)
         self._draw_minimap(game)
         self._draw_boss_bar(game)
