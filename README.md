@@ -12,6 +12,29 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## Prototipo para Android
+
+El proyecto incluye controles táctiles y una configuración inicial para generar
+un APK de prueba en orientación horizontal. Para compilarlo hace falta Linux o
+macOS con Java, Android SDK/NDK y Buildozer instalados; la primera compilación
+descarga las herramientas de Android y puede tardar varios minutos.
+
+```bash
+buildozer android debug
+```
+
+El APK queda en `bin/`. Se puede instalar en un teléfono Android con depuración
+USB activada usando `buildozer android debug deploy run`, o copiar el APK al
+teléfono e instalarlo manualmente. La configuración usa una receta de
+`pygame-ce` mantenida en una rama de python-for-android porque todavía no está
+incluida en la rama principal de esa herramienta. El empaquetado debe probarse
+en un dispositivo Android antes de darlo por listo.
+
+En el juego, usa el pad izquierdo para moverte y el derecho para disparar. El
+botón `E` interactúa y `Ⅱ` pausa. Toca la zona central para confirmar en los
+menús. Los controles táctiles solo se muestran con el controlador de pantalla
+Android; en computadora siguen disponibles teclado y ventana.
+
 ## Controles
 
 | Acción | Tecla |

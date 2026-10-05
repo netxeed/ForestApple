@@ -71,7 +71,7 @@ class Player(pygame.sprite.Sprite):
                 return True
         return False
 
-    def update(self, dt, walls):
+    def update(self, dt, walls, touch_move=None, touch_aim=None):
         keys = pygame.key.get_pressed()
 
         # Movimiento (WASD)
@@ -79,6 +79,10 @@ class Player(pygame.sprite.Sprite):
             keys[pygame.K_d] - keys[pygame.K_a],
             keys[pygame.K_s] - keys[pygame.K_w],
         )
+        if touch_move is not None:
+            move += touch_move
+        if move.length_squared() > 1:
+            move.normalize_ip()
         if move.length_squared() > 0:
             move = move.normalize()
             self.velocity += move * self.acceleration * dt
@@ -102,6 +106,8 @@ class Player(pygame.sprite.Sprite):
             keys[pygame.K_RIGHT] - keys[pygame.K_LEFT],
             keys[pygame.K_DOWN] - keys[pygame.K_UP],
         )
+        if touch_aim is not None:
+            aim += touch_aim
         if aim.length_squared() > 0 and self._cooldown <= 0:
             self._shoot(aim)
 
