@@ -21,21 +21,21 @@ class HUDView:
                 for d in game.floor.boss_door_directions()
                 if d in game.room.door_rects
             ):
-                hint = "E: usar llave" if game.player.has_trinket("key") else "Necesito una llave para entrar ahí"
+                hint = "E: usar llave" if game.player.has_trinket("key") else "Necesito una llave para entrar"
                 game.queue_text(hint, game.font, S.WHITE, (S.SCREEN_W // 2, S.SCREEN_H - 18), "center")
         if game.room.key_drop and game.player.rect.colliderect(game.room.key_rect.inflate(28, 28)):
-            game.queue_text("E: recoger llave", game.font, S.WHITE, (S.SCREEN_W // 2, S.SCREEN_H - 18), "center")
+            game.queue_text("E: agarrar llave", game.font, S.WHITE, (S.SCREEN_W // 2, S.SCREEN_H - 18), "center")
         if (
             game.room.kind == "boss"
             and game.room.cleared
             and not game.hole_dialogue_shown
             and game.player.rect.colliderect(game.room.hole_rect.inflate(28, 28))
         ):
-            game.queue_text("E: entrar en el agujero", game.font, S.WHITE, (S.SCREEN_W // 2, S.SCREEN_H - 18), "center")
+            game.queue_text("E: bajar", game.font, S.WHITE, (S.SCREEN_W // 2, S.SCREEN_H - 18), "center")
 
         if not game.player.alive:
             game.queue_text(
-                "Fallaste. (R para reiniciar)", game.font, S.WHITE,
+                "Fallaste...", game.font, S.WHITE,
                 (S.SCREEN_W // 2, S.SCREEN_H // 2), "center",
             )
         elif game.banner:
