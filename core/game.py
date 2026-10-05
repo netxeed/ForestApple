@@ -38,6 +38,8 @@ class Game:
         self.menu_options = ("Jugar", "Opciones", "Salir")
         self.options_open = False
         self.options_selection = 0
+        self.fps_options = (30, 60, 120, 144, 165, 180)
+        self.fps_selection = self.fps_options.index(S.FPS) if S.FPS in self.fps_options else 1
         self.paused = False
         self.pause_selection = 0
         self.pause_options = ("Continuar", "Reiniciar", "Salir")
@@ -102,13 +104,19 @@ class Game:
             if key == pygame.K_ESCAPE:
                 self.options_open = False
             elif key in (pygame.K_UP, pygame.K_w):
-                self.options_selection = (self.options_selection - 1) % 3
+                self.options_selection = (self.options_selection - 1) % 4
             elif key in (pygame.K_DOWN, pygame.K_s):
-                self.options_selection = (self.options_selection + 1) % 3
+                self.options_selection = (self.options_selection + 1) % 4
+            elif key in (pygame.K_LEFT, pygame.K_a) and self.options_selection == 1:
+                self.change_fps(-1)
+            elif key in (pygame.K_RIGHT, pygame.K_d) and self.options_selection == 1:
+                self.change_fps(1)
             elif key in (pygame.K_RETURN, pygame.K_SPACE):
                 if self.options_selection == 0:
                     self.toggle_fullscreen()
                 elif self.options_selection == 1:
+                    self.change_fps(1)
+                elif self.options_selection == 2:
                     S.DEBUG_KEYS = not S.DEBUG_KEYS
                 else:
                     self.options_open = False
@@ -135,6 +143,10 @@ class Game:
             self.window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         else:
             self.window = pygame.display.set_mode(self.windowed_size)
+
+    def change_fps(self, direction):
+        self.fps_selection = (self.fps_selection + direction) % len(self.fps_options)
+        S.FPS = self.fps_options[self.fps_selection]
 
     def return_to_menu(self):
         self.screen = "menu"

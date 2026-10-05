@@ -14,12 +14,13 @@ class MenuView:
             game.queue_text("Opciones", game.menu_font, S.WHITE, (S.SCREEN_W // 2, 104), "center")
             options = (
                 f"Pantalla completa: {'Sí' if game.fullscreen else 'No'}",
+                f"FPS: {S.FPS}  (←/→ o Enter)",
                 f"Modo debug: {'Sí' if S.DEBUG_KEYS else 'No'}",
                 "Volver",
             )
             for index, option in enumerate(options):
                 color = S.SEED if index == game.options_selection else S.WHITE
-                game.queue_text(option, game.menu_font, color, (S.SCREEN_W // 2, 150 + index * 34), "center")
+                game.queue_text(option, game.menu_font, color, (S.SCREEN_W // 2, 132 + index * 30), "center")
         else:
             for index, option in enumerate(game.menu_options):
                 color = S.SEED if index == game.menu_selection else S.WHITE
