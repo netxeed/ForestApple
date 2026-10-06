@@ -44,10 +44,10 @@ class Game:
         self.hud_view = HUDView()
         self.running = True
         self.screen = "menu"
-        self.menu_selection = None
+        self.menu_selection = self.idle_selection()
         self.menu_options = ("Jugar", "Opciones", "Salir")
         self.options_open = False
-        self.options_selection = None
+        self.options_selection = self.idle_selection()
         self.fps_options = (30, 60, 120, 144, 165, 180)
         self.fps_selection = self.fps_options.index(S.FPS) if S.FPS in self.fps_options else 1
         self.paused = False
@@ -219,7 +219,7 @@ class Game:
             options = self.option_entries()
             if key == pygame.K_ESCAPE:
                 self.options_open = False
-                self.menu_selection = None
+                self.menu_selection = self.idle_selection()
             elif key in (pygame.K_UP, pygame.K_w):
                 current = 0 if self.options_selection is None else self.options_selection
                 self.options_selection = (current - 1) % len(options)
@@ -246,7 +246,7 @@ class Game:
                         self.change_option(1)
                     else:
                         self.options_open = False
-                        self.menu_selection = None
+                        self.menu_selection = self.idle_selection()
             return
         if key == pygame.K_ESCAPE:
             self.running = False
@@ -264,9 +264,13 @@ class Game:
                 self.screen = "game"
             elif self.menu_selection == 1:
                 self.options_open = True
-                self.options_selection = None
+                self.options_selection = self.idle_selection()
             else:
                 self.running = False
+
+    def idle_selection(self):
+        """Opción resaltada al abrir un menú: ninguna en táctil, la primera con teclado."""
+        return None if self.is_mobile else 0
 
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
@@ -327,7 +331,7 @@ class Game:
     def return_to_menu(self):
         self.screen = "menu"
         self.options_open = False
-        self.menu_selection = None
+        self.menu_selection = self.idle_selection()
         self.paused = False
 
     def _update_menu_touch(self, x, y):
