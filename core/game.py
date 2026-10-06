@@ -1,6 +1,13 @@
+from pathlib import Path
+import os
+import sys
+
 import pygame
 
 from core import settings as S
+from core.preferences import load_preferences, save_preferences
+from core.touch_controls import TouchControls
+from core.viewport import viewport_rect
 from dialogue.box import DialogueBox
 from dialogue.lines import load_dialogue
 from entities.player import Player
@@ -14,8 +21,10 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("ForestApple")
-        icon = pygame.image.load("assets/icon.png")
+        icon_path = Path(__file__).resolve().parent.parent / "assets" / "icon.png"
+        icon = pygame.image.load(str(icon_path))
         pygame.display.set_icon(icon)
+        self.is_mobile = sys.platform == "android" or "ANDROID_ARGUMENT" in os.environ
         self.windowed_size = (S.SCREEN_W * S.SCALE, S.SCREEN_H * S.SCALE)
         self.fullscreen = False
         self.window = pygame.display.set_mode(self.windowed_size)
@@ -26,6 +35,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 20)
         self.menu_font = pygame.font.Font(None, 28)
+        self.section_font = pygame.font.Font(None, 34)
         self.title_font = pygame.font.Font(None, 42)
         self.footer_font = pygame.font.Font(None, 15)
         self._scaled_fonts = {}
@@ -34,15 +44,18 @@ class Game:
         self.hud_view = HUDView()
         self.running = True
         self.screen = "menu"
-        self.menu_selection = 0
+        self.menu_selection = self.idle_selection()
         self.menu_options = ("Jugar", "Opciones", "Salir")
         self.options_open = False
-        self.options_selection = 0
+        self.options_selection = self.idle_selection()
         self.fps_options = (30, 60, 120, 144, 165, 180)
         self.fps_selection = self.fps_options.index(S.FPS) if S.FPS in self.fps_options else 1
         self.paused = False
         self.pause_selection = 0
         self.pause_options = ("Continuar", "Reiniciar", "Salir")
+        self.touch_controls = TouchControls()
+        self._last_dialogue_touch_release = None
+        self._load_preferences()
 
     def reset(self):
         self.player_shots = pygame.sprite.Group()
@@ -53,6 +66,55 @@ class Game:
         self.dialogue = DialogueBox()
         self.dialogue_dark = False
         self.hole_dialogue_shown = False
+
+    def _load_preferences(self):
+        preferences = load_preferences()
+
+        fps = preferences.get("fps")
+        if type(fps) is int and fps in self.fps_options:
+            S.FPS = fps
+        self.fps_selection = self.fps_options.index(S.FPS) if S.FPS in self.fps_options else 1
+
+        debug_keys = preferences.get("debug_keys")
+        if type(debug_keys) is bool:
+            S.DEBUG_KEYS = debug_keys
+
+        fullscreen = preferences.get("fullscreen")
+        if type(fullscreen) is bool:
+            self.fullscreen = fullscreen
+        if self.fullscreen and not self.is_mobile:
+            self.window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+        move_mode = preferences.get("move_mode")
+        if move_mode in ("flechas", "joystick"):
+            self.touch_controls.move_mode = move_mode
+        aim_mode = preferences.get("aim_mode")
+        if aim_mode in ("flechas", "joystick"):
+            self.touch_controls.aim_mode = aim_mode
+
+        dynamic_base = preferences.get("dynamic_base_enabled")
+        if type(dynamic_base) is bool:
+            self.touch_controls.dynamic_base_enabled = dynamic_base
+
+        travel_index = preferences.get("base_travel_index")
+        if type(travel_index) is int and 0 <= travel_index < len(self.touch_controls.BASE_TRAVEL_OPTIONS):
+            self.touch_controls.base_travel_index = travel_index
+
+        size_index = preferences.get("joystick_size_index")
+        if type(size_index) is int and 0 <= size_index < len(self.touch_controls.JOYSTICK_SIZE_OPTIONS):
+            self.touch_controls.joystick_size_index = size_index
+
+    def _save_preferences(self):
+        save_preferences({
+            "fullscreen": self.fullscreen,
+            "fps": S.FPS,
+            "debug_keys": S.DEBUG_KEYS,
+            "move_mode": self.touch_controls.move_mode,
+            "aim_mode": self.touch_controls.aim_mode,
+            "dynamic_base_enabled": self.touch_controls.dynamic_base_enabled,
+            "base_travel_index": self.touch_controls.base_travel_index,
+            "joystick_size_index": self.touch_controls.joystick_size_index,
+        })
 
     @property
     def room(self):
@@ -66,10 +128,46 @@ class Game:
             if self.screen == "game" and not self.paused:
                 self.update(dt)
             self.draw()
+        self._save_preferences()
         pygame.quit()
 
     def handle_events(self):
         for event in pygame.event.get():
+            touch_action = self.touch_controls.handle_event(event)
+            if self.screen == "game" and self.dialogue.active and self._is_touch_release(event):
+                release_position = self._touch_event_position(event)
+                now = pygame.time.get_ticks()
+                last = self._last_dialogue_touch_release
+                duplicate = (
+                    last is not None
+                    and last[2] != event.type
+                    and now - last[1] < 250
+                    and (release_position[0] - last[0][0]) ** 2 + (release_position[1] - last[0][1]) ** 2 < 48 ** 2
+                )
+                if not duplicate:
+                    self._advance_dialogue()
+                    self._last_dialogue_touch_release = (release_position, now, event.type)
+                touch_action = None
+            if event.type in (pygame.FINGERDOWN, pygame.FINGERMOTION) and self.screen == "menu":
+                position = self.touch_controls.last_position
+                if position is None:
+                    self._update_menu_touch(-1, -1)
+                else:
+                    self._update_menu_touch(*position)
+            if touch_action == "pause" and self.screen == "game":
+                self.paused = not self.paused
+            elif touch_action == "interact" and self.screen == "game" and not self.paused:
+                self.interact()
+            elif touch_action == "tap":
+                if self.screen == "menu":
+                    x, y = self.touch_controls.last_tap
+                    if self._update_menu_touch(x, y):
+                        self.handle_menu_key(pygame.K_RETURN)
+                elif self.paused:
+                    _, y = self.touch_controls.last_tap
+                    if S.SCREEN_H // 2 - 30 <= y <= S.SCREEN_H // 2 + 68:
+                        self.pause_selection = max(0, min(2, round((y - (S.SCREEN_H // 2 - 12)) / 32)))
+                        self.select_pause_option()
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.KEYDOWN:
@@ -92,50 +190,87 @@ class Game:
                 elif event.key == pygame.K_e:
                     self.interact()
                 elif event.key in (pygame.K_SPACE, pygame.K_RETURN, pygame.K_z):
-                    dialogue_was_active = self.dialogue.active
-                    self.dialogue.advance()
-                    if not self.dialogue.active:
-                        self.dialogue_dark = False
-                        if dialogue_was_active and self.hole_dialogue_shown:
-                            self.return_to_menu()
+                    self._advance_dialogue()
+
+    @staticmethod
+    def _is_touch_release(event):
+        return (
+            event.type == pygame.FINGERUP
+            or (event.type == pygame.MOUSEBUTTONUP and getattr(event, "button", 1) == 1)
+        )
+
+    @staticmethod
+    def _touch_event_position(event):
+        if event.type == pygame.FINGERUP:
+            window_w, window_h = pygame.display.get_window_size()
+            return round(event.x * window_w), round(event.y * window_h)
+        return event.pos
+
+    def _advance_dialogue(self):
+        dialogue_was_active = self.dialogue.active
+        self.dialogue.advance()
+        if not self.dialogue.active:
+            self.dialogue_dark = False
+            if dialogue_was_active and self.hole_dialogue_shown:
+                self.return_to_menu()
 
     def handle_menu_key(self, key):
         if self.options_open:
+            options = self.option_entries()
             if key == pygame.K_ESCAPE:
                 self.options_open = False
+                self.menu_selection = self.idle_selection()
             elif key in (pygame.K_UP, pygame.K_w):
-                self.options_selection = (self.options_selection - 1) % 4
+                current = 0 if self.options_selection is None else self.options_selection
+                self.options_selection = (current - 1) % len(options)
             elif key in (pygame.K_DOWN, pygame.K_s):
-                self.options_selection = (self.options_selection + 1) % 4
-            elif key in (pygame.K_LEFT, pygame.K_a) and self.options_selection == 1:
-                self.change_fps(-1)
-            elif key in (pygame.K_RIGHT, pygame.K_d) and self.options_selection == 1:
-                self.change_fps(1)
-            elif key in (pygame.K_RETURN, pygame.K_SPACE):
-                if self.options_selection == 0:
-                    self.toggle_fullscreen()
-                elif self.options_selection == 1:
-                    self.change_fps(1)
-                elif self.options_selection == 2:
-                    S.DEBUG_KEYS = not S.DEBUG_KEYS
-                else:
-                    self.options_open = False
+                current = 0 if self.options_selection is None else self.options_selection
+                self.options_selection = (current + 1) % len(options)
+            elif key in (pygame.K_LEFT, pygame.K_a, pygame.K_RIGHT, pygame.K_d, pygame.K_RETURN, pygame.K_SPACE):
+                if self.options_selection is None:
+                    self.options_selection = 0
+                if key in (pygame.K_LEFT, pygame.K_a) and options[self.options_selection][0] in ("fps", "move", "aim", "dynamic", "travel", "size"):
+                    self.change_option(-1)
+                elif key in (pygame.K_RIGHT, pygame.K_d) and options[self.options_selection][0] in ("fps", "move", "aim", "dynamic", "travel", "size"):
+                    self.change_option(1)
+                elif key in (pygame.K_RETURN, pygame.K_SPACE):
+                    selected = options[self.options_selection][0]
+                    if selected == "fullscreen":
+                        self.toggle_fullscreen()
+                    elif selected == "fps":
+                        self.change_fps(1)
+                    elif selected == "debug":
+                        S.DEBUG_KEYS = not S.DEBUG_KEYS
+                        self._save_preferences()
+                    elif selected in ("move", "aim", "dynamic", "travel", "size"):
+                        self.change_option(1)
+                    else:
+                        self.options_open = False
+                        self.menu_selection = self.idle_selection()
             return
         if key == pygame.K_ESCAPE:
             self.running = False
         elif key in (pygame.K_UP, pygame.K_w):
-            self.menu_selection = (self.menu_selection - 1) % len(self.menu_options)
+            current = 0 if self.menu_selection is None else self.menu_selection
+            self.menu_selection = (current - 1) % len(self.menu_options)
         elif key in (pygame.K_DOWN, pygame.K_s):
-            self.menu_selection = (self.menu_selection + 1) % len(self.menu_options)
+            current = 0 if self.menu_selection is None else self.menu_selection
+            self.menu_selection = (current + 1) % len(self.menu_options)
         elif key in (pygame.K_RETURN, pygame.K_SPACE):
+            if self.menu_selection is None:
+                self.menu_selection = 0
             if self.menu_selection == 0:
                 self.reset()
                 self.screen = "game"
             elif self.menu_selection == 1:
                 self.options_open = True
-                self.options_selection = 0
+                self.options_selection = self.idle_selection()
             else:
                 self.running = False
+
+    def idle_selection(self):
+        """Opción resaltada al abrir un menú: ninguna en táctil, la primera con teclado."""
+        return None if self.is_mobile else 0
 
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
@@ -143,16 +278,89 @@ class Game:
             self.window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         else:
             self.window = pygame.display.set_mode(self.windowed_size)
+        self._save_preferences()
 
     def change_fps(self, direction):
         self.fps_selection = (self.fps_selection + direction) % len(self.fps_options)
         S.FPS = self.fps_options[self.fps_selection]
+        self._save_preferences()
+
+    def change_option(self, direction):
+        selected = self.option_entries()[self.options_selection][0]
+        if selected == "fps":
+            self.change_fps(direction)
+        elif selected == "move":
+            self.touch_controls.move_mode = "joystick" if self.touch_controls.move_mode == "flechas" else "flechas"
+        elif selected == "aim":
+            self.touch_controls.aim_mode = "joystick" if self.touch_controls.aim_mode == "flechas" else "flechas"
+        elif selected == "dynamic":
+            self.touch_controls.dynamic_base_enabled = not self.touch_controls.dynamic_base_enabled
+            self.touch_controls.reset_dynamic_bases()
+        elif selected == "travel":
+            controls = self.touch_controls
+            controls.base_travel_index = (
+                controls.base_travel_index + direction
+            ) % len(controls.BASE_TRAVEL_OPTIONS)
+        elif selected == "size":
+            controls = self.touch_controls
+            controls.joystick_size_index = (
+                controls.joystick_size_index + direction
+            ) % len(controls.JOYSTICK_SIZE_OPTIONS)
+        self._save_preferences()
+
+    def option_entries(self):
+        entries = []
+        if not self.is_mobile:
+            entries.append(("fullscreen", f"Pantalla completa: {'Sí' if self.fullscreen else 'No'}"))
+        entries.extend((("fps", f"FPS: {S.FPS}  (izq./der. o Enter)"),
+                        ("debug", f"Modo debug: {'Sí' if S.DEBUG_KEYS else 'No'}")))
+        if self.is_mobile:
+            entries.extend((("move", f"Movimiento: {self.touch_controls.move_mode.capitalize()}  (izq./der. o Enter)"),
+                            ("aim", f"Disparo: {self.touch_controls.aim_mode.capitalize()}  (izq./der. o Enter)"),
+                            ("dynamic", f"Joystick dinámico: {'Sí' if self.touch_controls.dynamic_base_enabled else 'No'}  (Enter)"),
+                            ("travel", f"Recorrido de joystick: {self.touch_controls.base_travel_label}  (izq./der.)"),
+                            ("size", f"Tamaño joystick: {self.touch_controls.joystick_size_label}  (izq./der.)")))
+        entries.append(("back", "Volver"))
+        return entries
+
+    def option_row_y(self, index):
+        if self.is_mobile:
+            return 120 + index * 20
+        return 132 + index * 30
 
     def return_to_menu(self):
         self.screen = "menu"
         self.options_open = False
-        self.menu_selection = 0
+        self.menu_selection = self.idle_selection()
         self.paused = False
+
+    def _update_menu_touch(self, x, y):
+        if self.options_open:
+            row_start = self.option_row_y(0)
+            row_spacing = 20 if self.is_mobile else 30
+            index = round((y - row_start) / row_spacing)
+            row_y = self.option_row_y(index) if 0 <= index < len(self.option_entries()) else -1000
+            valid = (
+                abs(x - S.SCREEN_W // 2) <= S.SCREEN_W * 0.44
+                and 0 <= index < len(self.option_entries())
+                and abs(y - row_y) <= (10 if self.is_mobile else 15)
+            )
+            if valid:
+                self.options_selection = index
+            else:
+                self.options_selection = None
+            return valid
+        index = round((y - 126) / 34)
+        valid = (
+            abs(x - S.SCREEN_W // 2) <= S.SCREEN_W * 0.44
+            and 0 <= index < len(self.menu_options)
+            and abs(y - (126 + index * 34)) <= 16
+        )
+        if valid:
+            self.menu_selection = index
+        else:
+            self.menu_selection = None
+        return valid
 
     def use_key_at_boss_door(self):
         if self.floor.boss_unlocked or not self.player.has_trinket("key"):
@@ -211,7 +419,7 @@ class Game:
             return
 
         room = self.room
-        self.player.update(dt, room.solids)
+        self.player.update(dt, room.solids, self.touch_controls.move, self.touch_controls.aim)
         self.player_shots.update(dt)
         room.update(dt, self.player)
 
@@ -259,9 +467,7 @@ class Game:
         self.text_queue = []
         if self.screen == "menu":
             self.menu_view.draw_main(self)
-            pygame.transform.scale(self.canvas, self.window.get_size(), self.window)
-            self.draw_queued_text()
-            pygame.display.flip()
+            self._present_canvas()
             return
 
         self.room.draw(self.canvas)
@@ -269,6 +475,8 @@ class Game:
         if self.player.alive:
             self.canvas.blit(self.player.image, self.player.rect)
         self.hud_view.draw(self)
+        if self.is_mobile:
+            self.touch_controls.draw(self.canvas)
         if self.dialogue_dark:
             overlay = pygame.Surface((S.SCREEN_W, S.SCREEN_H), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 190))
@@ -278,17 +486,25 @@ class Game:
         if self.paused:
             self.menu_view.draw_pause(self)
 
-        pygame.transform.scale(self.canvas, self.window.get_size(), self.window)
+        self._present_canvas()
+
+    def _present_canvas(self):
+        viewport = viewport_rect(self.window.get_size())
+        scaled = pygame.transform.scale(self.canvas, (viewport[2], viewport[3]))
+        self.window.fill((0, 0, 0))
+        self.window.blit(scaled, (viewport[0], viewport[1]))
         self.draw_queued_text()
+        if self.is_mobile and self.screen == "game" and not self.paused:
+            self.touch_controls.draw_controls(self.window, self.window.get_size())
         pygame.display.flip()
 
     def queue_text(self, text, font, color, position, anchor="topleft"):
         self.text_queue.append((text, font, color, position, anchor))
 
     def draw_queued_text(self):
-        window_w, window_h = self.window.get_size()
-        scale_x = window_w / S.SCREEN_W
-        scale_y = window_h / S.SCREEN_H
+        left, top, viewport_w, viewport_h = viewport_rect(self.window.get_size())
+        scale_x = viewport_w / S.SCREEN_W
+        scale_y = viewport_h / S.SCREEN_H
         for text, base_font, color, position, anchor in self.text_queue:
             font_size = max(1, round(base_font.get_height() * scale_y))
             cache_key = (id(base_font), font_size)
@@ -298,7 +514,7 @@ class Game:
                 self._scaled_fonts[cache_key] = font
             rendered = font.render(text, True, color)
             rect = rendered.get_rect()
-            setattr(rect, anchor, (round(position[0] * scale_x), round(position[1] * scale_y)))
+            setattr(rect, anchor, (left + round(position[0] * scale_x), top + round(position[1] * scale_y)))
             self.window.blit(rendered, rect)
 
     def select_pause_option(self):
@@ -308,7 +524,7 @@ class Game:
             self.reset()
             self.paused = False
         else:  # Salir
-            self.running = False
+            self.return_to_menu()
 
     def draw_fade(self):
         if not self.transition:
