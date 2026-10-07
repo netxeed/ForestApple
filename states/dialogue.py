@@ -32,7 +32,7 @@ class DialogueState(State):
         self._last_release = None  # (posición, ms, tipo de evento)
 
     def enter(self, game):
-        self.box.start(self.dialogue.speaker, self.dialogue.lines)
+        self.box.start_dialogue(self.dialogue)
         if not self.box.active:  # un diálogo sin líneas no tiene nada que mostrar
             self._close(game)
 
@@ -70,13 +70,12 @@ class DialogueState(State):
 
     def snapshot(self):
         """Lo que se ve ahora (para tests y para comparar versiones)."""
-        box = self.box
-        text = box._lines[box._index]
+        runner = self.box.runner
         return {
-            "speaker": box._speaker,
-            "index": box._index,
-            "shown": min(int(box._shown), len(text)),
-            "text": text,
+            "speaker": runner.speaker,
+            "index": runner.index,
+            "shown": runner.shown_count,
+            "text": runner.plain,
         }
 
     def _advance(self, game):

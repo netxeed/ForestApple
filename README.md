@@ -102,11 +102,32 @@ revisar que el archivo esté bien armado:
 python -m dialogue.lines
 ```
 
-La caja de diálogo (`dialogue/box.py`) es **provisoria**: máquina de escribir y
-nada más. Cuando esté el sistema definitivo se reemplaza manteniendo su interfaz
-(`start`, `update`, `advance`, `draw`, `active`). Para que algo muestre un diálogo
-desde el código: `game.say("clave")` (desde una sala, se agrega la clave a
-`room.pending_dialogues` y la partida lo abre); el juego se pausa mientras se lee.
+Una línea puede ser un texto o un objeto con más datos:
+
+```json
+"speaker": "Sandía",
+"lines": [
+  "Mira manzana...{pause=0.6} estoy abierta.",
+  {"text": "¿Quién habla ahora?\nOtro renglón.", "speaker": "Niño"},
+  {"text": "¡Rápido!", "speed": 90}
+]
+```
+
+- `speaker` dentro de una línea reemplaza al del diálogo solo en esa caja (vacío = sin nombre).
+- `speed` son letras por segundo (45 por defecto); sirve en una línea o en el diálogo entero.
+- `{pause=0.5}` frena la escritura ese tiempo (hasta 5 s). `\n` fuerza un renglón nuevo.
+- La caja muestra el nombre y hasta **3 renglones**; `python -m dialogue.lines` avisa de
+  etiquetas mal escritas, velocidades fuera de rango y campos desconocidos, y los tests
+  fallan si algún texto del juego necesita más de 3 renglones.
+
+Cómo está armado: `dialogue/text.py` (etiquetas y corte en renglones), `dialogue/lines.py`
+(carga y validación), `dialogue/runner.py` (efecto de escritura y pausas) y
+`dialogue/box.py` (dibujo). Los tres primeros no usan pygame. Todavía no hay retratos ni
+opciones para elegir.
+
+Para que algo muestre un diálogo desde el código: `game.say("clave")` (desde una sala, se
+agrega la clave a `room.pending_dialogues` y la partida lo abre); el juego se pausa
+mientras se lee.
 
 ## Pantallas (estados)
 
@@ -181,7 +202,7 @@ states/          pila de estados (base.py, cursor.py: sin pygame) y las pantalla
 entities/        jugador, trinkets.py, proyectiles, enemigos, patterns.py (abanico/espiral), watermelon.py (jefe)
 rooms/           layout.py (estructura del piso, sin pygame),
                  room.py (una sala con puertas), floor.py (el piso entero)
-dialogue/        lines.py (carga de textos, sin pygame) y box.py (caja provisoria)
+dialogue/        text.py, lines.py y runner.py (sin pygame) y box.py (la caja)
 data/            enemies.json, rooms.json, floor1.json, dialogues.json
 tests/           estructura del piso, fases, diálogos, pila de estados y comportamiento del jefe
 assets/          sprites y sonidos (por ahora todo son cuadrados de colores)

@@ -1,63 +1,74 @@
 import pygame
 
 from core import settings as S
+from dialogue.lines import Dialogue
+from dialogue.runner import DialogueRunner
+from dialogue.text import wrap_spans
 
 
 class DialogueBox:
-    """Caja de diálogo provisoria: texto con efecto máquina de escribir.
+    """Caja de diálogo: nombre arriba, hasta 3 renglones de texto con efecto de escritura.
 
-    Mientras está activa, el juego se pausa (lo maneja Game). Primera pulsación de
-    Espacio/Enter: muestra la línea completa. Segunda: pasa a la siguiente.
-    Cuando exista el sistema de diálogo definitivo, se reemplaza esta clase manteniendo
-    la misma interfaz: start(), update(), advance(), draw() y active.
+    Mientras está activa, el juego se pausa (lo maneja `DialogueState`). Primera pulsación de
+    Espacio/Enter: muestra la línea completa. Segunda: pasa a la siguiente. Qué se muestra y
+    cuándo lo decide `DialogueRunner` (sin pygame); acá solo se dibuja.
+
+    Interfaz: start(), start_dialogue(), update(), advance(), draw(), active.
     """
 
-    CHARS_PER_SECOND = 45
     MARGIN = 8
-    HEIGHT = 76
+    HEIGHT = 84
     LINE_HEIGHT = 18
+    MAX_LINES = 3
+    PADDING = 10
 
     def __init__(self):
-        self.active = False
-        self._speaker = ""
-        self._lines = ()
-        self._index = 0
-        self._shown = 0.0
-
-    def start(self, speaker, lines):
-        self._speaker = speaker
-        self._lines = tuple(lines)
-        self._index = 0
-        self._shown = 0.0
-        self.active = bool(self._lines)
+        self.runner = None
+        self._wrapped = None  # (índice de línea, id de la fuente, spans)
 
     @property
-    def _text(self):
-        return self._lines[self._index]
+    def active(self):
+        return self.runner is not None and self.runner.active
+
+    def start(self, speaker, lines):
+        """Forma simple: un hablante y una lista de textos."""
+        self.start_dialogue(Dialogue(speaker, tuple(lines)))
+
+    def start_dialogue(self, dialogue):
+        self.runner = DialogueRunner(dialogue)
+        self._wrapped = None
 
     @property
     def line_complete(self):
-        return self._shown >= len(self._text)
+        return self.runner is None or self.runner.line_complete
 
     def update(self, dt):
-        if self.active and not self.line_complete:
-            self._shown += self.CHARS_PER_SECOND * dt
+        if self.runner:
+            self.runner.update(dt)
 
     def advance(self):
-        if not self.active:
-            return
-        if not self.line_complete:
-            self._shown = float(len(self._text))
-            return
-        self._index += 1
-        self._shown = 0.0
-        if self._index >= len(self._lines):
-            self.active = False
+        if self.runner:
+            self.runner.advance()
 
     # ---------- dibujo ----------
+    @classmethod
+    def text_width(cls):
+        """Ancho disponible para el texto, en píxeles del lienzo."""
+        return S.SCREEN_W - 2 * cls.MARGIN - 2 * cls.PADDING
+
+    def spans(self, font):
+        """Renglones de la línea actual como [(inicio, fin)] sobre el texto visible completo."""
+        runner = self.runner
+        key = (runner.index, id(font))
+        if self._wrapped is None or self._wrapped[:2] != key:
+            spans = wrap_spans(runner.plain, lambda s: font.size(s)[0], self.text_width())
+            self._wrapped = (*key, spans)
+        return self._wrapped[2]
+
     def draw(self, surface, font, text_sink=None):
         if not self.active:
             return
+        runner = self.runner
         rect = pygame.Rect(
             self.MARGIN,
             S.SCREEN_H - self.HEIGHT - self.MARGIN,
@@ -76,32 +87,18 @@ class DialogueBox:
             setattr(target, anchor, position)
             surface.blit(rendered, target)
 
-        draw_text(self._speaker, S.SEED, (rect.x + 10, rect.y + 6))
+        left = rect.x + self.PADDING
+        if runner.speaker:
+            draw_text(runner.speaker, S.SEED, (left, rect.y + 6))
+        if runner.line_complete:
+            draw_text("[Espacio]", S.MAP_UNKNOWN, (rect.right - self.PADDING, rect.y + 6), "topright")
 
-        # Se arma el párrafo completo y después se revela letra por letra,
-        # así las palabras no saltan de renglón mientras se escriben.
-        remaining = int(self._shown)
+        # Los renglones se calculan con el texto completo y después se revelan letra por
+        # letra, así las palabras no saltan de renglón mientras se escriben.
+        count = runner.shown_count
         y = rect.y + 26
-        for line in self._wrap(self._text, font, rect.width - 20):
-            if remaining <= 0:
+        for start, end in self.spans(font):
+            if count <= start:
                 break
-            draw_text(line[:remaining], S.WHITE, (rect.x + 10, y))
-            remaining -= len(line) + 1
+            draw_text(runner.plain[start:min(end, count)], S.WHITE, (left, y))
             y += self.LINE_HEIGHT
-
-        if self.line_complete:
-            draw_text("[Espacio]", S.MAP_UNKNOWN, (rect.right - 10, rect.bottom - 20), "topright")
-
-    @staticmethod
-    def _wrap(text, font, max_width):
-        lines, current = [], ""
-        for word in text.split():
-            candidate = f"{current} {word}".strip()
-            if current and font.size(candidate)[0] > max_width:
-                lines.append(current)
-                current = word
-            else:
-                current = candidate
-        if current:
-            lines.append(current)
-        return lines
