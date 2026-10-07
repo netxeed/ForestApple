@@ -13,6 +13,8 @@ class PlayState(State):
     (los usa también el HUD); este estado tiene la lógica y el dibujo de la sala.
     """
 
+    touch_overlay = True
+
     def __init__(self):
         self.transition = None  # {"dir": ..., "t": ..., "swapped": ...} mientras se cruza una puerta
 
@@ -26,6 +28,12 @@ class PlayState(State):
             for enemy in list(game.room.enemies):
                 enemy.kill()
         elif key == INTERACT_KEY:
+            self.interact(game)
+
+    def handle_touch(self, game, action, position):
+        if action == "pause":
+            game.open_pause()
+        elif action == "interact":
             self.interact(game)
 
     def interact(self, game):
@@ -71,7 +79,7 @@ class PlayState(State):
             return
 
         room = game.room
-        game.player.update(dt, room.solids)
+        game.player.update(dt, room.solids, game.touch_controls.move, game.touch_controls.aim)
         game.player_shots.update(dt)
         room.update(dt, game.player)
 
@@ -121,6 +129,8 @@ class PlayState(State):
         if game.player.alive:
             game.canvas.blit(game.player.image, game.player.rect)
         game.hud_view.draw(game)
+        if game.is_mobile:
+            game.touch_controls.draw(game.canvas)
         self.draw_fade(game)
 
     def draw_fade(self, game):

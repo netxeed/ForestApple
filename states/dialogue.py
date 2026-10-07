@@ -17,6 +17,11 @@ class DialogueState(State):
 
     transparent = True
     pauses_below = True
+    touch_overlay = True
+
+    # Un toque puede llegar como dedo y como clic del mouse a la vez: el segundo se ignora
+    DUPLICATE_MS = 250
+    DUPLICATE_PIXELS = 48
 
     def __init__(self, dialogue, dark=False, on_close=None):
         self.dialogue = dialogue
@@ -24,6 +29,7 @@ class DialogueState(State):
         self.on_close = on_close
         self.box = DialogueBox()
         self._overlay = None
+        self._last_release = None  # (posición, ms, tipo de evento)
 
     def enter(self, game):
         self.box.start(self.dialogue.speaker, self.dialogue.lines)
@@ -34,9 +40,22 @@ class DialogueState(State):
         if key == PAUSE_KEY:
             game.open_pause()
         elif key in ADVANCE_KEYS:
-            self.box.advance()
-            if not self.box.active:
-                self._close(game)
+            self._advance(game)
+
+    def handle_release(self, game, position, event_type):
+        """Tocar la pantalla (en cualquier lado) pasa el diálogo."""
+        now = pygame.time.get_ticks()
+        last = self._last_release
+        duplicate = (
+            last is not None
+            and last[2] != event_type
+            and now - last[1] < self.DUPLICATE_MS
+            and (position[0] - last[0][0]) ** 2 + (position[1] - last[0][1]) ** 2 < self.DUPLICATE_PIXELS ** 2
+        )
+        if not duplicate:
+            self._advance(game)
+            self._last_release = (position, now, event_type)
+        return True
 
     def update(self, game, dt):
         self.box.update(dt)
@@ -59,6 +78,11 @@ class DialogueState(State):
             "shown": min(int(box._shown), len(text)),
             "text": text,
         }
+
+    def _advance(self, game):
+        self.box.advance()
+        if not self.box.active:
+            self._close(game)
 
     def _close(self, game):
         game.states.pop()

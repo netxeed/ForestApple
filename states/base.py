@@ -27,6 +27,9 @@ class State:
     #: Si es True, el estado de abajo NO se actualiza mientras este esté arriba.
     pauses_below = True
 
+    #: Si es True, en el celular se muestran los controles táctiles (flechas, botones).
+    touch_overlay = False
+
     def enter(self, ctx):
         """Se llama al agregar el estado a la pila."""
 
@@ -38,6 +41,19 @@ class State:
 
     def handle_key(self, ctx, key):
         """Tecla apretada (solo la recibe el estado de arriba)."""
+
+    def handle_pointer(self, ctx, position):
+        """Un dedo se apoya o se mueve (`position` en coordenadas del lienzo, o None si
+        quedó fuera). Sirve para resaltar opciones de un menú."""
+
+    def handle_touch(self, ctx, action, position):
+        """Toque ya interpretado por los controles táctiles: `action` es "tap", "pause" o
+        "interact"; `position` es donde se tocó (solo en "tap", si no es None)."""
+
+    def handle_release(self, ctx, position, event_type):
+        """Se soltó un dedo (o el botón del mouse). Devuelve True si el estado se quedó
+        con el toque; entonces no se interpreta como `handle_touch`."""
+        return False
 
     def update(self, ctx, dt):
         """Avanza `dt` segundos."""
@@ -92,6 +108,25 @@ class StateStack:
         top = self.top
         if top is not None:
             self._dispatch(lambda: top.handle_key(self.ctx, key))
+
+    def handle_pointer(self, position):
+        top = self.top
+        if top is not None:
+            self._dispatch(lambda: top.handle_pointer(self.ctx, position))
+
+    def handle_touch(self, action, position=None):
+        top = self.top
+        if top is not None:
+            self._dispatch(lambda: top.handle_touch(self.ctx, action, position))
+
+    def handle_release(self, position, event_type):
+        """Devuelve True si el estado de arriba se quedó con el toque."""
+        top = self.top
+        if top is None:
+            return False
+        result = []
+        self._dispatch(lambda: result.append(top.handle_release(self.ctx, position, event_type)))
+        return bool(result and result[0])
 
     def update(self, dt):
         """Actualiza el estado de arriba y, mientras no pause a los de abajo, los siguientes."""
