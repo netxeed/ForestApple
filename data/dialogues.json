@@ -1,5 +1,5 @@
 {
-  "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Se validan con: python -m dialogue.lines",
+  "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Una línea puede ser un objeto {\"text\", \"speaker\", \"speed\"} para cambiar quien habla o la velocidad solo en esa caja; dentro del texto valen {pause=0.5} (pausa) y \\n (salto de renglón). Se validan con: python -m dialogue.lines",
 
   "sandia_intro": {
     "speaker": "Sandía",
@@ -20,8 +20,8 @@
   "sandia_fase3": {
     "speaker": "Sandía",
     "lines": [
-      "Mira manzana... estoy abierta. Por dentro soy dulce.",
-      "Mátame, manzana. Así se acaba esto.",
+      "Mira manzana...{pause=0.6} estoy abierta.{pause=0.4} Por dentro soy dulce.",
+      "Mátame, manzana.{pause=0.5} Así se acaba esto.",
       "INTÉNTALO."
     ]
   },
