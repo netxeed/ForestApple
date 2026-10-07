@@ -105,7 +105,26 @@ python -m dialogue.lines
 La caja de diálogo (`dialogue/box.py`) es **provisoria**: máquina de escribir y
 nada más. Cuando esté el sistema definitivo se reemplaza manteniendo su interfaz
 (`start`, `update`, `advance`, `draw`, `active`). Para que algo muestre un diálogo
-desde el código: `room.say("clave")`; el juego se pausa mientras se lee.
+desde el código: `game.say("clave")` (desde una sala, se agrega la clave a
+`room.pending_dialogues` y la partida lo abre); el juego se pausa mientras se lee.
+
+## Pantallas (estados)
+
+Cada pantalla es un `State` (`states/`): menú, opciones, partida, pausa y diálogo.
+Viven en una pila (`StateStack`, `states/base.py`): el de arriba recibe las teclas y
+los toques y se actualiza; si es `transparent` se dibuja encima del de abajo, que queda
+congelado (la pausa y los diálogos se ven sobre la partida).
+
+```
+[Menú]  →  [Partida]  →  [Partida, Pausa]  →  [Partida, Diálogo, Pausa]
+```
+
+`Game` es el director y ofrece lo que los estados necesitan: `start_run()`,
+`open_pause()`, `open_options()`, `return_to_menu()`, `say(clave, dark, on_close)` y
+`quit()`. Los estados no se importan entre sí. Para una pantalla nueva: heredar de
+`State`, redefinir lo que haga falta (`handle_key`, `handle_touch`, `update`, `draw`) y
+abrirla con `game.states.push(...)`. La pila y el cursor de menús no usan pygame y
+están testeados en `tests/test_states.py`.
 
 ## Cómo agregar o editar salas (sin tocar código)
 
@@ -147,7 +166,7 @@ caracteres raros, enemigos pegados a una puerta, salas inalcanzables).
 python -m unittest discover tests -v
 ```
 
-Los tests de estructura, fases y diálogos no necesitan pygame. Los del
+Los tests de estructura, fases, diálogos y estados no necesitan pygame. Los del
 comportamiento del jefe (`tests/test_boss.py`) sí lo usan y se saltean solos si
 no está instalado.
 
@@ -155,13 +174,16 @@ no está instalado.
 
 ```
 main.py          punto de entrada
-core/            configuración global, game loop y phases.py (fases de jefes, sin pygame)
+core/            configuración global, game loop (Game), controles, preferencias, táctil y
+                 phases.py (fases de jefes, sin pygame)
+states/          pila de estados (base.py, cursor.py: sin pygame) y las pantallas:
+                 menu.py, play.py, pause.py, dialogue.py
 entities/        jugador, trinkets.py, proyectiles, enemigos, patterns.py (abanico/espiral), watermelon.py (jefe)
 rooms/           layout.py (estructura del piso, sin pygame),
                  room.py (una sala con puertas), floor.py (el piso entero)
 dialogue/        lines.py (carga de textos, sin pygame) y box.py (caja provisoria)
 data/            enemies.json, rooms.json, floor1.json, dialogues.json
-tests/           estructura del piso, fases, diálogos y comportamiento del jefe
+tests/           estructura del piso, fases, diálogos, pila de estados y comportamiento del jefe
 assets/          sprites y sonidos (por ahora todo son cuadrados de colores)
 ```
 
