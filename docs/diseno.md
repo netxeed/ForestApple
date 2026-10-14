@@ -50,7 +50,9 @@ Cada acto tiene un estilo de juego distinto.
 - Hay **mini-tareas cortas** (nada extenso) hasta que ocurre el **hecho trágico**:
   mueren sus **amigas, otras manzanas** (no su familia). De ahí sale su crisis.
 - Las frutas expresan su fe en el cielo de las frutas (siembra el conflicto).
-- El niño aparece y se forma la alianza.
+- **El hecho trágico:** las amigas **envejecen un poco** y las **tiran a la basura**.
+- **El niño aparece al comienzo**: se da cuenta de que puede entender a la manzana,
+  pero **no se sorprende demasiado**. La alianza se forma después de la crisis.
 
 #### Esquema del Acto 1 [Propuesta]
 
@@ -68,16 +70,18 @@ jugador a una de ellas (y a una fruta de otra especie) y siembra un tema.
 
 **Momentos** (unas 5 a 6 pantallas y 15 a 20 minutos de calma):
 
-1. **Un día cualquiera.** Despertar en el estante, conocer el lugar y a las vecinas. Se aprenden los controles caminando y hablando.
+1. **Un día cualquiera.** Despertar en el estante. **El niño aparece al comienzo** y descubre que entiende a la manzana (no se sorprende demasiado). Después, conocer el lugar y a las vecinas. Se aprenden los controles caminando y hablando.
 2. **Mini-tareas** (3 o 4, de pocos minutos cada una). Ideas: llevar un mensaje a una fruta de otro estante, encontrar algo que se le perdió a una vecina, ayudar a una banana con un problema cotidiano. Cada una deja un rato de conversación sobre el cielo de las frutas.
 3. **Un día de más calma que de costumbre.** Un cierre cálido (una charla entre las tres) justo antes del golpe.
-4. **El hecho trágico.** Las amigas desaparecen del estante y la manzana ve qué pasó: las tiran o las dejan pudrir sin que nadie las coma. La escena es corta y se juega, no solo se lee.
+4. **El hecho trágico.** Las amigas **envejecen un poco** (se arrugan, se ablandan) y las **tiran a la basura**. La escena es corta y se juega, no solo se lee.
 5. **La crisis.** Un rato de exploración con los mismos lugares vacíos y las otras frutas actuando como si nada. Las frutas no le creen; la manzana toma conciencia y decide su plan (volverse un bosque).
-6. **El niño** aparece y se forma la alianza. Se abre el Acto 2.
+6. **La alianza.** La manzana se vuelve hacia el niño, que estuvo ahí desde el principio. Se abre el Acto 2.
 
-**Decisiones que faltan antes de escribir diálogos:**
-- Cómo se ve el hecho trágico (qué ve exactamente la manzana).
-- Si el niño aparece antes del hecho (como una presencia rara) o recién después.
+**[Propuesta]** Que el envejecimiento se vea de a poco durante las mini-tareas (dos o tres versiones del sprite de cada amiga), así el golpe se siente anunciado y no de la nada. Pide algo más de arte, pero es poco.
+
+**Decisiones que faltan antes de escribir más diálogos:**
+- Si la manzana **ve cómo las tiran** o encuentra el estante vacío.
+- Si las demás frutas **ven u oyen al niño** (hoy los diálogos asumen que no).
 - Si las mini-tareas se pueden hacer en cualquier orden.
 
 ### Acto 2 — La guerra civil (estilo Isaac)
@@ -214,5 +218,5 @@ Esto **no está decidido**: depende de probar el recorte.
 3. ¿Qué tan largo es el Acto 1 en el MVP? (Propuesta: 15 a 20 minutos.)
 4. ¿Qué relación tiene el niño con las frutas antes de conocer a la manzana?
 5. ¿Qué pasa con las semillas llevadas de cada fruta en el final?
-6. ¿Cómo se ve el hecho trágico del Acto 1 y cuándo aparece el niño?
+6. ¿La manzana ve cómo tiran a sus amigas o encuentra el estante vacío? ¿Las demás frutas ven al niño?
 7. ¿Seguimos en Python o pasamos a Godot? (Depende del recorte de prueba.)

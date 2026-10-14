@@ -1,5 +1,5 @@
 {
-  "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Una línea puede ser un objeto {\"text\", \"speaker\", \"speed\"} para cambiar quien habla o la velocidad solo en esa caja; dentro del texto valen {pause=0.5} (pausa) y \\n (salto de renglón). Se validan con: python -m dialogue.lines",
+  "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Una línea puede ser un objeto {\"text\", \"speaker\", \"speed\"} para cambiar quien habla o la velocidad solo en esa caja; dentro del texto valen {pause=0.5} (pausa) y \\n (salto de renglón). Los de la clave acto1_* son un borrador del Acto 1 (los nombres Gala, Fuji y Lady son de relleno). Se validan con: python -m dialogue.lines",
 
   "sandia_intro": {
     "speaker": "Sandía",
@@ -38,6 +38,63 @@
       "Mientras desciende, la manzana se pregunta si podrá cumplir su objetivo.",
       "No será fácil.",
       "Continuará."
+    ]
+  },
+  "acto1_nino_llega": {
+    "speaker": "",
+    "lines": [
+      {
+        "text": "...¿Vos me oís?",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Sí. Hablás bajito, pero te oigo.",
+        "speaker": "Niño"
+      },
+      {
+        "text": "Pero soy una manzana.{pause=0.4} ¿No te asusta?",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Un poco raro, nada más.{pause=0.5} Con las cosas me pasa desde chico.",
+        "speaker": "Niño"
+      },
+      {
+        "text": "Nadie me cree cuando lo cuento. Así que mejor quedémonos con el secreto.",
+        "speaker": "Niño"
+      }
+    ]
+  },
+  "acto1_gala": {
+    "speaker": "Gala",
+    "lines": [
+      "¡Buen día, vecina! Mirá qué sol hay hoy.",
+      "Ojalá me coman pronto.{pause=0.4} Dicen que el cielo de las frutas es hermoso.",
+      {
+        "text": "¿Quién lo vio?",
+        "speaker": "Manzana"
+      },
+      "Nadie volvió a contar.{pause=0.5} Eso es porque están muy a gusto, tontita."
+    ]
+  },
+  "acto1_fuji": {
+    "speaker": "Fuji",
+    "lines": [
+      "¿Alguna vez pensaste adónde vamos?",
+      "No digo que Gala se equivoque.{pause=0.5} Solo que nadie volvió a contar.",
+      {
+        "text": "Nunca lo pensé.",
+        "speaker": "Manzana"
+      },
+      "Yo sí. Casi todas las noches."
+    ]
+  },
+  "acto1_lady": {
+    "speaker": "Lady",
+    "lines": [
+      "Hoy no pienso en nada.{pause=0.4} Solo quiero sol y que no me muevan.",
+      "¿Te cuento un secreto? Me gusta este estante.",
+      "Conozco cada rincón. Y a vos, y a Gala, y a Fuji.{pause=0.5} Con eso me alcanza."
     ]
   }
 }
