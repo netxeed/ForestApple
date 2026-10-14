@@ -13,6 +13,7 @@ from entities.player import Player
 from rooms.floor import Floor
 from states.base import StateStack
 from states.dialogue import DialogueState
+from states.gameover import GameOverState
 from states.menu import MenuState, OptionsState
 from states.pause import PauseState
 from states.play import PlayState
@@ -122,6 +123,9 @@ class Game:
 
     def open_pause(self):
         self.states.push(PauseState())
+
+    def open_game_over(self):
+        self.states.push(GameOverState())
 
     def open_options(self):
         self.states.push(OptionsState(self))

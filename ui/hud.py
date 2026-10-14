@@ -35,10 +35,7 @@ class HUDView:
             game.queue_text("E: bajar", game.font, S.WHITE, (S.SCREEN_W // 2, S.SCREEN_H - 18), "center")
 
         if not game.player.alive:
-            game.queue_text(
-                "Fallaste...", game.font, S.WHITE,
-                (S.SCREEN_W // 2, S.SCREEN_H // 2), "center",
-            )
+            pass  # el cartel "Fallaste..." lo muestra la pantalla de game over
         elif game.banner:
             msg_width, msg_height = game.font.size(game.banner[0])
             rect = pygame.Rect(0, 0, msg_width, msg_height)

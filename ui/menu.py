@@ -43,6 +43,16 @@ class MenuView:
                 (S.SCREEN_W // 2, S.SCREEN_H // 2 - 12 + index * 32), "center",
             )
 
+    def draw_game_over(self, game, options, selected, first_y, spacing):
+        """Oscurece la partida; el cartel "Fallaste..." lo dibuja el HUD en el centro."""
+        overlay = pygame.Surface((S.SCREEN_W, S.SCREEN_H), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 170))
+        game.canvas.blit(overlay, (0, 0))
+        game.queue_text("Fallaste...", game.section_font, S.SEED, (S.SCREEN_W // 2, S.SCREEN_H // 2 - 6), "center")
+        for index, option in enumerate(options):
+            color = S.SEED if index == selected else S.WHITE
+            game.queue_text(option, game.menu_font, color, (S.SCREEN_W // 2, first_y + index * spacing), "center")
+
     @staticmethod
     def _background(game):
         game.canvas.fill(S.BG)

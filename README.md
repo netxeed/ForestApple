@@ -131,7 +131,7 @@ mientras se lee.
 
 ## Pantallas (estados)
 
-Cada pantalla es un `State` (`states/`): menú, opciones, partida, pausa y diálogo.
+Cada pantalla es un `State` (`states/`): menú, opciones, partida, pausa, diálogo y game over.
 Viven en una pila (`StateStack`, `states/base.py`): el de arriba recibe las teclas y
 los toques y se actualiza; si es `transparent` se dibuja encima del de abajo, que queda
 congelado (la pausa y los diálogos se ven sobre la partida).
@@ -141,7 +141,7 @@ congelado (la pausa y los diálogos se ven sobre la partida).
 ```
 
 `Game` es el director y ofrece lo que los estados necesitan: `start_run()`,
-`open_pause()`, `open_options()`, `return_to_menu()`, `say(clave, dark, on_close)` y
+`open_pause()`, `open_options()`, `open_game_over()`, `return_to_menu()`, `say(clave, dark, on_close)` y
 `quit()`. Los estados no se importan entre sí. Para una pantalla nueva: heredar de
 `State`, redefinir lo que haga falta (`handle_key`, `handle_touch`, `update`, `draw`) y
 abrirla con `game.states.push(...)`. La pila y el cursor de menús no usan pygame y
@@ -198,7 +198,7 @@ main.py          punto de entrada
 core/            configuración global, game loop (Game), controles, preferencias, táctil y
                  phases.py (fases de jefes, sin pygame)
 states/          pila de estados (base.py, cursor.py: sin pygame) y las pantallas:
-                 menu.py, play.py, pause.py, dialogue.py
+                 menu.py, play.py, pause.py, dialogue.py, gameover.py
 entities/        jugador, trinkets.py, proyectiles, enemigos, patterns.py (abanico/espiral), watermelon.py (jefe)
 rooms/           layout.py (estructura del piso, sin pygame),
                  room.py (una sala con puertas), floor.py (el piso entero)

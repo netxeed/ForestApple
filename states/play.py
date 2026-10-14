@@ -14,8 +14,10 @@ class PlayState(State):
     """
 
     touch_overlay = True
+    DEATH_DELAY = 1.2  # segundos viendo la escena antes de la pantalla de game over
 
     def __init__(self):
+        self.death_time = 0.0
         self.transition = None  # {"dir": ..., "t": ..., "swapped": ...} mientras se cruza una puerta
 
     # ---------- teclas ----------
@@ -65,6 +67,10 @@ class PlayState(State):
     # ---------- actualización ----------
     def update(self, game, dt):
         if not game.player.alive:
+            self.death_time += dt
+            if self.death_time >= self.DEATH_DELAY:
+                self.death_time = float("-inf")  # una sola vez
+                game.open_game_over()
             return
         # Si la sala pidió un diálogo (ej. el jefe cambió de fase), se abre y la partida espera
         if not self.transition and game.room.pending_dialogues:
