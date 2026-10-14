@@ -1,12 +1,12 @@
 # ForestApple — Documento de diseño
 
-> Versión 0.1. Las secciones marcadas **[Decidido]** vienen del equipo.
+> Versión 0.2. Las secciones marcadas **[Decidido]** vienen del equipo.
 > Las marcadas **[Propuesta]** son ideas para discutir: se aceptan, se cambian o se tiran.
 
 ## 1. Premisa [Decidido]
 
-Una manzana toma conciencia de sí misma al ver cómo su familia es desperdiciada
-(no comida, sino dejada pudrir). Entra en una crisis existencial: ¿qué prefiere,
+Una manzana toma conciencia de sí misma al ver cómo sus amigas, otras manzanas,
+son desperdiciadas (no comidas, sino dejadas pudrir). Entra en una crisis existencial: ¿qué prefiere,
 ser comida o pudrirse? Decide que su propósito es **volverse un bosque de manzanos**
 (no un solo árbol): sacrificar todo su cuerpo y morir podrida para ser el sustrato
 perfecto, lleno de nutrientes, que sus semillas necesitan.
@@ -26,7 +26,7 @@ continúa (pudrirse para dar vida)? Ninguna de las dos respuestas es gratis.
 
 | Personaje | Rol | Estado |
 |---|---|---|
-| **Manzana** | Protagonista jugable. Consciente, obsesiva con su plan, con trauma familiar. | Decidido |
+| **Manzana** | Protagonista jugable. Consciente, obsesiva con su plan, marcada por la pérdida de sus amigas. | Decidido |
 | **El niño** | Aliado jugable. Su **nombre nunca se dice**; la manzana lo llama "niño". Aparece en miniatura, igual que las frutas, por su imaginación. | Decidido |
 | **Juan** | Hermano mayor del niño. Jefe final (con sus padres). | Decidido |
 | **María y Adán** | Padres del niño. Jefes finales. | Decidido |
@@ -45,11 +45,40 @@ conviene fijarlo antes de escribir diálogos.
 Cada acto tiene un estilo de juego distinto.
 
 ### Acto 1 — Introducción (estilo Undertale)
-- Exploración libre, sin combate. Se camina por los estantes y se **habla con
-  otras frutas**.
-- Se muestra la vida de la manzana, su trauma y su crisis.
-- El niño aparece y se forma la alianza.
+- Exploración libre, sin combate, como un RPG: se ve **un poco de la vida de la
+  manzana**, se camina por los estantes y se **habla con otras frutas**.
+- Hay **mini-tareas cortas** (nada extenso) hasta que ocurre el **hecho trágico**:
+  mueren sus **amigas, otras manzanas** (no su familia). De ahí sale su crisis.
 - Las frutas expresan su fe en el cielo de las frutas (siembra el conflicto).
+- El niño aparece y se forma la alianza.
+
+#### Esquema del Acto 1 [Propuesta]
+
+Para que la pérdida duela, el Acto 1 tiene que hacer que **se quiera a las amigas**
+antes de perderlas. Son pocas y distintas entre sí, y cada mini-tarea le muestra al
+jugador a una de ellas (y a una fruta de otra especie) y siembra un tema.
+
+**Las amigas** (los nombres son de relleno):
+
+| Amiga | Cómo es | Qué siembra |
+|---|---|---|
+| **Manzana vecina A** | Creyente: está feliz de que algún día la coman. | La fe en el cielo de las frutas. |
+| **Manzana vecina B** | Duda en silencio, pregunta cosas que nadie contesta. | Que la protagonista no es la única que se pregunta. |
+| **Manzana vecina C** | Solo quiere un día tranquilo; la más cálida. | Lo que se pierde: la vida cotidiana. |
+
+**Momentos** (unas 5 a 6 pantallas y 15 a 20 minutos de calma):
+
+1. **Un día cualquiera.** Despertar en el estante, conocer el lugar y a las vecinas. Se aprenden los controles caminando y hablando.
+2. **Mini-tareas** (3 o 4, de pocos minutos cada una). Ideas: llevar un mensaje a una fruta de otro estante, encontrar algo que se le perdió a una vecina, ayudar a una banana con un problema cotidiano. Cada una deja un rato de conversación sobre el cielo de las frutas.
+3. **Un día de más calma que de costumbre.** Un cierre cálido (una charla entre las tres) justo antes del golpe.
+4. **El hecho trágico.** Las amigas desaparecen del estante y la manzana ve qué pasó: las tiran o las dejan pudrir sin que nadie las coma. La escena es corta y se juega, no solo se lee.
+5. **La crisis.** Un rato de exploración con los mismos lugares vacíos y las otras frutas actuando como si nada. Las frutas no le creen; la manzana toma conciencia y decide su plan (volverse un bosque).
+6. **El niño** aparece y se forma la alianza. Se abre el Acto 2.
+
+**Decisiones que faltan antes de escribir diálogos:**
+- Cómo se ve el hecho trágico (qué ve exactamente la manzana).
+- Si el niño aparece antes del hecho (como una presencia rara) o recién después.
+- Si las mini-tareas se pueden hacer en cualquier orden.
 
 ### Acto 2 — La guerra civil (estilo Isaac)
 - Es lo que ya está hecho: salas, puertas, enemigos, jefe por piso.
@@ -158,11 +187,32 @@ no existen mejoras de combate.
 - El sistema de diálogo pasa a ser clave desde temprano: lo usan el Acto 1, las
   peleas del Acto 2 y el final.
 - Los textos van en `data/` (JSON) para que quien escriba no toque código.
+- El Acto 1 necesita **banderas de historia** (qué tareas se hicieron, con quién se habló) y NPCs con diálogos que cambian según eso. Hoy no existe.
+
+### Motor: Python y Godot [Propuesta]
+
+El prototipo actual está en Python (pygame) y no hay obligación de seguir con él.
+El Acto 1 es un RPG de exploración (mapas, NPCs, zonas que disparan eventos,
+cinemáticas), justo lo que más cuesta a mano y más resuelve un motor con editor.
+Propuesta:
+
+- Hacer en **Godot** un recorte pequeño del Acto 1 (una sala con dos NPCs y un
+  diálogo) y decidir con eso en la mano. Si no convence, el prototipo en Python
+  sigue intacto.
+- No borrar el repositorio actual: queda como prototipo y referencia del Acto 2.
+- Se conservan los diseños y los JSON (`rooms`, `enemies`, `dialogues`); lo que
+  hay que reescribir es el código.
+- Quien hace el arte puede trabajar directo en Godot (importar sprites, animar, armar
+  mapas), y el soporte para Android pasa a ser el oficial.
+
+Esto **no está decidido**: depende de probar el recorte.
 
 ## 8. Preguntas abiertas (resumen)
 
 1. ¿Por qué la familia es hostil con el niño?
 2. ¿Cómo se juega la batalla final del niño?
-3. ¿Qué tan largo es el Acto 1 en el MVP?
+3. ¿Qué tan largo es el Acto 1 en el MVP? (Propuesta: 15 a 20 minutos.)
 4. ¿Qué relación tiene el niño con las frutas antes de conocer a la manzana?
 5. ¿Qué pasa con las semillas llevadas de cada fruta en el final?
+6. ¿Cómo se ve el hecho trágico del Acto 1 y cuándo aparece el niño?
+7. ¿Seguimos en Python o pasamos a Godot? (Depende del recorte de prueba.)
