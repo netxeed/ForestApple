@@ -60,13 +60,28 @@ Para que la pérdida duela, el Acto 1 tiene que hacer que **se quiera a las amig
 antes de perderlas. Son pocas y distintas entre sí, y cada mini-tarea le muestra al
 jugador a una de ellas (y a una fruta de otra especie) y siembra un tema.
 
-**Las amigas** (los nombres son de relleno):
+**Las amigas.** Son manzanas con nombres femeninos (porque "manzana" es una palabra
+femenina), pero **su género es neutral y no importa para la historia**. En los
+textos conviene evitar adjetivos que marquen género cuando hablan de sí mismas
+("me da miedo" en vez de "soy miedosa"). La protagonista (sin nombre) es la más
+inteligente de todas; Aida e Isolde van detrás de ella y por encima del resto.
 
 | Amiga | Cómo es | Qué siembra |
 |---|---|---|
-| **Manzana vecina A** | Creyente: está feliz de que algún día la coman. | La fe en el cielo de las frutas. |
-| **Manzana vecina B** | Duda en silencio, pregunta cosas que nadie contesta. | Que la protagonista no es la única que se pregunta. |
-| **Manzana vecina C** | Solo quiere un día tranquilo; la más cálida. | Lo que se pierde: la vida cotidiana. |
+| **Gala** | Positiva siempre, no despreocupada: por eso dice "ojalá me coman pronto". Cree en el cielo de las frutas. | La fe en el cielo de las frutas. |
+| **Aida** | Temerosa, algo tímida (no mucho); se lleva bien con sus amigas. Todas las noches piensa adónde irán y se lo confiesa a la protagonista. | Que la protagonista no es la única que se pregunta. |
+| **Isolde** | Competente y razonable, con pensamiento crítico mayor al promedio, pero conformista y algo positiva como Gala (por eso se llevan mejor entre ellas que con Aida). | Lo que se pierde: la vida cotidiana. Y la idea de conformarse con una explicación razonable. |
+
+**Rasgos [Propuesta]** (para ir dándoles vida; se aceptan, se cambian o se tiran):
+
+| Amiga | Deseo | Gesto o manía | Defecto | Ante el hecho trágico |
+|---|---|---|---|---|
+| **Gala** | Que todos estén contentos. | Saluda a todo el mundo; tararea cuando está nerviosa. | No soporta la duda ajena y cambia de tema. | Es a quien más le duele: su fe se rompe o se vuelve más rígida. |
+| **Aida** | Que le digan que no pasa nada. | Mira el borde del estante; baja la voz con lo importante. | Piensa tanto que a veces no actúa. | Se le confirma lo que temía; quizá no se sorprende. |
+| **Isolde** | Que las cosas funcionen. | Acomoda el estante; corrige con cariño ("en realidad..."). | Prefiere una respuesta aceptable a una incómoda. | Busca una razón ("es el ciclo"); necesitar explicarlo es parte de su dolor. |
+
+Mini-tareas que salen de esto: ayudar a Gala a animar a otra fruta, acompañar a
+Aida a ver algo que le da miedo, ayudar a Isolde a acomodar algo del estante.
 
 **Momentos** (unas 5 a 6 pantallas y 15 a 20 minutos de calma):
 

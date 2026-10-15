@@ -6,7 +6,7 @@
     "lines": [
       "Así que vos sos la manzana negacionista.",
       "Qué tontería. Todos vamos al cielo de las frutas.",
-      "Déjame mostrarte como se ve."
+      "Déjame mostrarte cómo se ve."
     ]
   },
   "sandia_fase2": {
@@ -92,9 +92,14 @@
   "acto1_isolde": {
     "speaker": "Isolde",
     "lines": [
-      "Hoy no pienso en nada.{pause=0.4} Solo quiero sol y que no me muevan.",
-      "Me gusta este estante.",
-      "Conozco cada rincón. Y a vos, y a Gala, y Aida.{pause=0.5} Es suficiente para mi."
+      "Buen día. Acomodé el estante para que no se caiga nada.",
+      "Sobre lo que piensa Aida: yo creo que hay una explicación razonable.{pause=0.4} Nos eligen, nos comen. Es un ciclo.",
+      {
+        "text": "¿Y si no es así?",
+        "speaker": "Manzana"
+      },
+      "En realidad, no tengo pruebas.{pause=0.5} Pero conozco cada rincón de este estante. Y a vos, a Gala, a Aida.",
+      "Es suficiente para mí."
     ]
   }
 }
