@@ -66,7 +66,7 @@ aunque van detrás de la protagonista.
 | Amiga | Cómo es | Qué siembra |
 |---|---|---|
 | **Gala** | Positiva siempre, no despreocupada: por eso dice "ojalá me coman pronto". Cree en el cielo de las frutas. | La fe en el cielo de las frutas. |
-| **Aida** | Temerosa, algo tímida (no mucho); se lleva bien con sus amigas. Todas las noches piensa adónde irán y se lo confiesa a la protagonista. | Que la protagonista no es la única que se pregunta. |
+| **Aida** | Temerosa, algo tímida, pero se lleva bien con sus amigas. Todas las noches piensa adónde irán y se lo confiesa a la manzana protagonista. | Que la protagonista no es la única que se pregunta. |
 | **Isolde** | Competente y razonable, con pensamiento crítico mayor al promedio, pero conformista y algo positiva como Gala (por eso se llevan mejor entre ellas que con Aida). | Lo que se pierde: la vida cotidiana. Y la idea de conformarse con una explicación razonable. |
 
 **Rasgos [Propuesta]** (para ir dándoles vida; se aceptan, se cambian o se tiran):
