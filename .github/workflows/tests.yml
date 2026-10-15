@@ -1,0 +1,36 @@
+name: Tests
+
+# Corre los tests con pygame de verdad (sin ventana) en cada pull request y en main.
+# Los tests que necesitan pygame se saltean solos en una máquina sin pygame; acá no.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      SDL_VIDEODRIVER: dummy   # pygame sin ventana
+      SDL_AUDIODRIVER: dummy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Instalar dependencias
+        run: python -m pip install -r requirements.txt
+
+      - name: Comprobar que pygame funciona (si no, los tests se saltearían en silencio)
+        run: python -c "import pygame; print('pygame', pygame.version.ver, 'SDL', pygame.version.SDL)"
+
+      - name: Validar salas y diálogos
+        run: |
+          python -m rooms.layout
+          python -m dialogue.lines
+
+      - name: Tests (incluye una partida de humo sin ventana)
+        run: python -m unittest discover -s tests -v

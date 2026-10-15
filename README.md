@@ -188,8 +188,20 @@ python -m unittest discover tests -v
 ```
 
 Los tests de estructura, fases, diálogos y estados no necesitan pygame. Los del
-comportamiento del jefe (`tests/test_boss.py`) sí lo usan y se saltean solos si
-no está instalado.
+comportamiento del jefe (`tests/test_boss.py`), el game over y la partida de humo sí
+lo usan y se saltean solos si no está instalado.
+
+**Partida de humo** (`tests/smoke_game.py`): abre el juego de verdad, sin ventana,
+y recorre menú, opciones, pausa, diálogos, las ocho salas del piso 1, la pelea con la
+sandía y el game over, mandando teclas como si las apretara una persona. No juzga el
+balance ni cómo se ve: solo que nada se rompa. Se corre sola con los tests, o aparte:
+
+```bash
+python -m tests.smoke_game
+```
+
+**CI:** GitHub corre todo esto con pygame real en cada pull request y en `main`
+(`.github/workflows/tests.yml`). Si el PR sale en rojo, mirar el log antes de mergear.
 
 ## Estructura
 
@@ -204,7 +216,7 @@ rooms/           layout.py (estructura del piso, sin pygame),
                  room.py (una sala con puertas), floor.py (el piso entero)
 dialogue/        text.py, lines.py y runner.py (sin pygame) y box.py (la caja)
 data/            enemies.json, rooms.json, floor1.json, dialogues.json
-tests/           estructura del piso, fases, diálogos, pila de estados y comportamiento del jefe
+tests/           estructura del piso, fases, diálogos, estados, jefe y la partida de humo (smoke_game.py)
 assets/          sprites y sonidos (por ahora todo son cuadrados de colores)
 ```
 
