@@ -1,12 +1,12 @@
 {
-  "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Una línea puede ser un objeto {\"text\", \"speaker\", \"speed\"} para cambiar quien habla o la velocidad solo en esa caja; dentro del texto valen {pause=0.5} (pausa) y \\n (salto de renglón). Se validan con: python -m dialogue.lines",
+  "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Una línea puede ser un objeto {\"text\", \"speaker\", \"speed\"} para cambiar quien habla o la velocidad solo en esa caja; dentro del texto valen {pause=0.5} (pausa) y \\n (salto de renglón).",
 
   "sandia_intro": {
     "speaker": "Sandía",
     "lines": [
-      "Así que vos sos la manzana que dice que morir es pudrirse.",
+      "Así que vos sos la manzana negacionista.",
       "Qué tontería. Todos vamos al cielo de las frutas.",
-      "Déjame mostrarte como se ve."
+      "Déjame mostrarte cómo se ve."
     ]
   },
   "sandia_fase2": {
@@ -38,6 +38,68 @@
       "Mientras desciende, la manzana se pregunta si podrá cumplir su objetivo.",
       "No será fácil.",
       "Continuará."
+    ]
+  },
+  "acto1_nino_llega": {
+    "speaker": "",
+    "lines": [
+      {
+        "text": "...¿Vos me escuchás?",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Sí. Hablás bajito, pero te escucho.",
+        "speaker": "Niño"
+      },
+      {
+        "text": "Pero soy una manzana.{pause=0.4} ¿No te asusta?",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Un poco raro, nada más.{pause=0.5} Con las cosas me pasa desde chico.",
+        "speaker": "Niño"
+      },
+      {
+        "text": "Nadie me cree cuando lo cuento. Así que mejor quedémonos con el secreto.",
+        "speaker": "Niño"
+      }
+    ]
+  },
+  "acto1_gala": {
+    "speaker": "Gala",
+    "lines": [
+      "¡Buen día! Mirá qué sol hay hoy.",
+      "Ojalá me coman pronto.{pause=0.4} Dicen que el cielo de las frutas es hermoso.",
+      {
+        "text": "¿Quién lo vio?",
+        "speaker": "Manzana"
+      },
+      "Nadie volvió a contar.{pause=0.5} Eso es porque están muy a gusto allá."
+    ]
+  },
+  "acto1_aida": {
+    "speaker": "Aida",
+    "lines": [
+      "¿Alguna vez pensaste adónde vamos?",
+      "No digo que Gala se equivoque.{pause=0.5} Solo que nadie volvió a contar.",
+      {
+        "text": "Nunca lo pensé.",
+        "speaker": "Manzana"
+      },
+      "Yo sí. Casi todas las noches."
+    ]
+  },
+  "acto1_isolde": {
+    "speaker": "Isolde",
+    "lines": [
+      "Buen día. Acomodé el estante para que no se caiga nada.",
+      "Sobre lo que piensa Aida: yo creo que hay una explicación razonable.{pause=0.4} Nos eligen, nos comen. Es un ciclo.",
+      {
+        "text": "¿Y si no es así?",
+        "speaker": "Manzana"
+      },
+      "En realidad, no tengo pruebas.{pause=0.5} Pero conozco cada rincón de este estante. Y a vos, a Gala, a Aida.",
+      "Es suficiente para mí."
     ]
   }
 }
