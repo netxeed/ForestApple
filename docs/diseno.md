@@ -240,7 +240,7 @@ Propuesta:
 - Quien hace el arte puede trabajar directo en Godot (importar sprites, animar, armar
   mapas), y el soporte para Android pasa a ser el oficial.
 
-Esto **no está decidido**: depende de probar el recorte.
+Esto **no está decidido**: depende de probar el recorte. La comparación detallada y el checklist de prueba están en `docs/motor.md`.
 
 ## 8. Preguntas abiertas
 
