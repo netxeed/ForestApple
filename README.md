@@ -218,6 +218,7 @@ dialogue/        text.py, lines.py y runner.py (sin pygame) y box.py (la caja)
 data/            enemies.json, rooms.json, floor1.json, dialogues.json
 tests/           estructura del piso, fases, diálogos, estados, jefe y la partida de humo (smoke_game.py)
 assets/          sprites y sonidos (por ahora todo son cuadrados de colores)
+godot/           rebanada de prueba en Godot (experimento, ver godot/README.md)
 ```
 
 ## Cómo agregar un enemigo nuevo
