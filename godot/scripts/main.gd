@@ -72,6 +72,7 @@ func _setup_input() -> void:
 
 func _load_dialogues() -> Dictionary:
 	var candidates := [
+		OS.get_executable_path().get_base_dir().path_join("data/dialogues.json"),  # versión exportada
 		ProjectSettings.globalize_path("res://").path_join("../data/dialogues.json"),
 		"res://data/dialogues.json",
 	]
