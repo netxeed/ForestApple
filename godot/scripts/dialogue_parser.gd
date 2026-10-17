@@ -5,7 +5,7 @@ extends RefCounted
 ## Dentro de un texto valen {pause=SEGUNDOS} y \n.
 
 const MAX_PAUSE := 5.0
-const DEFAULT_CPS := 30.0  # letras por segundo
+const DEFAULT_CPS := 45.0  # letras por segundo (igual que DEFAULT_SPEED de dialogue/runner.py)
 
 static var _tag_re: RegEx = null
 static var _pause_re: RegEx = null
@@ -43,15 +43,16 @@ static func parse_text(raw: String) -> Dictionary:
 ## Normaliza las líneas de un diálogo a [{text, pauses, speaker, speed}, ...].
 static func build_lines(dialogue: Dictionary) -> Array:
 	var default_speaker: String = dialogue.get("speaker", "")
+	var dialogue_speed := float(dialogue.get("speed", DEFAULT_CPS))  # velocidad de todo el diálogo
 	var out: Array = []
 	for entry in dialogue.get("lines", []):
 		var raw := ""
 		var speaker := default_speaker
-		var speed := DEFAULT_CPS
+		var speed := dialogue_speed
 		if entry is Dictionary:
 			raw = str(entry.get("text", ""))
 			speaker = str(entry.get("speaker", default_speaker))
-			speed = float(entry.get("speed", DEFAULT_CPS))
+			speed = float(entry.get("speed", dialogue_speed))
 		else:
 			raw = str(entry)
 		var parsed := parse_text(raw)

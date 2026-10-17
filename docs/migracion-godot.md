@@ -172,6 +172,12 @@ Cada etapa es una PR. Python sigue jugable durante todo el proceso.
 Las etapas 2 a 4 dependen de la 1 y entre sí en ese orden. La CI de Godot (opcional) se puede
 agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entorno.
 
+> **Estado de la etapa 0:** `tools/export_golden.py`, `godot/tests/run_tests.gd`, `Geo` y los primeros
+> tests (`test_geo.gd`, `test_dialogue_golden.gd`) ya existen. Por ahora el exportador cubre solo lo
+> que no depende de pygame (fases, estructura del piso, diálogos); los valores de movimiento, patrones y
+> jefe se agregan en las etapas 3 y 4. Ojo: en `golden/layout.json` los mensajes de error traen las
+> coordenadas con el formato de Python (`(2, 0)`); el validador de Godot tiene que imitarlo.
+
 ## 6. Archivo por archivo
 
 Cada entrada dice **qué hace**, **cómo se traduce** y **qué no se puede perder**. Las rutas son las del
