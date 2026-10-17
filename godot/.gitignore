@@ -1,0 +1,7 @@
+.godot/
+*.import
+export/
+build/
+*.x86_64
+*.exe
+*.apk

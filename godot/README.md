@@ -20,16 +20,20 @@ muestra y avisa en la consola.
 2. Abre Godot → *Importar* → elige `godot/project.godot` → *Ejecutar* (F5).
 3. Sigue el checklist de `docs/motor.md` (sección 4).
 
-## Estado: sin verificar
+## Estado
 
-Lo escribí sin poder ejecutar Godot (no pude obtener el binario), así que **puede tener
-errores** de sintaxis o de API. Si algo falla, copia el mensaje de la consola de Godot y
-se corrige. No se usa ninguna imagen: todo se dibuja con formas para no depender de
-archivos importados. El dibujo de la manzana y las frutas está en `_draw()` y se
-reemplaza por sprites cuando haya arte.
+La base (movimiento, diálogo, lectura de `dialogues.json` y exportación a Linux) fue probada
+por el equipo y funciona. **Sin probar todavía:** la carga de sprites desde `sprites/` y la
+carpeta `data/` junto al ejecutable (se agregaron después). Si algo falla, copia el mensaje
+de la consola de Godot.
 
-Como la ruta `../data` solo funciona al ejecutar desde el editor, una versión exportada
-necesitaría copiar los JSON dentro del proyecto (no está resuelto).
+## Arte
+
+Para cambiar los dibujos de formas por arte real, basta dejar PNG en `sprites/` (ver
+`sprites/LEEME.md`: nombres, tamaño de 32 × 32 y cómo verlo). El juego los lee en tiempo
+de ejecución, sin importar nada en Godot; también funciona con la versión exportada si hay
+una carpeta `sprites/` junto al ejecutable. De la misma forma, una carpeta `data/` junto al
+ejecutable se usa antes que `../data`.
 
 ## Archivos
 
@@ -38,5 +42,6 @@ necesitaría copiar los JSON dentro del proyecto (no está resuelto).
 | `scripts/main.gd` | Sala, paredes, acciones de teclado, interacción y banderas |
 | `scripts/player.gd` | Movimiento de la manzana |
 | `scripts/npc.gd` | Una fruta hablante |
+| `scripts/sprites.gd` | Carga de PNG por nombre desde `sprites/` (con respaldo a figuras) |
 | `scripts/dialogue_parser.gd` | Parseo de `{pause=...}` y líneas (equivale a `dialogue/text.py`) |
 | `scripts/dialogue_box.gd` | Caja de diálogo con máquina de escribir |
