@@ -1,0 +1,366 @@
+{
+ "default_speed": 45,
+ "dialogues": {
+  "acto1_aida": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "¿Alguna vez pensaste adónde vamos?"
+    },
+    {
+     "pauses": [
+      [
+       30,
+       0.5
+      ]
+     ],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "No digo que Gala se equivoque. Solo que nadie volvió a contar."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Nunca lo pensé."
+    },
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Yo sí. Casi todas las noches."
+    }
+   ],
+   "speaker": "Aida"
+  },
+  "acto1_gala": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Gala",
+     "speed": 45.0,
+     "text": "¡Buen día! Mirá qué sol hay hoy."
+    },
+    {
+     "pauses": [
+      [
+       22,
+       0.4
+      ]
+     ],
+     "speaker": "Gala",
+     "speed": 45.0,
+     "text": "Ojalá me coman pronto. Dicen que el cielo de las frutas es hermoso."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "¿Quién lo vio?"
+    },
+    {
+     "pauses": [
+      [
+       22,
+       0.5
+      ]
+     ],
+     "speaker": "Gala",
+     "speed": 45.0,
+     "text": "Nadie volvió a contar. Eso es porque están muy a gusto allá."
+    }
+   ],
+   "speaker": "Gala"
+  },
+  "acto1_isolde": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Buen día. Acomodé el estante para que no se caiga nada."
+    },
+    {
+     "pauses": [
+      [
+       68,
+       0.4
+      ]
+     ],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Sobre lo que piensa Aida: yo creo que hay una explicación razonable. Nos eligen, nos comen. Es un ciclo."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "¿Y si no es así?"
+    },
+    {
+     "pauses": [
+      [
+       30,
+       0.5
+      ]
+     ],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "En realidad, no tengo pruebas. Pero conozco cada rincón de este estante. Y a vos, a Gala, a Aida."
+    },
+    {
+     "pauses": [],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Es suficiente para mí."
+    }
+   ],
+   "speaker": "Isolde"
+  },
+  "acto1_nino_llega": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "...¿Vos me escuchás?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Niño",
+     "speed": 45.0,
+     "text": "Sí. Hablás bajito, pero te escucho."
+    },
+    {
+     "pauses": [
+      [
+       21,
+       0.4
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Pero soy una manzana. ¿No te asusta?"
+    },
+    {
+     "pauses": [
+      [
+       23,
+       0.5
+      ]
+     ],
+     "speaker": "Niño",
+     "speed": 45.0,
+     "text": "Un poco raro, nada más. Con las cosas me pasa desde chico."
+    },
+    {
+     "pauses": [],
+     "speaker": "Niño",
+     "speed": 45.0,
+     "text": "Nadie me cree cuando lo cuento. Así que mejor quedémonos con el secreto."
+    }
+   ],
+   "speaker": ""
+  },
+  "hole_continue": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "..."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Mientras desciende, la manzana se pregunta si podrá cumplir su objetivo."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "No será fácil."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Continuará."
+    }
+   ],
+   "speaker": ""
+  },
+  "sandia_death": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "..."
+    }
+   ],
+   "speaker": "Sandía"
+  },
+  "sandia_fase2": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "¡Basta!"
+    },
+    {
+     "pauses": [],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "El cielo de las frutas existe."
+    },
+    {
+     "pauses": [],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "Lo entenderás en un momento."
+    }
+   ],
+   "speaker": "Sandía"
+  },
+  "sandia_fase3": {
+   "lines": [
+    {
+     "pauses": [
+      [
+       15,
+       0.6
+      ],
+      [
+       30,
+       0.4
+      ]
+     ],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "Mira manzana... estoy abierta. Por dentro soy dulce."
+    },
+    {
+     "pauses": [
+      [
+       16,
+       0.5
+      ]
+     ],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "Mátame, manzana. Así se acaba esto."
+    },
+    {
+     "pauses": [],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "INTÉNTALO."
+    }
+   ],
+   "speaker": "Sandía"
+  },
+  "sandia_intro": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "Así que vos sos la manzana negacionista."
+    },
+    {
+     "pauses": [],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "Qué tontería. Todos vamos al cielo de las frutas."
+    },
+    {
+     "pauses": [],
+     "speaker": "Sandía",
+     "speed": 45.0,
+     "text": "Déjame mostrarte cómo se ve."
+    }
+   ],
+   "speaker": "Sandía"
+  }
+ },
+ "parse_cases": [
+  {
+   "pauses": [],
+   "raw": "Hola.",
+   "text": "Hola."
+  },
+  {
+   "pauses": [
+    [
+     15,
+     0.6
+    ]
+   ],
+   "raw": "Mira manzana...{pause=0.6} estoy abierta.",
+   "text": "Mira manzana... estoy abierta."
+  },
+  {
+   "pauses": [],
+   "raw": "{pause=0.5}Empieza con pausa.",
+   "text": "Empieza con pausa."
+  },
+  {
+   "pauses": [],
+   "raw": "Termina con pausa.{pause=0.5}",
+   "text": "Termina con pausa."
+  },
+  {
+   "pauses": [
+    [
+     3,
+     0.3
+    ],
+    [
+     10,
+     1.0
+    ]
+   ],
+   "raw": "Dos{pause=0.3} pausas{pause=1} seguidas.",
+   "text": "Dos pausas seguidas."
+  },
+  {
+   "pauses": [],
+   "raw": "Etiqueta {rara} desconocida.",
+   "text": "Etiqueta  desconocida."
+  },
+  {
+   "pauses": [
+    [
+     16,
+     0.2
+    ]
+   ],
+   "raw": "Salto\nde renglón{pause=0.2} y pausa.",
+   "text": "Salto\nde renglón y pausa."
+  },
+  {
+   "pauses": [
+    [
+     11,
+     0.2
+    ],
+    [
+     11,
+     0.3
+    ]
+   ],
+   "raw": "Pausa doble{pause=0.2}{pause=0.3} juntas.",
+   "text": "Pausa doble juntas."
+  },
+  {
+   "pauses": [],
+   "raw": "Sin letras {pause=0.4}",
+   "text": "Sin letras "
+  }
+ ]
+}

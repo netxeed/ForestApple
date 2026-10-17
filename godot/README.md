@@ -27,6 +27,21 @@ por el equipo y funciona. **Sin probar todavía:** la carga de sprites desde `sp
 carpeta `data/` junto al ejecutable (se agregaron después). Si algo falla, copia el mensaje
 de la consola de Godot.
 
+## Pruebas
+
+Etapa 0 de la migración (`docs/migracion-godot.md`). Se corren desde la raíz del repositorio:
+
+```
+godot --headless --path godot --script res://tests/run_tests.gd
+```
+
+Termina con código 1 si algo falla. Si Godot no encuentra un `class_name` nuevo, corre antes una vez
+`godot --headless --path godot --import`. Los tests viven en `tests/test_*.gd`; los valores que
+comparan los calcula Python y están en `tests/golden/` (se regeneran con
+`python tools/export_golden.py`; un test de Python avisa si quedaron viejos).
+
+**Sin ejecutar todavía:** el ejecutor y los tests de Godot se escribieron sin poder correr Godot.
+
 ## Arte
 
 Para cambiar los dibujos de formas por arte real, basta dejar PNG en `sprites/` (ver

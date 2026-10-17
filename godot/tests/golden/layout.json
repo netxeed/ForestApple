@@ -1,0 +1,480 @@
+{
+ "broken": [
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- Salas inalcanzables desde el inicio: [(2, 0)]."
+   ],
+   "name": "sala_inalcanzable"
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- La sala inicial (5, 5) no existe en la grilla."
+   ],
+   "name": "inicio_inexistente"
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- [a] tiene 8 filas, debe tener 9."
+   ],
+   "name": "faltan_filas"
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- [a] carácter desconocido 'Z' en fila 2, col 3."
+   ],
+   "name": "caracter_desconocido"
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- [a] el borde debe ser '#' (fila 0, col 3)."
+   ],
+   "name": "borde_abierto"
+  }
+ ],
+ "constants": {
+  "approach_tile": {
+   "down": [
+    7,
+    7
+   ],
+   "left": [
+    1,
+    4
+   ],
+   "right": [
+    13,
+    4
+   ],
+   "up": [
+    7,
+    1
+   ]
+  },
+  "cols": 15,
+  "directions": {
+   "down": [
+    0,
+    1
+   ],
+   "left": [
+    -1,
+    0
+   ],
+   "right": [
+    1,
+    0
+   ],
+   "up": [
+    0,
+    -1
+   ]
+  },
+  "door_tile": {
+   "down": [
+    7,
+    8
+   ],
+   "left": [
+    0,
+    4
+   ],
+   "right": [
+    14,
+    4
+   ],
+   "up": [
+    7,
+    0
+   ]
+  },
+  "enemy_letters": {
+   "B": "banana",
+   "D": "peach",
+   "L": "lemon",
+   "P": "pineapple",
+   "S": "strawberry",
+   "W": "watermelon"
+  },
+  "min_enemy_door_distance": 2.5,
+  "rows": 9
+ },
+ "floor1": {
+  "cells": [
+   {
+    "col": 0,
+    "room": "limon",
+    "row": 0
+   },
+   {
+    "col": 1,
+    "room": "cruz",
+    "row": 0
+   },
+   {
+    "col": 0,
+    "room": "pilares",
+    "row": 1
+   },
+   {
+    "col": 1,
+    "room": "inicio",
+    "row": 1
+   },
+   {
+    "col": 2,
+    "room": "pasillo",
+    "row": 1
+   },
+   {
+    "col": 0,
+    "room": "durazno",
+    "row": 2
+   },
+   {
+    "col": 1,
+    "room": "ventana",
+    "row": 2
+   },
+   {
+    "col": 2,
+    "room": "jefe",
+    "row": 2
+   }
+  ],
+  "doors": [
+   {
+    "col": 0,
+    "doors": [
+     "down",
+     "right"
+    ],
+    "row": 0
+   },
+   {
+    "col": 1,
+    "doors": [
+     "down",
+     "left"
+    ],
+    "row": 0
+   },
+   {
+    "col": 0,
+    "doors": [
+     "down",
+     "right",
+     "up"
+    ],
+    "row": 1
+   },
+   {
+    "col": 1,
+    "doors": [
+     "down",
+     "left",
+     "right",
+     "up"
+    ],
+    "row": 1
+   },
+   {
+    "col": 2,
+    "doors": [
+     "down",
+     "left"
+    ],
+    "row": 1
+   },
+   {
+    "col": 0,
+    "doors": [
+     "right",
+     "up"
+    ],
+    "row": 2
+   },
+   {
+    "col": 1,
+    "doors": [
+     "left",
+     "right",
+     "up"
+    ],
+    "row": 2
+   },
+   {
+    "col": 2,
+    "doors": [
+     "left",
+     "up"
+    ],
+    "row": 2
+   }
+  ],
+  "name": "Piso 1",
+  "neighbors": [
+   {
+    "col": 0,
+    "dir": "down",
+    "row": 0,
+    "to": [
+     0,
+     1
+    ]
+   },
+   {
+    "col": 0,
+    "dir": "left",
+    "row": 0,
+    "to": null
+   },
+   {
+    "col": 0,
+    "dir": "right",
+    "row": 0,
+    "to": [
+     1,
+     0
+    ]
+   },
+   {
+    "col": 0,
+    "dir": "up",
+    "row": 0,
+    "to": null
+   },
+   {
+    "col": 1,
+    "dir": "down",
+    "row": 0,
+    "to": [
+     1,
+     1
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "left",
+    "row": 0,
+    "to": [
+     0,
+     0
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "right",
+    "row": 0,
+    "to": null
+   },
+   {
+    "col": 1,
+    "dir": "up",
+    "row": 0,
+    "to": null
+   },
+   {
+    "col": 0,
+    "dir": "down",
+    "row": 1,
+    "to": [
+     0,
+     2
+    ]
+   },
+   {
+    "col": 0,
+    "dir": "left",
+    "row": 1,
+    "to": null
+   },
+   {
+    "col": 0,
+    "dir": "right",
+    "row": 1,
+    "to": [
+     1,
+     1
+    ]
+   },
+   {
+    "col": 0,
+    "dir": "up",
+    "row": 1,
+    "to": [
+     0,
+     0
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "down",
+    "row": 1,
+    "to": [
+     1,
+     2
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "left",
+    "row": 1,
+    "to": [
+     0,
+     1
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "right",
+    "row": 1,
+    "to": [
+     2,
+     1
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "up",
+    "row": 1,
+    "to": [
+     1,
+     0
+    ]
+   },
+   {
+    "col": 2,
+    "dir": "down",
+    "row": 1,
+    "to": [
+     2,
+     2
+    ]
+   },
+   {
+    "col": 2,
+    "dir": "left",
+    "row": 1,
+    "to": [
+     1,
+     1
+    ]
+   },
+   {
+    "col": 2,
+    "dir": "right",
+    "row": 1,
+    "to": null
+   },
+   {
+    "col": 2,
+    "dir": "up",
+    "row": 1,
+    "to": null
+   },
+   {
+    "col": 0,
+    "dir": "down",
+    "row": 2,
+    "to": null
+   },
+   {
+    "col": 0,
+    "dir": "left",
+    "row": 2,
+    "to": null
+   },
+   {
+    "col": 0,
+    "dir": "right",
+    "row": 2,
+    "to": [
+     1,
+     2
+    ]
+   },
+   {
+    "col": 0,
+    "dir": "up",
+    "row": 2,
+    "to": [
+     0,
+     1
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "down",
+    "row": 2,
+    "to": null
+   },
+   {
+    "col": 1,
+    "dir": "left",
+    "row": 2,
+    "to": [
+     0,
+     2
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "right",
+    "row": 2,
+    "to": [
+     2,
+     2
+    ]
+   },
+   {
+    "col": 1,
+    "dir": "up",
+    "row": 2,
+    "to": [
+     1,
+     1
+    ]
+   },
+   {
+    "col": 2,
+    "dir": "down",
+    "row": 2,
+    "to": null
+   },
+   {
+    "col": 2,
+    "dir": "left",
+    "row": 2,
+    "to": [
+     1,
+     2
+    ]
+   },
+   {
+    "col": 2,
+    "dir": "right",
+    "row": 2,
+    "to": null
+   },
+   {
+    "col": 2,
+    "dir": "up",
+    "row": 2,
+    "to": [
+     2,
+     1
+    ]
+   }
+  ],
+  "start": [
+   1,
+   1
+  ],
+  "validate_errors": []
+ }
+}
