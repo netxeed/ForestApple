@@ -52,6 +52,8 @@ Una migración completa del prototipo actual es del orden de **días de trabajo*
 no semanas, porque el juego es pequeño. Aun así el Acto 2 no hace falta migrarlo
 ya: el prototipo Python queda como referencia y se migra cuando haya decisión.
 
+Si se decide migrar, las instrucciones archivo por archivo están en `docs/migracion-godot.md`.
+
 ## 4. Checklist de 30 minutos (se hace con Godot 4.x instalado)
 
 Con el proyecto de `godot/` (ver la rebanada, si ya está en el repositorio):
