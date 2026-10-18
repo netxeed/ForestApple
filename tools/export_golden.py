@@ -15,6 +15,7 @@ import json
 import random
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -46,6 +47,7 @@ from entities.patterns import fan, shot_at_angle  # noqa: E402
 import pygame  # noqa: E402
 from entities.watermelon import Watermelon  # noqa: E402
 from core.phases import phase_for_hp  # noqa: E402
+from core.touch_controls import TouchControls  # noqa: E402
 
 GOLDEN_DIR = ROOT / "godot" / "tests" / "golden"
 
@@ -266,6 +268,87 @@ def room_floor():
             "window_locked_after_unlock": sorted(floor.current_room.locked_doors),
             "boss_locked_after_unlock": sorted(boss.locked_doors),
         },
+    }
+
+
+# ---------- controles táctiles ----------
+def touch_controls_golden():
+    """Casos de entrada táctil y vectores calculados por core/touch_controls.py."""
+    window_size = (480, 288)
+    cases = []
+
+    def record(name, controls, fingers):
+        for finger, position in fingers:
+            controls.fingers[finger] = position
+            controls.finger_roles[finger] = controls._control_at(position, position, window_size)
+        controls._rebuild()
+        cases.append({
+            "name": name,
+            "move_mode": controls.move_mode,
+            "aim_mode": controls.aim_mode,
+            "dynamic_base_enabled": controls.dynamic_base_enabled,
+            "base_travel_index": controls.base_travel_index,
+            "joystick_size_index": controls.joystick_size_index,
+            "fingers": [
+                {"id": finger, "position": list(position), "role": controls.finger_roles[finger]}
+                for finger, position in fingers
+            ],
+            "move": [controls.move.x, controls.move.y],
+            "aim": [controls.aim.x, controls.aim.y],
+            "finger_bases": {
+                str(finger): list(controls.finger_bases[finger])
+                for finger in controls.finger_bases
+            },
+        })
+
+    with patch("pygame.display.get_window_size", return_value=window_size):
+        controls = TouchControls()
+        record("flecha_derecha", controls, [(1, (91, 230))])
+
+        controls = TouchControls()
+        record("flecha_izquierda_disparo", controls, [(2, (389, 230))])
+
+        controls = TouchControls()
+        record("multitactil_diagonal_normalizada", controls,
+               [(1, (91, 230)), (2, (55, 194))])
+
+        controls = TouchControls()
+        controls.move_mode = "joystick"
+        record("joystick_media_fuerza", controls, [(1, (63, 230))])
+
+        controls = TouchControls()
+        controls.move_mode = "joystick"
+        record("joystick_zona_muerta", controls, [(1, (50, 230))])
+
+        controls = TouchControls()
+        controls.move_mode = "joystick"
+        record("joystick_base_dinamica_limitada", controls, [(1, (102, 230))])
+
+        controls = TouchControls()
+        ui_roles = {
+            "interact": controls._control_at(controls.INTERACT_CENTER, controls.INTERACT_CENTER, window_size),
+            "pause": controls._control_at(controls.PAUSE_CENTER, controls.PAUSE_CENTER, window_size),
+        }
+
+    return {
+        "constants": {
+            "interact_center": list(TouchControls.INTERACT_CENTER),
+            "pause_center": list(TouchControls.PAUSE_CENTER),
+            "button_radius": TouchControls.BUTTON_RADIUS,
+            "joystick_radius": TouchControls.JOYSTICK_RADIUS,
+            "deadzone": TouchControls.DEADZONE,
+            "base_travel_options": list(TouchControls.BASE_TRAVEL_OPTIONS),
+            "base_travel_labels": list(TouchControls.BASE_TRAVEL_LABELS),
+            "joystick_size_options": list(TouchControls.JOYSTICK_SIZE_OPTIONS),
+            "joystick_size_labels": list(TouchControls.JOYSTICK_SIZE_LABELS),
+            "default_move_mode": "flechas",
+            "default_aim_mode": "flechas",
+            "default_dynamic_base_enabled": True,
+            "default_base_travel_index": 1,
+            "default_joystick_size_index": 1,
+        },
+        "ui_roles": ui_roles,
+        "cases": cases,
     }
 
 
@@ -742,6 +825,7 @@ FILES = {
     "layout.json": layout,
     "dialogue.json": dialogue,
     "room_floor.json": room_floor,
+    "touch_controls.json": touch_controls_golden,
     "player.json": player_golden,
     "enemies.json": enemies_golden,
     "boss.json": boss_golden,
