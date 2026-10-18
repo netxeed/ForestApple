@@ -1,7 +1,8 @@
 extends "res://tests/test_base.gd"
 ## Compara el parseo de diálogos de Godot con lo que calcula Python (golden/dialogue.json).
 
-const ParserScript = preload("res://scripts/dialogue_parser.gd")
+const ParserScript = preload("res://scripts/dialogue/dialogue_parser.gd")
+const RunnerScript = preload("res://scripts/dialogue/dialogue_runner.gd")
 
 
 func _pauses_equal(actual: Array, expected: Array) -> bool:
@@ -50,3 +51,58 @@ func test_todos_los_dialogos_del_juego() -> void:
 			check(is_equal_approx(float(lines[i]["speed"]), float(expected[i]["speed"])), where + ": velocidad")
 			check(_pauses_equal(lines[i]["pauses"], expected[i]["pauses"]), where + ": pausas")
 	check_eq(seen, expected_dialogues.size(), "cantidad de diálogos")
+
+
+func _spans_equal(actual: Array, expected: Array) -> bool:
+	if actual.size() != expected.size():
+		return false
+	for i in range(actual.size()):
+		if int(actual[i][0]) != int(expected[i][0]) or int(actual[i][1]) != int(expected[i][1]):
+			return false
+	return true
+
+
+func test_errores_de_etiquetas() -> void:
+	var data = golden("dialogue.json")
+	if data == null:
+		return
+	for item in data["tag_cases"]:
+		check_eq(ParserScript.tag_errors(item["raw"]), item["errors"], "errores de: " + item["raw"])
+
+
+func test_corte_en_renglones() -> void:
+	var data = golden("dialogue.json")
+	if data == null:
+		return
+	var toy := func(s: String) -> float: return s.length() * 9.0
+	for item in data["wrap_cases"]:
+		var text := ""
+		var width := float(data["wrap_width"])
+		var where := ""
+		if item.has("key"):
+			text = data["dialogues"][item["key"]]["lines"][int(item["line"])]["text"]
+			where = "%s línea %d" % [item["key"], int(item["line"]) + 1]
+		else:
+			text = item["text"]
+			width = float(item["width"])
+			where = "'%s' a %d px" % [text, int(width)]
+		var spans: Array = ParserScript.wrap_spans(text, toy, width)
+		check(_spans_equal(spans, item["spans"]), "renglones de %s (obtenido %s, esperado %s)" % [where, str(spans), str(item["spans"])])
+
+
+func test_avance_del_efecto_de_escritura() -> void:
+	var data = golden("dialogue.json")
+	if data == null:
+		return
+	for item in data["runner_cases"]:
+		var lines: Array = ParserScript.build_lines({"speaker": "X", "lines": [{"text": item["text"], "speed": item["speed"]}]})
+		var runner = RunnerScript.new(lines)
+		var step := 0
+		for ratio in item["steps"]:
+			runner.update(float(ratio[0]) / float(ratio[1]))
+			var expected: Dictionary = item["trace"][step]
+			var where := "'%s' paso %d" % [item["text"], step]
+			check_eq(runner.shown_count(), int(expected["shown"]), where + ": letras")
+			check_eq(runner.waiting(), expected["waiting"], where + ": en pausa")
+			check_eq(runner.line_complete(), expected["complete"], where + ": completa")
+			step += 1
