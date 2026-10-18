@@ -12,6 +12,7 @@ cuando se migran en la etapa 3. Los datos no alteran la lógica Python del juego
 """
 
 import json
+import random
 import sys
 from pathlib import Path
 
@@ -43,6 +44,8 @@ from entities.lemon import Lemon, AcidDrop, AcidPuddle  # noqa: E402
 from entities.peach import Peach  # noqa: E402
 from entities.patterns import fan, shot_at_angle  # noqa: E402
 import pygame  # noqa: E402
+from entities.watermelon import Watermelon  # noqa: E402
+from core.phases import phase_for_hp  # noqa: E402
 
 GOLDEN_DIR = ROOT / "godot" / "tests" / "golden"
 
@@ -508,8 +511,135 @@ def enemies_golden():
                             "steps": [0.5, 1.0, 1.0, 0.2], "trace": puddle_trace}}
 
 
+class _BossRoom:
+    def __init__(self, player=None, layout=None):
+        self.current_player = player
+        self.layout = layout or (["#" * 15] + ["#" + "." * 13 + "#" for _ in range(7)] + ["#" * 15])
+        self.acid_puddles = pygame.sprite.Group()
+        self.pending_dialogues = []
+        self.spawned = []
+
+    def say(self, key):
+        self.pending_dialogues.append(key)
+
+    def spawn_enemy(self, kind, pos):
+        self.spawned.append({"kind": kind, "pos": list(pos)})
+
+
+def _boss_snapshot(boss, shots, room):
+    return {
+        "phase": boss.phase, "state": boss.state, "timer": boss.timer, "attack": boss.attack,
+        "pos": [boss.pos.x, boss.pos.y], "rect": [boss.rect.x, boss.rect.y, boss.rect.w, boss.rect.h],
+        "hp": boss.hp, "alive": boss.alive(), "grace": boss.grace,
+        "velocity": [boss.velocity.x, boss.velocity.y], "bounces": boss.bounces,
+        "roll_bounces_target": boss.roll_bounces_target, "flash": boss._flash,
+        "color": list(boss.color), "blink": boss._blink,
+        "spiral_angle": boss._spiral_angle, "spiral_left": boss._spiral_left,
+        "spiral_tick": boss._spiral_tick, "spiral_next": boss._spiral_next,
+        "juice_timer": boss._juice_timer,
+        "shots": [{"pos": [shot.pos.x, shot.pos.y], "velocity": [shot.velocity.x, shot.velocity.y],
+                   "rect": [shot.rect.x, shot.rect.y, shot.rect.w, shot.rect.h],
+                   "damage": shot.damage, "lifetime": shot.lifetime} for shot in shots],
+        "puddles": [{"pos": [p.rect.centerx, p.rect.centery], "lifetime": p.lifetime,
+                     "alpha": p.image.get_alpha()} for p in room.acid_puddles],
+        "dialogues": list(room.pending_dialogues),
+        "spawned": room.spawned,
+    }
+
+
+def boss_golden():
+    dt = 1 / 60
+    walls = [pygame.Rect(0, 0, 480, 8), pygame.Rect(0, 280, 480, 8),
+             pygame.Rect(0, 0, 8, 288), pygame.Rect(472, 0, 8, 288)]
+    trace = {}
+
+    shots = pygame.sprite.Group()
+    player = Player((100, 144), pygame.sprite.Group())
+    room = _BossRoom(player)
+    boss = Watermelon((240, 144), shots)
+    boss.attach(room)
+    boss_group = pygame.sprite.Group(boss)
+    phase1_trace = []
+    for tick in range(125):
+        boss_group.update(dt, player, walls)
+        shots.update(dt)
+        if tick in {0, 1, 30, 60, 83, 90, 112, 113, 119, 124}:
+            phase1_trace.append({"tick": tick, **_boss_snapshot(boss, shots, room)})
+    trace["phase1"] = {"player": [100, 144], "trace": phase1_trace}
+
+    random.seed(20261018)
+    shots = pygame.sprite.Group()
+    player = Player((400, 144), pygame.sprite.Group())
+    room = _BossRoom(player)
+    boss = Watermelon((240, 144), shots)
+    boss.attach(room)
+    boss.phase = 2
+    boss.hp = 70
+    boss.grace = 0.0
+    boss.state = "telegraph"
+    boss.attack = "roll"
+    boss.timer = dt
+    boss_group = pygame.sprite.Group(boss)
+    roll_trace = []
+    target_bounces = None
+    for tick in range(140):
+        boss_group.update(dt, player, walls)
+        if target_bounces is None and boss.state == "roll":
+            target_bounces = boss.roll_bounces_target
+        shots.update(dt)
+        if tick in {0, 1, 20, 40, 60, 63, 64, 80, 100, 127, 128, 139}:
+            roll_trace.append({"tick": tick, **_boss_snapshot(boss, shots, room)})
+    trace["phase2_roll"] = {"player": [400, 144], "roll_bounces_target": target_bounces,
+                            "trace": roll_trace}
+
+    shots = pygame.sprite.Group()
+    player = Player((100, 100), pygame.sprite.Group())
+    room = _BossRoom(player)
+    boss = Watermelon((240, 144), shots)
+    boss.attach(room)
+    boss.phase = 2
+    boss.hp = 30
+    boss.grace = 0.0
+    shots.add(Projectile((50, 50), (1, 0), 20, 1, (250, 230, 120)))
+    room.acid_puddles.add(AcidPuddle((60, 60)))
+    boss_group = pygame.sprite.Group(boss)
+    phase3_trace = []
+    for tick in range(8):
+        boss_group.update(dt, player, walls)
+        shots.update(dt)
+        room.acid_puddles.update(dt)
+        phase3_trace.append({"tick": tick, **_boss_snapshot(boss, shots, room)})
+    trace["phase3_start"] = {"player": [100, 100], "trace": phase3_trace}
+
+    # Ataque espiral aislado para capturar ángulos, cadencia, final y retorno a walk.
+    shots = pygame.sprite.Group()
+    player = Player((100, 144), pygame.sprite.Group())
+    room = _BossRoom(player)
+    boss = Watermelon((240, 144), shots)
+    boss.attach(room)
+    boss.phase = 3
+    boss.hp = 20
+    boss.grace = 0.0
+    boss.state = "telegraph"
+    boss.attack = "spiral"
+    boss.timer = 0.01
+    boss_group = pygame.sprite.Group(boss)
+    spiral_trace = []
+    for tick in range(20):
+        boss_group.update(0.1, player, walls)
+        shots.update(0.1)
+        if tick in {0, 1, 2, 5, 10, 19}:
+            spiral_trace.append({"tick": tick, **_boss_snapshot(boss, shots, room)})
+    trace["phase3_spiral"] = {"player": [100, 144], "trace": spiral_trace}
+
+    return {"phase_dialogue": {"1": "sandia_intro", "2": "sandia_fase2", "3": "sandia_fase3"},
+            "death_dialogue": "sandia_death", "trace": trace,
+            "damage": {"phase_for_hp": [phase_for_hp(70, 110, [0.66, 0.33]), phase_for_hp(30, 110, [0.66, 0.33])],
+                       "hp_after_phase3_stunned_hit": 27.2}}
+
+
 FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue,
-         "player.json": player_golden, "enemies.json": enemies_golden}
+         "player.json": player_golden, "enemies.json": enemies_golden, "boss.json": boss_golden}
 
 
 def render(data):

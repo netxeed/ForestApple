@@ -7,8 +7,8 @@ const Geo = preload("res://scripts/core/geo.gd")
 static var _enemy_data: Dictionary = {}
 
 var kind := ""
-var max_hp := 0
-var hp := 0
+var max_hp := 0.0
+var hp := 0.0
 var speed := 0.0
 var contact_damage := 0
 var stats: Dictionary = {}
@@ -33,7 +33,7 @@ func _init(enemy_kind: String, start: Vector2, shots: Array) -> void:
 		push_error("No existen estadísticas para el enemigo '%s'." % kind)
 		return
 	stats = _enemy_data[kind]
-	max_hp = int(stats.hp)
+	max_hp = float(stats.hp)
 	hp = max_hp
 	speed = float(stats.speed)
 	contact_damage = int(stats.contact_damage)
@@ -48,7 +48,7 @@ func attach(owner) -> void:
 	room = owner
 
 
-func take_damage(amount: int) -> void:
+func take_damage(amount: float) -> void:
 	hp -= amount
 	_flash = 0.08
 	if hp <= 0:

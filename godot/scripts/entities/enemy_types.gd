@@ -6,6 +6,7 @@ const Pineapple = preload("res://scripts/entities/pineapple.gd")
 const Banana = preload("res://scripts/entities/banana.gd")
 const Lemon = preload("res://scripts/entities/lemon.gd")
 const Peach = preload("res://scripts/entities/peach.gd")
+const Watermelon = preload("res://scripts/entities/watermelon.gd")
 
 const TYPES := {
 	"strawberry": Strawberry,
@@ -13,6 +14,7 @@ const TYPES := {
 	"banana": Banana,
 	"lemon": Lemon,
 	"peach": Peach,
+	"watermelon": Watermelon,
 }
 
 

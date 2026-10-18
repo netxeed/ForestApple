@@ -1,0 +1,3469 @@
+{
+ "damage": {
+  "hp_after_phase3_stunned_hit": 27.2,
+  "phase_for_hp": [
+   2,
+   3
+  ]
+ },
+ "death_dialogue": "sandia_death",
+ "phase_dialogue": {
+  "1": "sandia_intro",
+  "2": "sandia_fase2",
+  "3": "sandia_fase3"
+ },
+ "trace": {
+  "phase1": {
+   "player": [
+    100,
+    144
+   ],
+   "trace": [
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": 0.0,
+     "grace": 1.0,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 0,
+     "timer": 1.4,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": 0.0,
+     "grace": 0.9833333333333333,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      239.5,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 1,
+     "timer": 1.3833333333333333,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": 0.0,
+     "grace": 0.4999999999999985,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      225.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      207,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 30,
+     "timer": 0.900000000000001,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": 0.0,
+     "grace": 0.0,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      210.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      192,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 60,
+     "timer": 0.39999999999999986,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": 0.0,
+     "grace": 0.0,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      198.5,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      180,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 83,
+     "timer": 0.016666666666666604,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "fan",
+     "blink": 0.03666666666666668,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      198.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      180,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "telegraph",
+     "tick": 90,
+     "timer": 0.4,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "fan",
+     "blink": 0.07,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      198.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      180,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "telegraph",
+     "tick": 112,
+     "timer": 0.03333333333333344,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "fan",
+     "blink": 0.053333333333333344,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      198.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      180,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "telegraph",
+     "tick": 113,
+     "timer": 0.01666666666666677,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "fan",
+     "blink": 0.020000000000000014,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      196.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      178,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 3.916666666666667,
+       "pos": [
+        189.31455037423208,
+        148.05009167501504
+       ],
+       "rect": [
+        186,
+        145,
+        6,
+        6
+       ],
+       "velocity": [
+        -104.22539550921472,
+        48.6011001001805
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.916666666666667,
+       "pos": [
+        188.64382993176736,
+        146.07421296690683
+       ],
+       "rect": [
+        186,
+        143,
+        6,
+        6
+       ],
+       "velocity": [
+        -112.27404081879234,
+        24.890555602881836
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.916666666666667,
+       "pos": [
+        188.4166666666667,
+        144.0
+       ],
+       "rect": [
+        185,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -115.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.916666666666667,
+       "pos": [
+        188.64382993176736,
+        141.92578703309317
+       ],
+       "rect": [
+        186,
+        139,
+        6,
+        6
+       ],
+       "velocity": [
+        -112.27404081879234,
+        -24.890555602881836
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.916666666666667,
+       "pos": [
+        189.31455037423208,
+        139.94990832498496
+       ],
+       "rect": [
+        186,
+        137,
+        6,
+        6
+       ],
+       "velocity": [
+        -104.22539550921475,
+        -48.60110010018044
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 119,
+     "timer": 1.5333333333333337,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "fan",
+     "blink": 0.020000000000000014,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [
+      "sandia_intro"
+     ],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 110,
+     "juice_timer": 0.0,
+     "phase": 1,
+     "pos": [
+      193.5,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      176,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 3.833333333333334,
+       "pos": [
+        180.62910074846417,
+        152.10018335003008
+       ],
+       "rect": [
+        178,
+        149,
+        6,
+        6
+       ],
+       "velocity": [
+        -104.22539550921472,
+        48.6011001001805
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.833333333333334,
+       "pos": [
+        179.2876598635347,
+        148.14842593381366
+       ],
+       "rect": [
+        176,
+        145,
+        6,
+        6
+       ],
+       "velocity": [
+        -112.27404081879234,
+        24.890555602881836
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.833333333333334,
+       "pos": [
+        178.83333333333343,
+        144.0
+       ],
+       "rect": [
+        176,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -115.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.833333333333334,
+       "pos": [
+        179.2876598635347,
+        139.85157406618634
+       ],
+       "rect": [
+        176,
+        137,
+        6,
+        6
+       ],
+       "velocity": [
+        -112.27404081879234,
+        -24.890555602881836
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.833333333333334,
+       "pos": [
+        180.62910074846417,
+        135.89981664996992
+       ],
+       "rect": [
+        178,
+        133,
+        6,
+        6
+       ],
+       "velocity": [
+        -104.22539550921475,
+        -48.60110010018044
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 124,
+     "timer": 1.4500000000000006,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  "phase2_roll": {
+   "player": [
+    400,
+    144
+   ],
+   "roll_bounces_target": 2,
+   "trace": [
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": 0.043333333333333335,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 0,
+     "timer": 0.0,
+     "velocity": [
+      200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": 0.02666666666666667,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      243.33333333333334,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      225,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 1,
+     "timer": 0.0,
+     "velocity": [
+      200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      306.6666666666664,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      289,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 20,
+     "timer": 0.0,
+     "velocity": [
+      200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      373.3333333333327,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      355,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 40,
+     "timer": 0.0,
+     "velocity": [
+      200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      439.999999999999,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      422,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 60,
+     "timer": 0.0,
+     "velocity": [
+      200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      449.9999999999989,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      432,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 63,
+     "timer": 0.0,
+     "velocity": [
+      200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      453.33333333333223,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      435,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 64,
+     "timer": 0.0,
+     "velocity": [
+      200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 1,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      404.0000000000003,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      386,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 3.7333333333333343,
+       "pos": [
+        484.66666666666697,
+        144.0
+       ],
+       "rect": [
+        482,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        115.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.7333333333333343,
+       "pos": [
+        475.6846079563875,
+        165.68460795638748
+       ],
+       "rect": [
+        473,
+        163,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645297,
+        81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.7333333333333343,
+       "pos": [
+        454.0,
+        174.66666666666652
+       ],
+       "rect": [
+        451,
+        172,
+        6,
+        6
+       ],
+       "velocity": [
+        -0.0,
+        115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.7333333333333343,
+       "pos": [
+        432.3153920436125,
+        165.68460795638748
+       ],
+       "rect": [
+        429,
+        163,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645295,
+        81.31727983645297
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.7333333333333343,
+       "pos": [
+        423.33333333333303,
+        144.0
+       ],
+       "rect": [
+        420,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -115.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.7333333333333343,
+       "pos": [
+        432.3153920436125,
+        122.31539204361252
+       ],
+       "rect": [
+        429,
+        119,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645298,
+        -81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.7333333333333343,
+       "pos": [
+        454.0,
+        113.33333333333337
+       ],
+       "rect": [
+        451,
+        110,
+        6,
+        6
+       ],
+       "velocity": [
+        0.0,
+        -115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.7333333333333343,
+       "pos": [
+        475.6846079563875,
+        122.31539204361252
+       ],
+       "rect": [
+        473,
+        119,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645294,
+        -81.31727983645298
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 80,
+     "timer": 0.0,
+     "velocity": [
+      -200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 1,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      337.333333333334,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      319,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 3.400000000000002,
+       "pos": [
+        523.0000000000003,
+        144.0
+       ],
+       "rect": [
+        520,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        115.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.400000000000002,
+       "pos": [
+        502.79036790187183,
+        192.79036790187183
+       ],
+       "rect": [
+        500,
+        190,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645297,
+        81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.400000000000002,
+       "pos": [
+        454.0,
+        212.99999999999966
+       ],
+       "rect": [
+        451,
+        210,
+        6,
+        6
+       ],
+       "velocity": [
+        -0.0,
+        115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.400000000000002,
+       "pos": [
+        405.20963209812817,
+        192.79036790187183
+       ],
+       "rect": [
+        402,
+        190,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645295,
+        81.31727983645297
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.400000000000002,
+       "pos": [
+        384.9999999999993,
+        144.0
+       ],
+       "rect": [
+        382,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -115.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.400000000000002,
+       "pos": [
+        405.20963209812817,
+        95.20963209812817
+       ],
+       "rect": [
+        402,
+        92,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645298,
+        -81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.400000000000002,
+       "pos": [
+        454.0,
+        74.99999999999994
+       ],
+       "rect": [
+        451,
+        72,
+        6,
+        6
+       ],
+       "velocity": [
+        0.0,
+        -115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.400000000000002,
+       "pos": [
+        502.79036790187183,
+        95.20963209812817
+       ],
+       "rect": [
+        500,
+        92,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645294,
+        -81.31727983645298
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 100,
+     "timer": 0.0,
+     "velocity": [
+      -200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 1,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      247.33333333333442,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      229,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 2.9500000000000037,
+       "pos": [
+        574.7499999999993,
+        144.0
+       ],
+       "rect": [
+        572,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        115.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.9500000000000037,
+       "pos": [
+        539.3831438282757,
+        229.3831438282757
+       ],
+       "rect": [
+        536,
+        226,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645297,
+        81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.9500000000000037,
+       "pos": [
+        454.0,
+        264.74999999999955
+       ],
+       "rect": [
+        451,
+        262,
+        6,
+        6
+       ],
+       "velocity": [
+        -0.0,
+        115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.9500000000000037,
+       "pos": [
+        368.6168561717243,
+        229.3831438282757
+       ],
+       "rect": [
+        366,
+        226,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645295,
+        81.31727983645297
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.9500000000000037,
+       "pos": [
+        333.2499999999988,
+        144.0
+       ],
+       "rect": [
+        330,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -115.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.9500000000000037,
+       "pos": [
+        368.6168561717243,
+        58.616856171724294
+       ],
+       "rect": [
+        366,
+        56,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645298,
+        -81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.9500000000000037,
+       "pos": [
+        454.0,
+        23.249999999999954
+       ],
+       "rect": [
+        451,
+        20,
+        6,
+        6
+       ],
+       "velocity": [
+        0.0,
+        -115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.9500000000000037,
+       "pos": [
+        539.3831438282757,
+        58.616856171724294
+       ],
+       "rect": [
+        536,
+        56,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645294,
+        -81.31727983645298
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 127,
+     "timer": 0.0,
+     "velocity": [
+      -200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 1,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      244.00000000000108,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      226,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 2.933333333333337,
+       "pos": [
+        576.666666666666,
+        144.0
+       ],
+       "rect": [
+        574,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        115.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.933333333333337,
+       "pos": [
+        540.7384318255499,
+        230.73843182554992
+       ],
+       "rect": [
+        538,
+        228,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645297,
+        81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.933333333333337,
+       "pos": [
+        454.0,
+        266.66666666666623
+       ],
+       "rect": [
+        451,
+        264,
+        6,
+        6
+       ],
+       "velocity": [
+        -0.0,
+        115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.933333333333337,
+       "pos": [
+        367.2615681744501,
+        230.73843182554992
+       ],
+       "rect": [
+        364,
+        228,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645295,
+        81.31727983645297
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.933333333333337,
+       "pos": [
+        331.3333333333321,
+        144.0
+       ],
+       "rect": [
+        328,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -115.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.933333333333337,
+       "pos": [
+        367.2615681744501,
+        57.261568174450076
+       ],
+       "rect": [
+        364,
+        54,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645298,
+        -81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.933333333333337,
+       "pos": [
+        454.0,
+        21.333333333333286
+       ],
+       "rect": [
+        451,
+        18,
+        6,
+        6
+       ],
+       "velocity": [
+        0.0,
+        -115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.933333333333337,
+       "pos": [
+        540.7384318255499,
+        57.261568174450076
+       ],
+       "rect": [
+        538,
+        54,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645294,
+        -81.31727983645298
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 128,
+     "timer": 0.0,
+     "velocity": [
+      -200.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "roll",
+     "blink": 0.12,
+     "bounces": 1,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.0066666666666666645,
+     "grace": 0.0,
+     "hp": 70,
+     "juice_timer": 0.0,
+     "phase": 2,
+     "pos": [
+      207.3333333333343,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      189,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 2,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 2.7500000000000044,
+       "pos": [
+        597.7499999999989,
+        144.0
+       ],
+       "rect": [
+        595,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        115.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.7500000000000044,
+       "pos": [
+        555.6465997955663,
+        245.64659979556632
+       ],
+       "rect": [
+        553,
+        243,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645297,
+        81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.7500000000000044,
+       "pos": [
+        454.0,
+        287.7499999999998
+       ],
+       "rect": [
+        451,
+        285,
+        6,
+        6
+       ],
+       "velocity": [
+        -0.0,
+        115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.7500000000000044,
+       "pos": [
+        352.3534002044337,
+        245.64659979556632
+       ],
+       "rect": [
+        349,
+        243,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645295,
+        81.31727983645297
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.7500000000000044,
+       "pos": [
+        310.2499999999986,
+        144.0
+       ],
+       "rect": [
+        307,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -115.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.7500000000000044,
+       "pos": [
+        352.3534002044337,
+        42.35340020443368
+       ],
+       "rect": [
+        349,
+        39,
+        6,
+        6
+       ],
+       "velocity": [
+        -81.31727983645298,
+        -81.31727983645295
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.7500000000000044,
+       "pos": [
+        454.0,
+        0.24999999999995137
+       ],
+       "rect": [
+        451,
+        -3,
+        6,
+        6
+       ],
+       "velocity": [
+        0.0,
+        -115.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.7500000000000044,
+       "pos": [
+        555.6465997955663,
+        42.35340020443368
+       ],
+       "rect": [
+        553,
+        39,
+        6,
+        6
+       ],
+       "velocity": [
+        81.31727983645294,
+        -81.31727983645298
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "roll",
+     "tick": 139,
+     "timer": 0.0,
+     "velocity": [
+      -200.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  "phase3_spiral": {
+   "player": [
+    100,
+    144
+   ],
+   "trace": [
+    {
+     "alive": true,
+     "attack": "spiral",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.04000000000000001,
+     "grace": 0.0,
+     "hp": 20,
+     "juice_timer": 0.0,
+     "phase": 3,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [],
+     "spiral_angle": 180.0,
+     "spiral_left": 2.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "spiral",
+     "tick": 0,
+     "timer": -0.09000000000000001,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "spiral",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.04000000000000001,
+     "grace": 0.0,
+     "hp": 20,
+     "juice_timer": 0.0,
+     "phase": 3,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 3.9,
+       "pos": [
+        230.0,
+        144.0
+       ],
+       "rect": [
+        227,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -100.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.9,
+       "pos": [
+        250.0,
+        144.0
+       ],
+       "rect": [
+        247,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        100.0,
+        0.0
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 198.0,
+     "spiral_left": 1.9,
+     "spiral_next": false,
+     "spiral_tick": 0.14,
+     "state": "spiral",
+     "tick": 1,
+     "timer": -0.09000000000000001,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "spiral",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.04000000000000001,
+     "grace": 0.0,
+     "hp": 20,
+     "juice_timer": 0.0,
+     "phase": 3,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 3.8,
+       "pos": [
+        220.0,
+        144.0
+       ],
+       "rect": [
+        217,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -100.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.8,
+       "pos": [
+        260.0,
+        144.0
+       ],
+       "rect": [
+        257,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        100.0,
+        0.0
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 198.0,
+     "spiral_left": 1.7999999999999998,
+     "spiral_next": false,
+     "spiral_tick": 0.04000000000000001,
+     "state": "spiral",
+     "tick": 2,
+     "timer": -0.09000000000000001,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "spiral",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.04000000000000001,
+     "grace": 0.0,
+     "hp": 20,
+     "juice_timer": 0.0,
+     "phase": 3,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 3.4999999999999996,
+       "pos": [
+        190.0,
+        144.0
+       ],
+       "rect": [
+        187,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -100.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.4999999999999996,
+       "pos": [
+        290.0,
+        144.0
+       ],
+       "rect": [
+        287,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        100.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.6999999999999997,
+       "pos": [
+        211.4683045111454,
+        134.72949016875162
+       ],
+       "rect": [
+        208,
+        132,
+        6,
+        6
+       ],
+       "velocity": [
+        -95.10565162951536,
+        -30.901699437494727
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.6999999999999997,
+       "pos": [
+        268.5316954888546,
+        153.27050983124846
+       ],
+       "rect": [
+        266,
+        150,
+        6,
+        6
+       ],
+       "velocity": [
+        95.10565162951536,
+        30.901699437494745
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.9,
+       "pos": [
+        231.9098300562505,
+        138.12214747707526
+       ],
+       "rect": [
+        229,
+        135,
+        6,
+        6
+       ],
+       "velocity": [
+        -80.90169943749476,
+        -58.7785252292473
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.9,
+       "pos": [
+        248.0901699437495,
+        149.87785252292474
+       ],
+       "rect": [
+        245,
+        147,
+        6,
+        6
+       ],
+       "velocity": [
+        80.90169943749474,
+        58.778525229247315
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 234.0,
+     "spiral_left": 1.4999999999999996,
+     "spiral_next": false,
+     "spiral_tick": 0.14,
+     "state": "spiral",
+     "tick": 5,
+     "timer": -0.09000000000000001,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "spiral",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.04000000000000001,
+     "grace": 0.0,
+     "hp": 20,
+     "juice_timer": 0.0,
+     "phase": 3,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 2.999999999999999,
+       "pos": [
+        140.0,
+        144.0
+       ],
+       "rect": [
+        137,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -100.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.999999999999999,
+       "pos": [
+        340.0,
+        144.0
+       ],
+       "rect": [
+        337,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        100.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.1999999999999993,
+       "pos": [
+        163.9154786963877,
+        119.27864045000429
+       ],
+       "rect": [
+        161,
+        116,
+        6,
+        6
+       ],
+       "velocity": [
+        -95.10565162951536,
+        -30.901699437494727
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.1999999999999993,
+       "pos": [
+        316.0845213036123,
+        168.7213595499959
+       ],
+       "rect": [
+        313,
+        166,
+        6,
+        6
+       ],
+       "velocity": [
+        95.10565162951536,
+        30.901699437494745
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.3999999999999995,
+       "pos": [
+        191.45898033750308,
+        108.73288486245161
+       ],
+       "rect": [
+        188,
+        106,
+        6,
+        6
+       ],
+       "velocity": [
+        -80.90169943749476,
+        -58.7785252292473
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.3999999999999995,
+       "pos": [
+        288.5410196624968,
+        179.26711513754844
+       ],
+       "rect": [
+        286,
+        176,
+        6,
+        6
+       ],
+       "velocity": [
+        80.90169943749474,
+        58.778525229247315
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.5999999999999996,
+       "pos": [
+        216.48858990830104,
+        111.63932022500212
+       ],
+       "rect": [
+        213,
+        109,
+        6,
+        6
+       ],
+       "velocity": [
+        -58.77852522924732,
+        -80.90169943749473
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.5999999999999996,
+       "pos": [
+        263.51141009169896,
+        176.36067977499795
+       ],
+       "rect": [
+        261,
+        173,
+        6,
+        6
+       ],
+       "velocity": [
+        58.778525229247315,
+        80.90169943749474
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.8,
+       "pos": [
+        233.81966011250103,
+        124.97886967409693
+       ],
+       "rect": [
+        231,
+        122,
+        6,
+        6
+       ],
+       "velocity": [
+        -30.901699437494756,
+        -95.10565162951535
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.8,
+       "pos": [
+        246.18033988749897,
+        163.02113032590307
+       ],
+       "rect": [
+        243,
+        160,
+        6,
+        6
+       ],
+       "velocity": [
+        30.901699437494752,
+        95.10565162951536
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 270.0,
+     "spiral_left": 0.9999999999999992,
+     "spiral_next": false,
+     "spiral_tick": 0.04000000000000001,
+     "state": "spiral",
+     "tick": 10,
+     "timer": -0.09000000000000001,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": "spiral",
+     "blink": 0.12,
+     "bounces": 0,
+     "color": [
+      74,
+      160,
+      84
+     ],
+     "dialogues": [],
+     "flash": -0.04000000000000001,
+     "grace": 0.0,
+     "hp": 20,
+     "juice_timer": 0.0,
+     "phase": 3,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [
+      {
+       "damage": 1,
+       "lifetime": 2.0999999999999983,
+       "pos": [
+        50.0,
+        144.0
+       ],
+       "rect": [
+        47,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        -100.0,
+        -0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.0999999999999983,
+       "pos": [
+        430.0,
+        144.0
+       ],
+       "rect": [
+        427,
+        141,
+        6,
+        6
+       ],
+       "velocity": [
+        100.0,
+        0.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.2999999999999985,
+       "pos": [
+        78.32039222982388,
+        91.46711095625903
+       ],
+       "rect": [
+        75,
+        88,
+        6,
+        6
+       ],
+       "velocity": [
+        -95.10565162951536,
+        -30.901699437494727
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.2999999999999985,
+       "pos": [
+        401.6796077701761,
+        196.53288904374128
+       ],
+       "rect": [
+        399,
+        194,
+        6,
+        6
+       ],
+       "velocity": [
+        95.10565162951536,
+        30.901699437494745
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.4999999999999987,
+       "pos": [
+        118.64745084375772,
+        55.832212156129074
+       ],
+       "rect": [
+        116,
+        53,
+        6,
+        6
+       ],
+       "velocity": [
+        -80.90169943749476,
+        -58.7785252292473
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.4999999999999987,
+       "pos": [
+        361.35254915624193,
+        232.1677878438711
+       ],
+       "rect": [
+        358,
+        229,
+        6,
+        6
+       ],
+       "velocity": [
+        80.90169943749474,
+        58.778525229247315
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.699999999999999,
+       "pos": [
+        163.58791720197837,
+        38.82779073125687
+       ],
+       "rect": [
+        161,
+        36,
+        6,
+        6
+       ],
+       "velocity": [
+        -58.77852522924732,
+        -80.90169943749473
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.699999999999999,
+       "pos": [
+        316.41208279802163,
+        249.17220926874333
+       ],
+       "rect": [
+        313,
+        246,
+        6,
+        6
+       ],
+       "velocity": [
+        58.778525229247315,
+        80.90169943749474
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.899999999999999,
+       "pos": [
+        206.00813061875564,
+        39.3837832075331
+       ],
+       "rect": [
+        203,
+        36,
+        6,
+        6
+       ],
+       "velocity": [
+        -30.901699437494756,
+        -95.10565162951535
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 2.899999999999999,
+       "pos": [
+        273.9918693812442,
+        248.6162167924669
+       ],
+       "rect": [
+        271,
+        246,
+        6,
+        6
+       ],
+       "velocity": [
+        30.901699437494752,
+        95.10565162951536
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.099999999999999,
+       "pos": [
+        240.0,
+        54.0
+       ],
+       "rect": [
+        237,
+        51,
+        6,
+        6
+       ],
+       "velocity": [
+        0.0,
+        -100.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.099999999999999,
+       "pos": [
+        240.0,
+        234.0
+       ],
+       "rect": [
+        237,
+        231,
+        6,
+        6
+       ],
+       "velocity": [
+        -0.0,
+        100.0
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.2999999999999994,
+       "pos": [
+        261.6311896062462,
+        77.42604385933925
+       ],
+       "rect": [
+        259,
+        74,
+        6,
+        6
+       ],
+       "velocity": [
+        30.901699437494724,
+        -95.10565162951536
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.2999999999999994,
+       "pos": [
+        218.3688103937536,
+        210.57395614066075
+       ],
+       "rect": [
+        215,
+        208,
+        6,
+        6
+       ],
+       "velocity": [
+        -30.901699437494734,
+        95.10565162951536
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.4999999999999996,
+       "pos": [
+        269.3892626146237,
+        103.54915028125262
+       ],
+       "rect": [
+        266,
+        101,
+        6,
+        6
+       ],
+       "velocity": [
+        58.77852522924729,
+        -80.90169943749476
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.4999999999999996,
+       "pos": [
+        210.6107373853763,
+        184.45084971874743
+       ],
+       "rect": [
+        208,
+        181,
+        6,
+        6
+       ],
+       "velocity": [
+        -58.778525229247315,
+        80.90169943749476
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.6999999999999997,
+       "pos": [
+        264.2705098312484,
+        126.36644243122578
+       ],
+       "rect": [
+        261,
+        123,
+        6,
+        6
+       ],
+       "velocity": [
+        80.90169943749473,
+        -58.778525229247336
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.6999999999999997,
+       "pos": [
+        215.72949016875162,
+        161.63355756877422
+       ],
+       "rect": [
+        213,
+        159,
+        6,
+        6
+       ],
+       "velocity": [
+        -80.90169943749473,
+        58.77852522924732
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.9,
+       "pos": [
+        249.51056516295154,
+        140.9098300562505
+       ],
+       "rect": [
+        247,
+        138,
+        6,
+        6
+       ],
+       "velocity": [
+        95.10565162951535,
+        -30.901699437494763
+       ]
+      },
+      {
+       "damage": 1,
+       "lifetime": 3.9,
+       "pos": [
+        230.48943483704846,
+        147.0901699437495
+       ],
+       "rect": [
+        227,
+        144,
+        6,
+        6
+       ],
+       "velocity": [
+        -95.10565162951535,
+        30.901699437494752
+       ]
+      }
+     ],
+     "spawned": [],
+     "spiral_angle": 360.0,
+     "spiral_left": 0.09999999999999937,
+     "spiral_next": false,
+     "spiral_tick": 0.14,
+     "state": "spiral",
+     "tick": 19,
+     "timer": -0.09000000000000001,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  },
+  "phase3_start": {
+   "player": [
+    100,
+    100
+   ],
+   "trace": [
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      222,
+      86,
+      104
+     ],
+     "dialogues": [
+      "sandia_fase3"
+     ],
+     "flash": 0.0,
+     "grace": 1.0,
+     "hp": 30,
+     "juice_timer": 0.0,
+     "phase": 3,
+     "pos": [
+      240.0,
+      144.0
+     ],
+     "puddles": [],
+     "rect": [
+      222,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        48.0
+       ]
+      },
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        240.0
+       ]
+      },
+      {
+       "kind": "lemon",
+       "pos": [
+        432.0,
+        80.0
+       ]
+      }
+     ],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 0,
+     "timer": 1.4,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      222,
+      86,
+      104
+     ],
+     "dialogues": [
+      "sandia_fase3"
+     ],
+     "flash": 0.0,
+     "grace": 0.9833333333333333,
+     "hp": 30,
+     "juice_timer": 0.6,
+     "phase": 3,
+     "pos": [
+      239.12550575950718,
+      143.72515895298798
+     ],
+     "puddles": [
+      {
+       "alpha": 255,
+       "lifetime": 5.983333333333333,
+       "pos": [
+        239,
+        144
+       ]
+      }
+     ],
+     "rect": [
+      221,
+      126,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        48.0
+       ]
+      },
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        240.0
+       ]
+      },
+      {
+       "kind": "lemon",
+       "pos": [
+        432.0,
+        80.0
+       ]
+      }
+     ],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 1,
+     "timer": 1.3833333333333333,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      222,
+      86,
+      104
+     ],
+     "dialogues": [
+      "sandia_fase3"
+     ],
+     "flash": 0.0,
+     "grace": 0.9666666666666666,
+     "hp": 30,
+     "juice_timer": 0.5833333333333333,
+     "phase": 3,
+     "pos": [
+      238.25101151901436,
+      143.45031790597596
+     ],
+     "puddles": [
+      {
+       "alpha": 255,
+       "lifetime": 5.966666666666667,
+       "pos": [
+        239,
+        144
+       ]
+      }
+     ],
+     "rect": [
+      220,
+      125,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        48.0
+       ]
+      },
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        240.0
+       ]
+      },
+      {
+       "kind": "lemon",
+       "pos": [
+        432.0,
+        80.0
+       ]
+      }
+     ],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 2,
+     "timer": 1.3666666666666667,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      222,
+      86,
+      104
+     ],
+     "dialogues": [
+      "sandia_fase3"
+     ],
+     "flash": 0.0,
+     "grace": 0.9499999999999998,
+     "hp": 30,
+     "juice_timer": 0.5666666666666665,
+     "phase": 3,
+     "pos": [
+      237.37651727852153,
+      143.17547685896395
+     ],
+     "puddles": [
+      {
+       "alpha": 255,
+       "lifetime": 5.95,
+       "pos": [
+        239,
+        144
+       ]
+      }
+     ],
+     "rect": [
+      219,
+      125,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        48.0
+       ]
+      },
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        240.0
+       ]
+      },
+      {
+       "kind": "lemon",
+       "pos": [
+        432.0,
+        80.0
+       ]
+      }
+     ],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 3,
+     "timer": 1.35,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      222,
+      86,
+      104
+     ],
+     "dialogues": [
+      "sandia_fase3"
+     ],
+     "flash": 0.0,
+     "grace": 0.9333333333333331,
+     "hp": 30,
+     "juice_timer": 0.5499999999999998,
+     "phase": 3,
+     "pos": [
+      236.5020230380287,
+      142.90063581195193
+     ],
+     "puddles": [
+      {
+       "alpha": 255,
+       "lifetime": 5.933333333333334,
+       "pos": [
+        239,
+        144
+       ]
+      }
+     ],
+     "rect": [
+      219,
+      125,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        48.0
+       ]
+      },
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        240.0
+       ]
+      },
+      {
+       "kind": "lemon",
+       "pos": [
+        432.0,
+        80.0
+       ]
+      }
+     ],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 4,
+     "timer": 1.3333333333333335,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      222,
+      86,
+      104
+     ],
+     "dialogues": [
+      "sandia_fase3"
+     ],
+     "flash": 0.0,
+     "grace": 0.9166666666666664,
+     "hp": 30,
+     "juice_timer": 0.5333333333333331,
+     "phase": 3,
+     "pos": [
+      235.6275287975359,
+      142.6257947649399
+     ],
+     "puddles": [
+      {
+       "alpha": 255,
+       "lifetime": 5.916666666666667,
+       "pos": [
+        239,
+        144
+       ]
+      }
+     ],
+     "rect": [
+      218,
+      125,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        48.0
+       ]
+      },
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        240.0
+       ]
+      },
+      {
+       "kind": "lemon",
+       "pos": [
+        432.0,
+        80.0
+       ]
+      }
+     ],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 5,
+     "timer": 1.3166666666666669,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      222,
+      86,
+      104
+     ],
+     "dialogues": [
+      "sandia_fase3"
+     ],
+     "flash": 0.0,
+     "grace": 0.8999999999999997,
+     "hp": 30,
+     "juice_timer": 0.5166666666666664,
+     "phase": 3,
+     "pos": [
+      234.75303455704307,
+      142.3509537179279
+     ],
+     "puddles": [
+      {
+       "alpha": 255,
+       "lifetime": 5.9,
+       "pos": [
+        239,
+        144
+       ]
+      }
+     ],
+     "rect": [
+      217,
+      124,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        48.0
+       ]
+      },
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        240.0
+       ]
+      },
+      {
+       "kind": "lemon",
+       "pos": [
+        432.0,
+        80.0
+       ]
+      }
+     ],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 6,
+     "timer": 1.3000000000000003,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "alive": true,
+     "attack": null,
+     "blink": 0.0,
+     "bounces": 0,
+     "color": [
+      222,
+      86,
+      104
+     ],
+     "dialogues": [
+      "sandia_fase3"
+     ],
+     "flash": 0.0,
+     "grace": 0.883333333333333,
+     "hp": 30,
+     "juice_timer": 0.4999999999999997,
+     "phase": 3,
+     "pos": [
+      233.87854031655024,
+      142.07611267091588
+     ],
+     "puddles": [
+      {
+       "alpha": 255,
+       "lifetime": 5.883333333333334,
+       "pos": [
+        239,
+        144
+       ]
+      }
+     ],
+     "rect": [
+      216,
+      124,
+      36,
+      36
+     ],
+     "roll_bounces_target": 3,
+     "shots": [],
+     "spawned": [
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        48.0
+       ]
+      },
+      {
+       "kind": "banana",
+       "pos": [
+        432.0,
+        240.0
+       ]
+      },
+      {
+       "kind": "lemon",
+       "pos": [
+        432.0,
+        80.0
+       ]
+      }
+     ],
+     "spiral_angle": 0.0,
+     "spiral_left": 0.0,
+     "spiral_next": false,
+     "spiral_tick": 0.0,
+     "state": "walk",
+     "tick": 7,
+     "timer": 1.2833333333333337,
+     "velocity": [
+      0.0,
+      0.0
+     ]
+    }
+   ]
+  }
+ }
+}

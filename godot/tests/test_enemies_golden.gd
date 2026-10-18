@@ -41,7 +41,7 @@ func test_dano_y_muerte_de_enemigo() -> void:
 	enemy.take_damage(99)
 	check_eq(enemy.hp, -87, "el daño conserva la vida negativa del prototipo")
 	check(not enemy.alive, "vida no positiva mata al enemigo")
-	var hp_after_death: int = enemy.hp
+	var hp_after_death: float = enemy.hp
 	enemy.take_damage(1)
 	check_eq(enemy.hp, hp_after_death - 1, "el método conserva el comportamiento de daño de Python")
 

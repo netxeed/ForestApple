@@ -215,6 +215,11 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > patrones se comparan con valores dorados; la arena temporal permite combatir contra los cinco
 > enemigos. Falta integrar el combate con `room.gd`/`floor.gd` de la etapa 2.
 
+> **Estado de la etapa 4 (lógica del jefe):** `core/phases.gd` y `entities/watermelon.gd` portan las
+> fases, diálogos, abanicos, rodada con rebotes, aturdimiento, espiral, charcos de jugo y refuerzos.
+> `boss.json` prueba esas trazas con el número de rebotes fijado. El flujo de salas hasta el agujero
+> final aún no está conectado porque esta rama parte de `main`, donde falta integrar `room.gd`/`floor.gd`.
+
 ## 6. Archivo por archivo
 
 Cada entrada dice **qué hace**, **cómo se traduce** y **qué no se puede perder**. Las rutas son las del
@@ -563,6 +568,18 @@ vecinas). Esto último lo usa el minimapa.
   patrones; las compara `test_enemies_golden.gd` con tolerancia numérica de 1e-3 por el uso de vectores
   float de Godot.
 
+**`core/phases.py` y `entities/watermelon.py` → `scripts/core/phases.gd` y `entities/watermelon.gd`**
+(etapa 4, lógica del jefe)
+- `phase_for_hp` y las claves de diálogo conservan los umbrales de Python.
+- `Watermelon` conserva la máquina `walk` / `telegraph` / `roll` / `stunned` / `spiral`, las ventanas
+  de gracia, el daño variable, tiros, rebotes, jugo y refuerzos de la fase 3. `roll_bounces_override`
+  permite fijar el resultado del azar solo en las pruebas.
+- `boss.json` trae trazas pygame de fases y ataques; `test_boss_golden.gd` las compara con Godot. Se
+  preservó el doble avance vertical que aparece en `_move_and_bounce` del prototipo.
+- La lógica usa la interfaz de `Room` (`layout`, `current_player`, `acid_puddles`, `say` y `spawn_enemy`).
+  Esta rama la prueba con una sala simulada; conectar el agujero, HUD y flujo de partida requiere las
+  salas de la etapa 2.
+
 **Reglas comunes de movimiento (jugador y enemigos)**
 Mueven **un eje por vez**: suman al eje, recalculan el `rect` con `round_py`, y si choca con un
 sólido lo alinean al borde (`right = wall.left` si iba hacia `+`, `left = wall.right` si iba hacia `-`),
@@ -688,7 +705,7 @@ valores esperados y Godot los compara**.
      renglones medidos con un ancho fijo; y la traza de `DialogueRunner` (`shown_count` cada 1/60 s).
    - `player.json` y `enemies.json`: trayectorias del jugador y de cada enemigo con entradas fijas,
      sobre paredes conocidas y con posiciones/tiempos de disparo.
-   - `boss.json`: traza de la sandía con la semilla del azar fijada (estado y fase cada 1/60 s).
+   - `boss.json`: trazas pygame de fases y ataques de la sandía con el número de rebotes fijado.
 2. **`godot/tests/run_tests.gd`** extiende `SceneTree`, carga los `test_*.gd`, ejecuta cada `test_*`
    y termina con código de salida distinto de cero si algo falla. Sin dependencias externas (no se usa
    GUT, para no instalar nada). Se corre con:
