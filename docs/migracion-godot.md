@@ -225,8 +225,9 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 
 > **Estado de la etapa 5 (paridad automática):** pasan los valores dorados de fases, layout, diálogos,
 > salas, controles táctiles, jugador, enemigos y jefe. La suite Godot prueba también el recorrido integrado,
-> y CI ejecuta ambos motores. No se archiva Python todavía: el último punto del checklist 8 exige validar
-> los controles táctiles y diálogos en un teléfono Android real.
+> y CI ejecuta ambos motores. `godot/export_presets.cfg` ya traduce el paquete, la orientación, las
+> arquitecturas y las APIs de `buildozer.spec` al preset Android de Godot. No se archiva Python todavía:
+> el último punto del checklist 8 exige validar los controles táctiles y diálogos en un teléfono Android real.
 
 ## 6. Archivo por archivo
 
@@ -671,9 +672,9 @@ rebotes: inyecta un `RandomNumberGenerator` para poder fijar la semilla en las p
   byte por byte para incluirla en exportaciones. `test_data_paths.gd` comprueba que no diverjan.
   `DataPaths` permite datos externos y tiene respaldo con recursos embebidos.
 - `assets/icon.png`: ícono del proyecto (`application/config/icon`).
-- `main.py` → `main.tscn` + `scripts/main.gd`. `buildozer.spec` → preajuste de exportación de Android
-  (versión, paquete `org.forestapple.forestapple`, orientación horizontal, arquitecturas `arm64-v8a`
-  y `armeabi-v7a`, API mínima 23). `requirements.txt` desaparece.
+- `main.py` → `main.tscn` + `scripts/main.gd`. `buildozer.spec` → `export_presets.cfg`, preset Android
+  (versión 0.1.0, paquete `org.forestapple.forestapple`, orientación horizontal, arquitecturas
+  `arm64-v8a` y `armeabi-v7a`, API mínima 23 y objetivo 35). `requirements.txt` desaparece.
 - `.github/workflows/tests.yml`: corre Python y Godot 4.7.2, incluyendo importación, suite headless y
   smoke de dibujo.
 

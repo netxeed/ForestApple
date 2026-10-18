@@ -3,6 +3,7 @@ __pycache__/
 .venv/
 venv/
 .buildozer/
+godot/build/
 bin/
 .idea/
 .vscode/

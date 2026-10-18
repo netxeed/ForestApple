@@ -4,6 +4,7 @@ config_version=5
 [application]
 
 config/name="ForestApple"
+config/version="0.1.0"
 run/main_scene="res://game.tscn"
 config/icon="res://assets/icon.png"
 config/features=PackedStringArray("4.3")
