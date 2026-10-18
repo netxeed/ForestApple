@@ -1,7 +1,6 @@
 extends Node2D
 ## El director del juego (equivale a core/game.py): guarda las preferencias y la pila de estados,
 ## dibuja el estado de arriba y reparte las teclas y los toques. Es el `ctx` de todos los estados.
-## Todavía NO tiene partida real (piso, jugador): `start_run()` abre una partida provisoria.
 
 const S = preload("res://scripts/core/settings.gd")
 const Controls = preload("res://scripts/core/controls.gd")
@@ -14,8 +13,11 @@ const OptionsStateScript = preload("res://scripts/states/options_state.gd")
 const PauseStateScript = preload("res://scripts/states/pause_state.gd")
 const GameOverStateScript = preload("res://scripts/states/gameover_state.gd")
 const DialogueStateScript = preload("res://scripts/states/dialogue_state.gd")
-const PlayPlaceholderScript = preload("res://scripts/states/play_placeholder_state.gd")
+const RoomTestStateScript = preload("res://scripts/states/room_test_state.gd")
+const RoomTestPlayerScript = preload("res://scripts/states/room_test_player.gd")
+const FloorScript = preload("res://scripts/rooms/floor.gd")
 const MenuViewScript = preload("res://scripts/ui/menu_view.gd")
+const HUDViewScript = preload("res://scripts/ui/hud.gd")
 const ParserScript = preload("res://scripts/dialogue/dialogue_parser.gd")
 const LinesScript = preload("res://scripts/dialogue/dialogue_lines.gd")
 
@@ -26,15 +28,22 @@ var fps_selection := 1
 var running := true
 var states
 var menu_view
+var hud_view
 var font: Font = ThemeDB.fallback_font
 ## Dónde se guardan las preferencias (los tests lo cambian para no tocar las reales).
 var prefs_path: String = Preferences.DEFAULT_PATH
 ## Diálogos por clave. Si está vacío se leen de data/dialogues.json la primera vez que hacen falta.
 var dialogues: Dictionary = {}
+var floor
+var player
+var player_shots: Array = []
+var banner
+var hole_dialogue_shown := false
 
 
 func _init() -> void:
 	menu_view = MenuViewScript.new()
+	hud_view = HUDViewScript.new()
 	states = StackScript.new(self)
 	fps_selection = fps_options.find(S.FPS) if fps_options.has(S.FPS) else 1
 
@@ -74,7 +83,27 @@ func save_preferences() -> bool:
 # ---------- cambios de pantalla (los usan los estados) ----------
 ## Empieza una partida nueva (también sirve para reiniciar).
 func start_run() -> void:
-	states.switch_to(PlayPlaceholderScript.new())
+	if not _reset_run():
+		return
+	states.switch_to(RoomTestStateScript.new())
+
+
+func _reset_run() -> bool:
+	var errors: Array = []
+	floor = FloorScript.load_floor("floor1", errors)
+	if floor == null:
+		push_error("No se pudo cargar el piso:\n- " + "\n- ".join(errors))
+		return false
+	player = RoomTestPlayerScript.new()
+	player_shots = []
+	banner = null
+	hole_dialogue_shown = false
+	return true
+
+
+var room:
+	get:
+		return floor.current_room() if floor != null else null
 
 
 func open_pause() -> void:

@@ -1,0 +1,73 @@
+{
+ "floor": {
+  "all_non_boss_cleared": true,
+  "boss_locked_after_unlock": [],
+  "boss_locked_doors": [],
+  "boss_unlocked": true,
+  "initial_known": [
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    1
+   ]
+  ],
+  "initial_room_count": 1,
+  "initial_room_doors": 4,
+  "initially_all_non_boss_cleared": false,
+  "key_collected": true,
+  "key_consumed_to_unlock": true,
+  "key_dropped": true,
+  "key_position": [
+   232,
+   168
+  ],
+  "moved_to_window": true,
+  "window_boss_doors": [
+   "right"
+  ],
+  "window_locked_after_unlock": [],
+  "window_locked_doors": [
+   "right"
+  ]
+ },
+ "room": {
+  "door_rect": [
+   448,
+   128,
+   32,
+   32
+  ],
+  "entry_point_right": [
+   400.0,
+   144.0
+  ],
+  "exit_when_open": "right",
+  "key_collects_from_inflated_player": true,
+  "key_position": [
+   232,
+   104
+  ],
+  "key_trinkets": [
+   "key"
+  ],
+  "obstacles": 1,
+  "solids_cleared": 44,
+  "solids_with_enemy": 45,
+  "walls": 43
+ }
+}
