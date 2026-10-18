@@ -30,3 +30,12 @@ func golden(file_name: String) -> Variant:
 ## Ruta al data/dialogues.json del repositorio (los tests se corren desde el repositorio).
 func dialogues_path() -> String:
 	return ProjectSettings.globalize_path("res://").path_join("../data/dialogues.json")
+
+
+## Una tecla apretada, como la que llega de un teclado real (con tecla lógica y física).
+func make_key(code: Key) -> InputEventKey:
+	var event := InputEventKey.new()
+	event.keycode = code
+	event.physical_keycode = code
+	event.pressed = true
+	return event

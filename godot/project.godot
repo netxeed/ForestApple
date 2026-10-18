@@ -3,8 +3,8 @@ config_version=5
 
 [application]
 
-config/name="ForestApple (rebanada Godot)"
-run/main_scene="res://main.tscn"
+config/name="ForestApple"
+run/main_scene="res://game.tscn"
 config/features=PackedStringArray("4.3")
 
 [display]
