@@ -39,6 +39,8 @@ from entities.projectile import Projectile  # noqa: E402
 from entities.strawberry import Strawberry  # noqa: E402
 from entities.pineapple import Pineapple  # noqa: E402
 from entities.banana import Banana  # noqa: E402
+from entities.lemon import Lemon, AcidDrop, AcidPuddle  # noqa: E402
+from entities.peach import Peach  # noqa: E402
 from entities.patterns import fan, shot_at_angle  # noqa: E402
 import pygame  # noqa: E402
 
@@ -443,7 +445,67 @@ def enemies_golden():
     for angle in (0, 45, 90, 180, -90, 270):
         shot = shot_at_angle((12, 18), angle, 80, 2, (255, 140, 140), size=5, lifetime=3.0)
         angle_cases.append({"angle": angle, "velocity": [shot.velocity.x, shot.velocity.y]})
-    return {"trace": trace, "patterns": {"fans": pattern_cases, "angles": angle_cases}}
+    # Limón, gota y charco comparten grupos en ese mismo orden en Room.update.
+    lemon_shots = pygame.sprite.Group()
+    puddles = pygame.sprite.Group()
+    lemon = Lemon((100, 100), lemon_shots, puddles)
+    lemon_group = pygame.sprite.Group(lemon)
+    lemon_trace = []
+    for tick in range(120):
+        lemon_group.update(dt, target, walls)
+        lemon_shots.update(dt)
+        puddles.update(dt)
+        if tick in {0, 35, 70, 106, 107, 108, 119}:
+            lemon_trace.append({"tick": tick, **_enemy_snapshot(lemon, lemon_shots, {
+                "cooldown": lemon._cooldown,
+                "puddles": [{"pos": [p.rect.centerx, p.rect.centery], "lifetime": p.lifetime,
+                             "alpha": p.image.get_alpha()} for p in puddles],
+            })})
+    trace["lemon"] = {"start": [100, 100], "target": [220, 100], "dt": [1, 60],
+                      "walls": [[w.x, w.y, w.w, w.h] for w in walls], "trace": lemon_trace}
+
+    peach_shots = pygame.sprite.Group()
+    peach = Peach((100, 100), peach_shots)
+    peach_group = pygame.sprite.Group(peach)
+    peach_trace = []
+    for tick in range(72):
+        peach_group.update(dt, Player((220, 136), pygame.sprite.Group()), walls)
+        if tick in {0, 5, 11, 17, 23, 29, 35, 41, 47, 59, 71}:
+            peach_trace.append({"tick": tick, **_enemy_snapshot(peach, peach_shots, {
+                "velocity": [peach.velocity.x, peach.velocity.y], "aimed": peach._aimed})})
+    trace["peach"] = {"start": [100, 100], "target": [220, 136], "dt": [1, 60],
+                      "walls": [[w.x, w.y, w.w, w.h] for w in walls], "trace": peach_trace}
+
+    direct_puddles = pygame.sprite.Group()
+    drop = AcidDrop((10, 20), (3, 4), 100, direct_puddles)
+    drop_group = pygame.sprite.Group(drop)
+    direct_drop_trace = []
+    for tick in range(14):
+        drop_group.update(1 / 10)
+        direct_puddles.update(1 / 10)
+        if tick in {0, 1, 2, 5, 8, 13}:
+            direct_drop_trace.append({
+                "tick": tick, "pos": [drop.pos.x, drop.pos.y],
+                "velocity": [drop.velocity.x, drop.velocity.y],
+                "rect": [drop.rect.x, drop.rect.y, drop.rect.w, drop.rect.h],
+                "lifetime": drop.lifetime, "trail_timer": drop._trail_timer,
+                "alive": drop.alive(),
+                "puddles": [{"pos": [p.rect.centerx, p.rect.centery], "lifetime": p.lifetime,
+                             "alpha": p.image.get_alpha()} for p in direct_puddles],
+            })
+
+    puddle = AcidPuddle((40, 50))
+    puddle_group = pygame.sprite.Group(puddle)
+    puddle_trace = [{"lifetime": puddle.lifetime, "alpha": puddle.image.get_alpha(), "alive": puddle.alive()}]
+    for step in (0.5, 1.0, 1.0, 0.2):
+        puddle_group.update(step)
+        puddle_trace.append({"lifetime": puddle.lifetime, "alpha": puddle.image.get_alpha(), "alive": puddle.alive()})
+
+    return {"trace": trace, "patterns": {"fans": pattern_cases, "angles": angle_cases},
+            "acid_drop": {"start": [10, 20], "direction": [3, 4], "speed": 100,
+                          "dt": [1, 10], "trace": direct_drop_trace},
+            "acid_puddle": {"start": [40, 50], "lifetime": 2.6,
+                            "steps": [0.5, 1.0, 1.0, 0.2], "trace": puddle_trace}}
 
 
 FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue,

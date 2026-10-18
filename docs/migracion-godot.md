@@ -210,10 +210,10 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > sustituirá al integrarse `play_state.gd` con `room.gd`/`floor.gd`. `tools/export_golden.py` exporta
 > trazas desde pygame a `tests/golden/player.json`, contrastadas por `test_player_golden.gd`.
 
-> **Estado de la etapa 3 (parte 2, primer grupo):** ya están `entities/enemy.gd`, `enemy_types.gd`,
-> fresa, piña y banana. También se portaron `patterns.gd` y sus pruebas doradas de abanicos y disparos
-> angulares. La arena temporal permite combatir contra estos tres enemigos; faltan limón, durazno,
-> charcos y su integración con las salas de la etapa 2.
+> **Estado de la etapa 3 (parte 2):** ya están `entities/enemy.gd`, `enemy_types.gd`, fresa, piña,
+> banana, limón, durazno, `acid_drop.gd`, `acid_puddle.gd` y `patterns.gd`. `enemies.json` y los
+> patrones se comparan con valores dorados; la arena temporal permite combatir contra los cinco
+> enemigos. Falta integrar el combate con `room.gd`/`floor.gd` de la etapa 2.
 
 ## 6. Archivo por archivo
 
@@ -553,11 +553,15 @@ vecinas). Esto último lo usa el minimapa.
   a su velocidad; la banana conserva dirección y tiempos de carga, rango y enfriamiento tal como Python.
 - `patterns.gd` porta `fan` y `shot_at_angle` usando grados convertidos a radianes solo en el giro de
   Godot. Los proyectiles resultantes usan la misma clase `projectile.gd`.
-- La arena temporal de `player_test_state.gd` coloca un ejemplar de cada fruta, actualiza sus tiros,
+- `acid_drop.gd` conserva la gota móvil y su rastro cada 0,12 s; `acid_puddle.gd` conserva el daño,
+  duración de 2,6 s y desvanecimiento del último segundo. El limón persigue y dispara ácido; el durazno
+  apunta una vez y rebota por eje sin detenerse tras el primer choque.
+- La arena temporal de `player_test_state.gd` coloca los cinco enemigos, actualiza sus tiros y charcos,
   recibe daño, resuelve el contacto, los disparos del jugador y las paredes del recinto. Al integrar
   `play_state.gd`, estas reglas pasarán a `room.gd`.
-- `tests/golden/enemies.json` contiene trazas pygame de cada comportamiento y los patrones; las compara
-  `test_enemies_golden.gd` con tolerancia numérica de 1e-4 por el uso de vectores float de Godot.
+- `tests/golden/enemies.json` contiene trazas pygame de los cinco comportamientos, gotas, charcos y
+  patrones; las compara `test_enemies_golden.gd` con tolerancia numérica de 1e-3 por el uso de vectores
+  float de Godot.
 
 **Reglas comunes de movimiento (jugador y enemigos)**
 Mueven **un eje por vez**: suman al eje, recalculan el `rect` con `round_py`, y si choca con un
@@ -679,11 +683,11 @@ valores esperados y Godot los compara**.
    - `phases.json`: `phase_for_hp` para una malla de vidas y umbrales.
    - `layout.json`: por sala, las puertas, los rectángulos de pared/obstáculo/puerta, los
      `entry_point` y el resultado de `validate()` (también con los casos de error de los tests).
-   - `patterns.json`: ángulos y velocidades de `fan` y `shot_at_angle` con varios parámetros.
+   - `enemies.json`: trayectorias de los enemigos, gotas/charcos y patrones `fan` / `shot_at_angle`.
    - `dialogue.json`: para **cada** clave de `dialogues.json`, el texto visible, las pausas y los
      renglones medidos con un ancho fijo; y la traza de `DialogueRunner` (`shown_count` cada 1/60 s).
-   - `movement.json`: trayectorias del jugador y de cada enemigo con una entrada fija (por ejemplo, 3 s
-     moviendo a la derecha y disparando) sobre una sala conocida.
+   - `player.json` y `enemies.json`: trayectorias del jugador y de cada enemigo con entradas fijas,
+     sobre paredes conocidas y con posiciones/tiempos de disparo.
    - `boss.json`: traza de la sandía con la semilla del azar fijada (estado y fase cada 1/60 s).
 2. **`godot/tests/run_tests.gd`** extiende `SceneTree`, carga los `test_*.gd`, ejecuta cada `test_*`
    y termina con código de salida distinto de cero si algo falla. Sin dependencias externas (no se usa

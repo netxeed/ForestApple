@@ -10,6 +10,7 @@ const BORDER := 8.0
 var player
 var shots: Array = []
 var enemy_shots: Array = []
+var acid_puddles: Array = []
 var enemies: Array = []
 var walls: Array = []
 
@@ -27,6 +28,8 @@ func _init() -> void:
 		EnemyTypes.create("strawberry", Vector2(124, 86), enemy_shots),
 		EnemyTypes.create("pineapple", Vector2(240, 86), enemy_shots),
 		EnemyTypes.create("banana", Vector2(356, 86), enemy_shots),
+		EnemyTypes.create("lemon", Vector2(112, 210), enemy_shots, acid_puddles),
+		EnemyTypes.create("peach", Vector2(368, 210), enemy_shots),
 	]
 
 
@@ -52,6 +55,10 @@ func update(_game, dt: float) -> void:
 			shot.kill()
 		elif Geo.overlaps(shot.rect, player.rect):
 			player.take_damage(shot.damage)
+	for puddle in acid_puddles.duplicate():
+		puddle.update(dt)
+		if Geo.overlaps(puddle.rect, player.rect):
+			player.take_damage(puddle.damage)
 	for enemy in enemies:
 		if Geo.overlaps(enemy.rect, player.rect):
 			player.take_damage(enemy.contact_damage)
@@ -65,10 +72,10 @@ func update(_game, dt: float) -> void:
 				enemy.take_damage(shot.damage)
 				shot.kill()
 				break
-	shots = shots.filter(func(shot): return shot.alive)
-	enemy_shots = enemy_shots.filter(func(shot): return shot.alive)
-	enemies = enemies.filter(func(enemy): return enemy.alive)
-	player.shots = shots
+	_prune_alive(shots)
+	_prune_alive(enemy_shots)
+	_prune_alive(acid_puddles)
+	_prune_alive(enemies)
 
 
 func draw(game, canvas) -> void:
@@ -79,6 +86,8 @@ func draw(game, canvas) -> void:
 		shot.draw(canvas)
 	for shot in enemy_shots:
 		shot.draw(canvas)
+	for puddle in acid_puddles:
+		puddle.draw(canvas)
 	for enemy in enemies:
 		enemy.draw(canvas)
 	player.draw(canvas)
@@ -91,3 +100,9 @@ func _touches_wall(rect: Rect2) -> bool:
 		if Geo.overlaps(rect, wall):
 			return true
 	return false
+
+
+func _prune_alive(items: Array) -> void:
+	var alive_items: Array = items.filter(func(item): return item.alive)
+	items.clear()
+	items.append_array(alive_items)
