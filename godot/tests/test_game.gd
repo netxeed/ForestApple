@@ -127,7 +127,7 @@ func test_start_run_y_return_to_menu_cambian_la_pila() -> void:
 	game.states.push(MenuStateScript.new(game))
 	game.start_run()
 	check_eq(game.states.size(), 1, "una sola pantalla")
-	check(game.states.top().get_script().resource_path.ends_with("play_placeholder_state.gd"), "partida provisoria")
+	check(game.states.top().get_script().resource_path.ends_with("player_test_state.gd"), "arena de prueba del jugador")
 	game.open_pause()
 	check_eq(game.states.size(), 2, "pausa encima")
 	game.return_to_menu()

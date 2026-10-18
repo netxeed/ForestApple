@@ -203,6 +203,13 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > `setup()` devuelve el mensaje de error en vez de lanzar `ValueError`, y `validate()` devuelve las líneas del
 > mensaje (`[]` si está bien). Faltan `room`, `floor`, el minimapa/HUD, la llave y el fundido.
 
+> **Estado de la etapa 3 (parte 1):** `entities/player.gd` y `entities/projectile.gd` portan el movimiento
+> acelerado, fricción, colisión por ejes, disparos de cuatro direcciones, daño, invulnerabilidad y
+> teletransporte. `entities/trinket.gd` porta la llave consumible. `player_test_state.gd` reemplaza
+> provisionalmente la partida vacía por una arena con bordes, para probar movimiento y disparos; se
+> sustituirá al integrarse `play_state.gd` con `room.gd`/`floor.gd`. `tools/export_golden.py` exporta
+> trazas desde pygame a `tests/golden/player.json`, contrastadas por `test_player_golden.gd`.
+
 ## 6. Archivo por archivo
 
 Cada entrada dice **qué hace**, **cómo se traduce** y **qué no se puede perder**. Las rutas son las del
@@ -514,6 +521,22 @@ y estén limpias), `drop_key_if_ready()` (deja la llave **en la sala actual**, u
 vecinas). Esto último lo usa el minimapa.
 
 ### 6.6 `entities/`
+
+**`entities/player.py` y `entities/projectile.py` → `scripts/entities/player.gd` y `projectile.gd`**
+(parte 1 de la etapa 3)
+- Son clases `RefCounted`, no nodos de física. `Player.update(dt, walls, touch_move, touch_aim)` mantiene
+  aceleración/fricción, límite de velocidad, colisión por un eje, separación entre `pos` decimal y `rect`
+  entero, enfriamiento, disparo cardinal, invulnerabilidad y el parpadeo de alfa. Las entradas vectoriales
+  opcionales permiten hacer pruebas deterministas; si no se pasan, lee las acciones WASD y flechas.
+- `Projectile` mantiene posición y velocidad decimales, `Rect2` redondeado al estilo pygame, daño,
+  duración y `alive`; el estado dueño recorre una copia de los disparos y depura los que mueren.
+- `Player.draw(canvas)` usa `Sprites.get_texture("manzana")` cuando hay arte; si falta, dibuja el
+  cuadrado rojo redondeado de 20×20. El PNG de 32×32 se muestra a tamaño nativo, como indica
+  `godot/sprites/LEEME.md`; el rectángulo de combate permanece en 20×20.
+- Los datos del objeto llave son `id`, nombre y `consumable`; su dibujo y la recogida pertenecen a
+  `room.gd` (etapa 2), todavía pendiente de integrar en esta rama.
+- La arena temporal se inicia con Jugar y se prueba con WASD, flechas y Esc. No implementa salas,
+  HUD, enemigos ni puertas; esos componentes dependen de la etapa 2 y se conectarán en `play_state.gd`.
 
 **Reglas comunes de movimiento (jugador y enemigos)**
 Mueven **un eje por vez**: suman al eje, recalculan el `rect` con `round_py`, y si choca con un

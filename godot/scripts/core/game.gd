@@ -14,7 +14,7 @@ const OptionsStateScript = preload("res://scripts/states/options_state.gd")
 const PauseStateScript = preload("res://scripts/states/pause_state.gd")
 const GameOverStateScript = preload("res://scripts/states/gameover_state.gd")
 const DialogueStateScript = preload("res://scripts/states/dialogue_state.gd")
-const PlayPlaceholderScript = preload("res://scripts/states/play_placeholder_state.gd")
+const PlayerTestScript = preload("res://scripts/states/player_test_state.gd")
 const MenuViewScript = preload("res://scripts/ui/menu_view.gd")
 const ParserScript = preload("res://scripts/dialogue/dialogue_parser.gd")
 const LinesScript = preload("res://scripts/dialogue/dialogue_lines.gd")
@@ -74,7 +74,7 @@ func save_preferences() -> bool:
 # ---------- cambios de pantalla (los usan los estados) ----------
 ## Empieza una partida nueva (también sirve para reiniciar).
 func start_run() -> void:
-	states.switch_to(PlayPlaceholderScript.new())
+	states.switch_to(PlayerTestScript.new())
 
 
 func open_pause() -> void:

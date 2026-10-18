@@ -7,8 +7,8 @@ se vuelven a generar:
     python tools/export_golden.py            # escribe los archivos
     python tools/export_golden.py --check    # solo comprueba que estén al día (código 1 si no)
 
-Solo usa módulos sin pygame (fases, estructura del piso, diálogos). Los valores de movimiento,
-patrones de proyectiles y del jefe dependen de pygame y se agregan en las etapas 3 y 4.
+Los valores de movimiento y proyectiles se calculan con el prototipo pygame y se incorporan
+cuando se migran en la etapa 3. Los datos no alteran la lógica Python del juego.
 """
 
 import json
@@ -34,6 +34,9 @@ from rooms.layout import (  # noqa: E402
     FloorLayout,
     load_floor_layout,
 )
+from entities.player import Player  # noqa: E402
+from entities.projectile import Projectile  # noqa: E402
+import pygame  # noqa: E402
 
 GOLDEN_DIR = ROOT / "godot" / "tests" / "golden"
 
@@ -248,7 +251,114 @@ def runner_cases():
     return cases
 
 
-FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue}
+# ---------- jugador y proyectiles ----------
+class _Keys:
+    """Estado mínimo de teclado para ejecutar Player.update sin cambiar el prototipo."""
+
+    def __init__(self, pressed=()):
+        self.pressed = set(pressed)
+
+    def __getitem__(self, key):
+        return int(key in self.pressed)
+
+
+def player_snapshot(player, shots):
+    return {
+        "pos": [player.pos.x, player.pos.y],
+        "velocity": [player.velocity.x, player.velocity.y],
+        "rect": [player.rect.x, player.rect.y, player.rect.w, player.rect.h],
+        "hp": player.hp,
+        "alive": player.alive,
+        "cooldown": player._cooldown,
+        "invuln": player._invuln,
+        "image_alpha": player.image.get_alpha(),
+        "shots": [
+            {
+                "pos": [shot.pos.x, shot.pos.y],
+                "velocity": [shot.velocity.x, shot.velocity.y],
+                "rect": [shot.rect.x, shot.rect.y, shot.rect.w, shot.rect.h],
+                "damage": shot.damage,
+                "lifetime": shot.lifetime,
+            }
+            for shot in shots
+        ],
+    }
+
+
+def player_golden():
+    shots = pygame.sprite.Group()
+    player = Player((100, 100), shots)
+    walls = [pygame.Rect(0, 0, 480, 8), pygame.Rect(0, 280, 480, 8),
+             pygame.Rect(0, 0, 8, 288), pygame.Rect(472, 0, 8, 288),
+             pygame.Rect(150, 72, 20, 72)]
+    schedule = []
+    for tick in range(72):
+        pressed = []
+        if tick < 24:
+            pressed.append(pygame.K_d)
+        elif tick < 42:
+            pressed.extend((pygame.K_d, pygame.K_s))
+        elif tick < 54:
+            pressed.append(pygame.K_s)
+        elif tick < 66:
+            pressed.append(pygame.K_a)
+        if tick % 12 < 6:
+            pressed.append(pygame.K_RIGHT)
+        else:
+            pressed.append(pygame.K_DOWN)
+        schedule.append(pressed)
+
+    trace = []
+    sample_ticks = {0, 5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71}
+    for tick, pressed in enumerate(schedule):
+        with __import__("unittest.mock", fromlist=["patch"]).patch("pygame.key.get_pressed", return_value=_Keys(pressed)):
+            player.update(1 / 60, walls)
+        shots.update(1 / 60)
+        if tick in sample_ticks:
+            trace.append({"tick": tick, **player_snapshot(player, shots)})
+
+    # Daño, inmunidad y teletransporte se fotografían aparte para cubrir esos métodos puros.
+    damage_player = Player((50, 50), pygame.sprite.Group())
+    damage_player.take_damage(2)
+    first_hit = {"hp": damage_player.hp, "invuln": damage_player._invuln}
+    damage_player.take_damage(2)
+    blocked_hit = {"hp": damage_player.hp, "invuln": damage_player._invuln}
+    with __import__("unittest.mock", fromlist=["patch"]).patch("pygame.key.get_pressed", return_value=_Keys()):
+        damage_player.update(0.5, [])
+    after_half_second = {"hp": damage_player.hp, "invuln": damage_player._invuln, "image_alpha": damage_player.image.get_alpha()}
+    damage_player.teleport((201.5, 80.5))
+    teleported = {"pos": [damage_player.pos.x, damage_player.pos.y], "velocity": [damage_player.velocity.x, damage_player.velocity.y], "rect": [damage_player.rect.x, damage_player.rect.y, damage_player.rect.w, damage_player.rect.h]}
+
+    # Proyectil con dirección diagonal para verificar normalización, rectángulo, tiempo y muerte.
+    projectile = Projectile((10.5, 20.5), (3, 4), 100, 2, (255, 140, 140), size=7, lifetime=0.25)
+    projectile_group = pygame.sprite.Group(projectile)
+    projectile_trace = []
+    for step in (0.1, 0.1, 0.1):
+        projectile_group.update(step)
+        projectile_trace.append({
+            "pos": [projectile.pos.x, projectile.pos.y],
+            "velocity": [projectile.velocity.x, projectile.velocity.y],
+            "rect": [projectile.rect.x, projectile.rect.y, projectile.rect.w, projectile.rect.h],
+            "damage": projectile.damage,
+            "lifetime": projectile.lifetime,
+            "alive": projectile.alive(),
+        })
+
+    return {
+        "constants": {"size": Player.SIZE, "hp": player.max_hp, "speed": player.speed,
+                      "acceleration": player.acceleration, "friction": player.friction,
+                      "fire_rate": player.fire_rate, "shot_speed": player.shot_speed,
+                      "shot_damage": player.damage},
+        "movement": {"dt": [1, 60], "initial_pos": [100, 100], "walls": [[w.x, w.y, w.w, w.h] for w in walls], "trace": trace},
+        "damage": {"first_hit": first_hit, "blocked_hit": blocked_hit,
+                   "after_half_second": after_half_second, "teleported": teleported},
+        "projectile": {"start": [10.5, 20.5], "direction": [3, 4], "speed": 100,
+                       "size": 7, "lifetime_start": 0.25, "steps": [[1, 10]] * 3,
+                       "trace": projectile_trace},
+    }
+
+
+FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue, "player.json": player_golden}
 
 
 def render(data):
