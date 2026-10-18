@@ -1,8 +1,8 @@
 extends "res://scripts/states/state.gd"
 ## Una conversación: se dibuja encima de lo que esté abajo, que queda congelado (states/dialogue.py).
 ## Se abre con `game.say("clave")`. `dark` oscurece el fondo; `on_close` se llama al terminar.
-## Un toque o clic en cualquier lado pasa de línea. No lleva el antirrebote de Python (dedo + ratón a
-## la vez) porque Godot, con `emulate_mouse_from_touch`, entrega un solo evento por toque.
+## Un toque o clic en cualquier lado pasa de línea. No hace falta el antirrebote de Python porque el
+## proyecto desactiva `emulate_mouse_from_touch` y cada toque llega como un solo evento táctil.
 
 const S = preload("res://scripts/core/settings.gd")
 const BoxScript = preload("res://scripts/dialogue/dialogue_box.gd")

@@ -7,13 +7,15 @@ se vuelven a generar:
     python tools/export_golden.py            # escribe los archivos
     python tools/export_golden.py --check    # solo comprueba que estén al día (código 1 si no)
 
-Solo usa módulos sin pygame (fases, estructura del piso, diálogos). Los valores de movimiento,
-patrones de proyectiles y del jefe dependen de pygame y se agregan en las etapas 3 y 4.
+Los valores de movimiento y proyectiles se calculan con el prototipo pygame y se incorporan
+cuando se migran en la etapa 3. Los datos no alteran la lógica Python del juego.
 """
 
 import json
+import random
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -34,6 +36,18 @@ from rooms.layout import (  # noqa: E402
     FloorLayout,
     load_floor_layout,
 )
+from entities.player import Player  # noqa: E402
+from entities.projectile import Projectile  # noqa: E402
+from entities.strawberry import Strawberry  # noqa: E402
+from entities.pineapple import Pineapple  # noqa: E402
+from entities.banana import Banana  # noqa: E402
+from entities.lemon import Lemon, AcidDrop, AcidPuddle  # noqa: E402
+from entities.peach import Peach  # noqa: E402
+from entities.patterns import fan, shot_at_angle  # noqa: E402
+import pygame  # noqa: E402
+from entities.watermelon import Watermelon  # noqa: E402
+from core.phases import phase_for_hp  # noqa: E402
+from core.touch_controls import TouchControls  # noqa: E402
 
 GOLDEN_DIR = ROOT / "godot" / "tests" / "golden"
 
@@ -90,7 +104,6 @@ def layout():
         ],
         "validate_errors": [],
     }
-
 
     # Pisos mal armados: el validador junta TODOS los problemas y los mensajes se conservan.
     broken = []
@@ -258,6 +271,87 @@ def room_floor():
     }
 
 
+# ---------- controles táctiles ----------
+def touch_controls_golden():
+    """Casos de entrada táctil y vectores calculados por core/touch_controls.py."""
+    window_size = (480, 288)
+    cases = []
+
+    def record(name, controls, fingers):
+        for finger, position in fingers:
+            controls.fingers[finger] = position
+            controls.finger_roles[finger] = controls._control_at(position, position, window_size)
+        controls._rebuild()
+        cases.append({
+            "name": name,
+            "move_mode": controls.move_mode,
+            "aim_mode": controls.aim_mode,
+            "dynamic_base_enabled": controls.dynamic_base_enabled,
+            "base_travel_index": controls.base_travel_index,
+            "joystick_size_index": controls.joystick_size_index,
+            "fingers": [
+                {"id": finger, "position": list(position), "role": controls.finger_roles[finger]}
+                for finger, position in fingers
+            ],
+            "move": [controls.move.x, controls.move.y],
+            "aim": [controls.aim.x, controls.aim.y],
+            "finger_bases": {
+                str(finger): list(controls.finger_bases[finger])
+                for finger in controls.finger_bases
+            },
+        })
+
+    with patch("pygame.display.get_window_size", return_value=window_size):
+        controls = TouchControls()
+        record("flecha_derecha", controls, [(1, (91, 230))])
+
+        controls = TouchControls()
+        record("flecha_izquierda_disparo", controls, [(2, (389, 230))])
+
+        controls = TouchControls()
+        record("multitactil_diagonal_normalizada", controls,
+               [(1, (91, 230)), (2, (55, 194))])
+
+        controls = TouchControls()
+        controls.move_mode = "joystick"
+        record("joystick_media_fuerza", controls, [(1, (63, 230))])
+
+        controls = TouchControls()
+        controls.move_mode = "joystick"
+        record("joystick_zona_muerta", controls, [(1, (50, 230))])
+
+        controls = TouchControls()
+        controls.move_mode = "joystick"
+        record("joystick_base_dinamica_limitada", controls, [(1, (102, 230))])
+
+        controls = TouchControls()
+        ui_roles = {
+            "interact": controls._control_at(controls.INTERACT_CENTER, controls.INTERACT_CENTER, window_size),
+            "pause": controls._control_at(controls.PAUSE_CENTER, controls.PAUSE_CENTER, window_size),
+        }
+
+    return {
+        "constants": {
+            "interact_center": list(TouchControls.INTERACT_CENTER),
+            "pause_center": list(TouchControls.PAUSE_CENTER),
+            "button_radius": TouchControls.BUTTON_RADIUS,
+            "joystick_radius": TouchControls.JOYSTICK_RADIUS,
+            "deadzone": TouchControls.DEADZONE,
+            "base_travel_options": list(TouchControls.BASE_TRAVEL_OPTIONS),
+            "base_travel_labels": list(TouchControls.BASE_TRAVEL_LABELS),
+            "joystick_size_options": list(TouchControls.JOYSTICK_SIZE_OPTIONS),
+            "joystick_size_labels": list(TouchControls.JOYSTICK_SIZE_LABELS),
+            "default_move_mode": "flechas",
+            "default_aim_mode": "flechas",
+            "default_dynamic_base_enabled": True,
+            "default_base_travel_index": 1,
+            "default_joystick_size_index": 1,
+        },
+        "ui_roles": ui_roles,
+        "cases": cases,
+    }
+
+
 # ---------- diálogos ----------
 PARSE_CASES = [
     "Hola.",
@@ -348,7 +442,394 @@ def runner_cases():
     return cases
 
 
-FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue, "room_floor.json": room_floor}
+# ---------- jugador y proyectiles ----------
+class _Keys:
+    """Estado mínimo de teclado para ejecutar Player.update sin cambiar el prototipo."""
+
+    def __init__(self, pressed=()):
+        self.pressed = set(pressed)
+
+    def __getitem__(self, key):
+        return int(key in self.pressed)
+
+
+def player_snapshot(player, shots):
+    return {
+        "pos": [player.pos.x, player.pos.y],
+        "velocity": [player.velocity.x, player.velocity.y],
+        "rect": [player.rect.x, player.rect.y, player.rect.w, player.rect.h],
+        "hp": player.hp,
+        "alive": player.alive,
+        "cooldown": player._cooldown,
+        "invuln": player._invuln,
+        "image_alpha": player.image.get_alpha(),
+        "shots": [
+            {
+                "pos": [shot.pos.x, shot.pos.y],
+                "velocity": [shot.velocity.x, shot.velocity.y],
+                "rect": [shot.rect.x, shot.rect.y, shot.rect.w, shot.rect.h],
+                "damage": shot.damage,
+                "lifetime": shot.lifetime,
+            }
+            for shot in shots
+        ],
+    }
+
+
+def player_golden():
+    shots = pygame.sprite.Group()
+    player = Player((100, 100), shots)
+    walls = [pygame.Rect(0, 0, 480, 8), pygame.Rect(0, 280, 480, 8),
+             pygame.Rect(0, 0, 8, 288), pygame.Rect(472, 0, 8, 288),
+             pygame.Rect(150, 72, 20, 72)]
+    schedule = []
+    for tick in range(72):
+        pressed = []
+        if tick < 24:
+            pressed.append(pygame.K_d)
+        elif tick < 42:
+            pressed.extend((pygame.K_d, pygame.K_s))
+        elif tick < 54:
+            pressed.append(pygame.K_s)
+        elif tick < 66:
+            pressed.append(pygame.K_a)
+        if tick % 12 < 6:
+            pressed.append(pygame.K_RIGHT)
+        else:
+            pressed.append(pygame.K_DOWN)
+        schedule.append(pressed)
+
+    trace = []
+    sample_ticks = {0, 5, 11, 17, 23, 29, 35, 41, 47, 53, 59, 65, 71}
+    for tick, pressed in enumerate(schedule):
+        with __import__("unittest.mock", fromlist=["patch"]).patch("pygame.key.get_pressed", return_value=_Keys(pressed)):
+            player.update(1 / 60, walls)
+        shots.update(1 / 60)
+        if tick in sample_ticks:
+            trace.append({"tick": tick, **player_snapshot(player, shots)})
+
+    # Daño, inmunidad y teletransporte se fotografían aparte para cubrir esos métodos puros.
+    damage_player = Player((50, 50), pygame.sprite.Group())
+    damage_player.take_damage(2)
+    first_hit = {"hp": damage_player.hp, "invuln": damage_player._invuln}
+    damage_player.take_damage(2)
+    blocked_hit = {"hp": damage_player.hp, "invuln": damage_player._invuln}
+    with __import__("unittest.mock", fromlist=["patch"]).patch("pygame.key.get_pressed", return_value=_Keys()):
+        damage_player.update(0.5, [])
+    after_half_second = {"hp": damage_player.hp, "invuln": damage_player._invuln, "image_alpha": damage_player.image.get_alpha()}
+    damage_player.teleport((201.5, 80.5))
+    teleported = {"pos": [damage_player.pos.x, damage_player.pos.y], "velocity": [damage_player.velocity.x, damage_player.velocity.y], "rect": [damage_player.rect.x, damage_player.rect.y, damage_player.rect.w, damage_player.rect.h]}
+
+    # Proyectil con dirección diagonal para verificar normalización, rectángulo, tiempo y muerte.
+    projectile = Projectile((10.5, 20.5), (3, 4), 100, 2, (255, 140, 140), size=7, lifetime=0.25)
+    projectile_group = pygame.sprite.Group(projectile)
+    projectile_trace = []
+    for step in (0.1, 0.1, 0.1):
+        projectile_group.update(step)
+        projectile_trace.append({
+            "pos": [projectile.pos.x, projectile.pos.y],
+            "velocity": [projectile.velocity.x, projectile.velocity.y],
+            "rect": [projectile.rect.x, projectile.rect.y, projectile.rect.w, projectile.rect.h],
+            "damage": projectile.damage,
+            "lifetime": projectile.lifetime,
+            "alive": projectile.alive(),
+        })
+
+    return {
+        "constants": {"size": Player.SIZE, "hp": player.max_hp, "speed": player.speed,
+                      "acceleration": player.acceleration, "friction": player.friction,
+                      "fire_rate": player.fire_rate, "shot_speed": player.shot_speed,
+                      "shot_damage": player.damage},
+        "movement": {"dt": [1, 60], "initial_pos": [100, 100], "walls": [[w.x, w.y, w.w, w.h] for w in walls], "trace": trace},
+        "damage": {"first_hit": first_hit, "blocked_hit": blocked_hit,
+                   "after_half_second": after_half_second, "teleported": teleported},
+        "projectile": {"start": [10.5, 20.5], "direction": [3, 4], "speed": 100,
+                       "size": 7, "lifetime_start": 0.25, "steps": [[1, 10]] * 3,
+                       "trace": projectile_trace},
+    }
+
+
+def _enemy_snapshot(enemy, shots, extra=None):
+    value = {
+        "pos": [enemy.pos.x, enemy.pos.y],
+        "rect": [enemy.rect.x, enemy.rect.y, enemy.rect.w, enemy.rect.h],
+        "hp": enemy.hp,
+        "alive": enemy.alive(),
+        "flash": enemy._flash,
+        "shots": [
+            {"pos": [shot.pos.x, shot.pos.y], "velocity": [shot.velocity.x, shot.velocity.y],
+             "rect": [shot.rect.x, shot.rect.y, shot.rect.w, shot.rect.h],
+             "damage": shot.damage, "lifetime": shot.lifetime}
+            for shot in shots
+        ],
+    }
+    if extra:
+        value.update(extra)
+    return value
+
+
+def enemies_golden():
+    dt = 1 / 60
+    walls = [pygame.Rect(0, 0, 480, 8), pygame.Rect(0, 280, 480, 8),
+             pygame.Rect(0, 0, 8, 288), pygame.Rect(472, 0, 8, 288),
+             pygame.Rect(145, 70, 20, 70)]
+    target = Player((220, 100), pygame.sprite.Group())
+    trace = {}
+
+    shots = pygame.sprite.Group()
+    strawberry = Strawberry((100, 100), shots)
+    enemies = pygame.sprite.Group(strawberry)
+    strawberry_trace = []
+    for tick in range(78):
+        strawberry.update(dt, target, walls)
+        shots.update(dt)
+        if tick in {0, 35, 70, 71, 77}:
+            strawberry_trace.append({"tick": tick, **_enemy_snapshot(strawberry, shots, {"cooldown": strawberry._cooldown})})
+    trace["strawberry"] = {"start": [100, 100], "target": [220, 100], "dt": [1, 60], "trace": strawberry_trace}
+
+    shots = pygame.sprite.Group()
+    pineapple = Pineapple((100, 100), shots)
+    enemies = pygame.sprite.Group(pineapple)
+    pineapple_trace = []
+    for tick in range(48):
+        pineapple.update(dt, target, walls)
+        shots.update(dt)
+        if tick in {0, 5, 11, 17, 23, 31, 39, 47}:
+            pineapple_trace.append({"tick": tick, **_enemy_snapshot(pineapple, shots)})
+    trace["pineapple"] = {"start": [100, 100], "target": [220, 100], "dt": [1, 60],
+                          "walls": [[w.x, w.y, w.w, w.h] for w in walls], "trace": pineapple_trace}
+
+    banana_target = Player((220, 100), pygame.sprite.Group())
+    shots = pygame.sprite.Group()
+    banana = Banana((100, 100), shots)
+    enemies = pygame.sprite.Group(banana)
+    banana_trace = []
+    for tick in range(54):
+        banana.update(dt, banana_target, walls[:4])
+        if tick in {0, 1, 5, 11, 17, 18, 23, 29, 35, 41, 47, 53}:
+            banana_trace.append({"tick": tick, **_enemy_snapshot(banana, shots, {
+                "charge_time": banana._charge_time,
+                "charge_cooldown": banana._charge_cooldown,
+                "charge_direction": [banana._charge_direction.x, banana._charge_direction.y],
+            })})
+    trace["banana"] = {"start": [100, 100], "target": [220, 100], "dt": [1, 60], "trace": banana_trace}
+
+    pattern_cases = []
+    for origin, destination, count, spread, speed in [
+        ((20, 30), (120, 90), 5, 50, 115), ((4, -7), (4, -7), 1, 180, 12),
+        ((0, 0), (-20, 4), 4, 90, 35),
+    ]:
+        projectiles = fan(origin, destination, count, spread, speed, 1, (250, 230, 120))
+        pattern_cases.append({"origin": list(origin), "target": list(destination), "count": count,
+                              "spread_deg": spread, "speed": speed,
+                              "shots": [{"pos": [shot.pos.x, shot.pos.y],
+                                         "velocity": [shot.velocity.x, shot.velocity.y],
+                                         "rect": [shot.rect.x, shot.rect.y, shot.rect.w, shot.rect.h]}
+                                        for shot in projectiles]})
+    angle_cases = []
+    for angle in (0, 45, 90, 180, -90, 270):
+        shot = shot_at_angle((12, 18), angle, 80, 2, (255, 140, 140), size=5, lifetime=3.0)
+        angle_cases.append({"angle": angle, "velocity": [shot.velocity.x, shot.velocity.y]})
+    # Limón, gota y charco comparten grupos en ese mismo orden en Room.update.
+    lemon_shots = pygame.sprite.Group()
+    puddles = pygame.sprite.Group()
+    lemon = Lemon((100, 100), lemon_shots, puddles)
+    lemon_group = pygame.sprite.Group(lemon)
+    lemon_trace = []
+    for tick in range(120):
+        lemon_group.update(dt, target, walls)
+        lemon_shots.update(dt)
+        puddles.update(dt)
+        if tick in {0, 35, 70, 106, 107, 108, 119}:
+            lemon_trace.append({"tick": tick, **_enemy_snapshot(lemon, lemon_shots, {
+                "cooldown": lemon._cooldown,
+                "puddles": [{"pos": [p.rect.centerx, p.rect.centery], "lifetime": p.lifetime,
+                             "alpha": p.image.get_alpha()} for p in puddles],
+            })})
+    trace["lemon"] = {"start": [100, 100], "target": [220, 100], "dt": [1, 60],
+                      "walls": [[w.x, w.y, w.w, w.h] for w in walls], "trace": lemon_trace}
+
+    peach_shots = pygame.sprite.Group()
+    peach = Peach((100, 100), peach_shots)
+    peach_group = pygame.sprite.Group(peach)
+    peach_trace = []
+    for tick in range(72):
+        peach_group.update(dt, Player((220, 136), pygame.sprite.Group()), walls)
+        if tick in {0, 5, 11, 17, 23, 29, 35, 41, 47, 59, 71}:
+            peach_trace.append({"tick": tick, **_enemy_snapshot(peach, peach_shots, {
+                "velocity": [peach.velocity.x, peach.velocity.y], "aimed": peach._aimed})})
+    trace["peach"] = {"start": [100, 100], "target": [220, 136], "dt": [1, 60],
+                      "walls": [[w.x, w.y, w.w, w.h] for w in walls], "trace": peach_trace}
+
+    direct_puddles = pygame.sprite.Group()
+    drop = AcidDrop((10, 20), (3, 4), 100, direct_puddles)
+    drop_group = pygame.sprite.Group(drop)
+    direct_drop_trace = []
+    for tick in range(14):
+        drop_group.update(1 / 10)
+        direct_puddles.update(1 / 10)
+        if tick in {0, 1, 2, 5, 8, 13}:
+            direct_drop_trace.append({
+                "tick": tick, "pos": [drop.pos.x, drop.pos.y],
+                "velocity": [drop.velocity.x, drop.velocity.y],
+                "rect": [drop.rect.x, drop.rect.y, drop.rect.w, drop.rect.h],
+                "lifetime": drop.lifetime, "trail_timer": drop._trail_timer,
+                "alive": drop.alive(),
+                "puddles": [{"pos": [p.rect.centerx, p.rect.centery], "lifetime": p.lifetime,
+                             "alpha": p.image.get_alpha()} for p in direct_puddles],
+            })
+
+    puddle = AcidPuddle((40, 50))
+    puddle_group = pygame.sprite.Group(puddle)
+    puddle_trace = [{"lifetime": puddle.lifetime, "alpha": puddle.image.get_alpha(), "alive": puddle.alive()}]
+    for step in (0.5, 1.0, 1.0, 0.2):
+        puddle_group.update(step)
+        puddle_trace.append({"lifetime": puddle.lifetime, "alpha": puddle.image.get_alpha(), "alive": puddle.alive()})
+
+    return {"trace": trace, "patterns": {"fans": pattern_cases, "angles": angle_cases},
+            "acid_drop": {"start": [10, 20], "direction": [3, 4], "speed": 100,
+                          "dt": [1, 10], "trace": direct_drop_trace},
+            "acid_puddle": {"start": [40, 50], "lifetime": 2.6,
+                            "steps": [0.5, 1.0, 1.0, 0.2], "trace": puddle_trace}}
+
+
+class _BossRoom:
+    def __init__(self, player=None, layout=None):
+        self.current_player = player
+        self.layout = layout or (["#" * 15] + ["#" + "." * 13 + "#" for _ in range(7)] + ["#" * 15])
+        self.acid_puddles = pygame.sprite.Group()
+        self.pending_dialogues = []
+        self.spawned = []
+
+    def say(self, key):
+        self.pending_dialogues.append(key)
+
+    def spawn_enemy(self, kind, pos):
+        self.spawned.append({"kind": kind, "pos": list(pos)})
+
+
+def _boss_snapshot(boss, shots, room):
+    return {
+        "phase": boss.phase, "state": boss.state, "timer": boss.timer, "attack": boss.attack,
+        "pos": [boss.pos.x, boss.pos.y], "rect": [boss.rect.x, boss.rect.y, boss.rect.w, boss.rect.h],
+        "hp": boss.hp, "alive": boss.alive(), "grace": boss.grace,
+        "velocity": [boss.velocity.x, boss.velocity.y], "bounces": boss.bounces,
+        "roll_bounces_target": boss.roll_bounces_target, "flash": boss._flash,
+        "color": list(boss.color), "blink": boss._blink,
+        "spiral_angle": boss._spiral_angle, "spiral_left": boss._spiral_left,
+        "spiral_tick": boss._spiral_tick, "spiral_next": boss._spiral_next,
+        "juice_timer": boss._juice_timer,
+        "shots": [{"pos": [shot.pos.x, shot.pos.y], "velocity": [shot.velocity.x, shot.velocity.y],
+                   "rect": [shot.rect.x, shot.rect.y, shot.rect.w, shot.rect.h],
+                   "damage": shot.damage, "lifetime": shot.lifetime} for shot in shots],
+        "puddles": [{"pos": [p.rect.centerx, p.rect.centery], "lifetime": p.lifetime,
+                     "alpha": p.image.get_alpha()} for p in room.acid_puddles],
+        "dialogues": list(room.pending_dialogues),
+        "spawned": room.spawned,
+    }
+
+
+def boss_golden():
+    dt = 1 / 60
+    walls = [pygame.Rect(0, 0, 480, 8), pygame.Rect(0, 280, 480, 8),
+             pygame.Rect(0, 0, 8, 288), pygame.Rect(472, 0, 8, 288)]
+    trace = {}
+
+    shots = pygame.sprite.Group()
+    player = Player((100, 144), pygame.sprite.Group())
+    room = _BossRoom(player)
+    boss = Watermelon((240, 144), shots)
+    boss.attach(room)
+    boss_group = pygame.sprite.Group(boss)
+    phase1_trace = []
+    for tick in range(125):
+        boss_group.update(dt, player, walls)
+        shots.update(dt)
+        if tick in {0, 1, 30, 60, 83, 90, 112, 113, 119, 124}:
+            phase1_trace.append({"tick": tick, **_boss_snapshot(boss, shots, room)})
+    trace["phase1"] = {"player": [100, 144], "trace": phase1_trace}
+
+    random.seed(20261018)
+    shots = pygame.sprite.Group()
+    player = Player((400, 144), pygame.sprite.Group())
+    room = _BossRoom(player)
+    boss = Watermelon((240, 144), shots)
+    boss.attach(room)
+    boss.phase = 2
+    boss.hp = 70
+    boss.grace = 0.0
+    boss.state = "telegraph"
+    boss.attack = "roll"
+    boss.timer = dt
+    boss_group = pygame.sprite.Group(boss)
+    roll_trace = []
+    target_bounces = None
+    for tick in range(140):
+        boss_group.update(dt, player, walls)
+        if target_bounces is None and boss.state == "roll":
+            target_bounces = boss.roll_bounces_target
+        shots.update(dt)
+        if tick in {0, 1, 20, 40, 60, 63, 64, 80, 100, 127, 128, 139}:
+            roll_trace.append({"tick": tick, **_boss_snapshot(boss, shots, room)})
+    trace["phase2_roll"] = {"player": [400, 144], "roll_bounces_target": target_bounces,
+                            "trace": roll_trace}
+
+    shots = pygame.sprite.Group()
+    player = Player((100, 100), pygame.sprite.Group())
+    room = _BossRoom(player)
+    boss = Watermelon((240, 144), shots)
+    boss.attach(room)
+    boss.phase = 2
+    boss.hp = 30
+    boss.grace = 0.0
+    shots.add(Projectile((50, 50), (1, 0), 20, 1, (250, 230, 120)))
+    room.acid_puddles.add(AcidPuddle((60, 60)))
+    boss_group = pygame.sprite.Group(boss)
+    phase3_trace = []
+    for tick in range(8):
+        boss_group.update(dt, player, walls)
+        shots.update(dt)
+        room.acid_puddles.update(dt)
+        phase3_trace.append({"tick": tick, **_boss_snapshot(boss, shots, room)})
+    trace["phase3_start"] = {"player": [100, 100], "trace": phase3_trace}
+
+    # Ataque espiral aislado para capturar ángulos, cadencia, final y retorno a walk.
+    shots = pygame.sprite.Group()
+    player = Player((100, 144), pygame.sprite.Group())
+    room = _BossRoom(player)
+    boss = Watermelon((240, 144), shots)
+    boss.attach(room)
+    boss.phase = 3
+    boss.hp = 20
+    boss.grace = 0.0
+    boss.state = "telegraph"
+    boss.attack = "spiral"
+    boss.timer = 0.01
+    boss_group = pygame.sprite.Group(boss)
+    spiral_trace = []
+    for tick in range(20):
+        boss_group.update(0.1, player, walls)
+        shots.update(0.1)
+        if tick in {0, 1, 2, 5, 10, 19}:
+            spiral_trace.append({"tick": tick, **_boss_snapshot(boss, shots, room)})
+    trace["phase3_spiral"] = {"player": [100, 144], "trace": spiral_trace}
+
+    return {"phase_dialogue": {"1": "sandia_intro", "2": "sandia_fase2", "3": "sandia_fase3"},
+            "death_dialogue": "sandia_death", "trace": trace,
+            "damage": {"phase_for_hp": [phase_for_hp(70, 110, [0.66, 0.33]), phase_for_hp(30, 110, [0.66, 0.33])],
+                       "hp_after_phase3_stunned_hit": 27.2}}
+
+
+FILES = {
+    "phases.json": phases,
+    "layout.json": layout,
+    "dialogue.json": dialogue,
+    "room_floor.json": room_floor,
+    "touch_controls.json": touch_controls_golden,
+    "player.json": player_golden,
+    "enemies.json": enemies_golden,
+    "boss.json": boss_golden,
+}
 
 
 def render(data):

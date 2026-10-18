@@ -7,6 +7,8 @@ const FloorScript = preload("res://scripts/rooms/floor.gd")
 const LayoutScript = preload("res://scripts/rooms/layout.gd")
 const GameScript = preload("res://scripts/core/game.gd")
 const Controls = preload("res://scripts/core/controls.gd")
+const RoomTestStateScript = preload("res://scripts/states/room_test_state.gd")
+const RoomTestPlayerScript = preload("res://scripts/states/room_test_player.gd")
 
 
 class EnemyStub extends RefCounted:
@@ -176,8 +178,14 @@ func test_sala_temporal_recorrible_y_llave_abre_el_jefe() -> void:
 	Controls.setup()
 	var game = GameScript.new()
 	game.states.quiet = true
-	game.start_run()
-	var state = game.states.top()
+	var errors: Array = []
+	game.floor = FloorScript.load_floor("floor1", errors)
+	game.player = RoomTestPlayerScript.new()
+	game.player_shots = []
+	game.banner = null
+	game.hole_dialogue_shown = false
+	var state = RoomTestStateScript.new()
+	game.states.push(state)
 	var route: Array[String] = ["up", "left", "down", "down", "right", "up", "right"]
 	for direction in route:
 		_cross_room(game, state, direction)

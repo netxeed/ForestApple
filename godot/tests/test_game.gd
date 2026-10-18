@@ -33,13 +33,39 @@ func test_filas_de_opciones_en_escritorio_y_en_movil() -> void:
 	names = []
 	for entry in game.option_entries():
 		names.append(entry[0])
-	check_eq(names, ["fps", "debug", "back"], "móvil: sin pantalla completa")
+	check_eq(names, ["fps", "debug", "move", "aim", "dynamic", "travel", "size", "back"], "móvil: opciones táctiles")
 	check_eq(game.option_row_y(0), 120.0, "primera fila en móvil")
 	check_eq(game.option_row_y(2), 160.0, "tercera fila en móvil")
 	game.is_mobile = false
 	check_eq(game.option_row_y(0), 132.0, "primera fila en escritorio")
 	check_eq(game.option_row_y(2), 192.0, "tercera fila en escritorio")
 	game.free()
+
+
+func test_opciones_tactiles_se_guardan_y_se_recuperan() -> void:
+	var game = _game()
+	game.is_mobile = true
+	game.change_option("move", 1)
+	game.change_option("aim", 1)
+	game.change_option("dynamic", 1)
+	game.change_option("travel", 1)
+	game.change_option("size", -1)
+	var saved: Dictionary = Preferences.load_from(PATH)
+	check_eq(saved.get("move_mode"), "joystick", "se guarda el modo de movimiento")
+	check_eq(saved.get("aim_mode"), "joystick", "se guarda el modo de disparo")
+	check_eq(saved.get("dynamic_base_enabled"), false, "se guarda la base dinámica")
+	check_eq(saved.get("base_travel_index"), 2, "se guarda el recorrido")
+	check_eq(saved.get("joystick_size_index"), 0, "se guarda el tamaño")
+	var other = _game_keep_file()
+	other.load_preferences()
+	check_eq(other.touch_controls.move_mode, "joystick", "se recupera el modo de movimiento")
+	check_eq(other.touch_controls.aim_mode, "joystick", "se recupera el modo de disparo")
+	check_eq(other.touch_controls.dynamic_base_enabled, false, "se recupera la base dinámica")
+	check_eq(other.touch_controls.base_travel_index, 2, "se recupera el recorrido")
+	check_eq(other.touch_controls.joystick_size_index, 0, "se recupera el tamaño")
+	_cleanup()
+	game.free()
+	other.free()
 
 
 func test_textos_de_las_opciones() -> void:
@@ -127,14 +153,28 @@ func test_start_run_y_return_to_menu_cambian_la_pila() -> void:
 	game.states.push(MenuStateScript.new(game))
 	game.start_run()
 	check_eq(game.states.size(), 1, "una sola pantalla")
-	check(game.states.top().get_script().resource_path.ends_with("room_test_state.gd"), "sala recorrible de etapa 2")
+	check(game.states.top().get_script().resource_path.ends_with("play_state.gd"), "partida con salas y combate")
 	check(game.floor != null and game.floor.current_room().kind == "start", "se cargó el piso y su sala inicial")
+	check(game.floor.current_room().enemies.is_empty(), "la sala inicial empieza sin enemigos")
+	check_eq(game.player.hp, game.player.max_hp, "se creó el jugador real")
 	game.open_pause()
 	check_eq(game.states.size(), 2, "pausa encima")
 	game.return_to_menu()
 	check_eq(game.states.size(), 1, "vuelve al menú")
 	check(game.states.top().get_script().resource_path.ends_with("menu_state.gd"), "el menú")
 	_cleanup()
+	game.free()
+
+
+func test_overlay_tactil_depende_del_estado_superior() -> void:
+	var game = _game()
+	game.is_mobile = true
+	game.start_run()
+	check(game.states.top().touch_overlay, "la partida muestra controles táctiles")
+	game.open_pause()
+	check(not game.states.top().touch_overlay, "la pausa oculta los controles de combate")
+	game.return_to_menu()
+	check(not game.states.top().touch_overlay, "el menú no muestra controles de combate")
 	game.free()
 
 

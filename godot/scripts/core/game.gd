@@ -13,8 +13,10 @@ const OptionsStateScript = preload("res://scripts/states/options_state.gd")
 const PauseStateScript = preload("res://scripts/states/pause_state.gd")
 const GameOverStateScript = preload("res://scripts/states/gameover_state.gd")
 const DialogueStateScript = preload("res://scripts/states/dialogue_state.gd")
-const RoomTestStateScript = preload("res://scripts/states/room_test_state.gd")
-const RoomTestPlayerScript = preload("res://scripts/states/room_test_player.gd")
+const PlayStateScript = preload("res://scripts/states/play_state.gd")
+const PlayerScript = preload("res://scripts/entities/player.gd")
+const EnemyTypesScript = preload("res://scripts/entities/enemy_types.gd")
+const TouchControlsScript = preload("res://scripts/core/touch_controls.gd")
 const FloorScript = preload("res://scripts/rooms/floor.gd")
 const MenuViewScript = preload("res://scripts/ui/menu_view.gd")
 const HUDViewScript = preload("res://scripts/ui/hud.gd")
@@ -29,6 +31,7 @@ var running := true
 var states
 var menu_view
 var hud_view
+var touch_controls
 var font: Font = ThemeDB.fallback_font
 ## Dónde se guardan las preferencias (los tests lo cambian para no tocar las reales).
 var prefs_path: String = Preferences.DEFAULT_PATH
@@ -44,6 +47,7 @@ var hole_dialogue_shown := false
 func _init() -> void:
 	menu_view = MenuViewScript.new()
 	hud_view = HUDViewScript.new()
+	touch_controls = TouchControlsScript.new()
 	states = StackScript.new(self)
 	fps_selection = fps_options.find(S.FPS) if fps_options.has(S.FPS) else 1
 
@@ -74,10 +78,34 @@ func load_preferences() -> void:
 	var full = prefs.get("fullscreen")
 	if typeof(full) == TYPE_BOOL:
 		fullscreen = full
+	var move_mode = prefs.get("move_mode")
+	if move_mode in ["flechas", "joystick"]:
+		touch_controls.move_mode = move_mode
+	var aim_mode = prefs.get("aim_mode")
+	if aim_mode in ["flechas", "joystick"]:
+		touch_controls.aim_mode = aim_mode
+	var dynamic_base = prefs.get("dynamic_base_enabled")
+	if typeof(dynamic_base) == TYPE_BOOL:
+		touch_controls.dynamic_base_enabled = dynamic_base
+	var travel_index = prefs.get("base_travel_index")
+	if typeof(travel_index) == TYPE_INT and travel_index >= 0 and travel_index < TouchControlsScript.BASE_TRAVEL_OPTIONS.size():
+		touch_controls.base_travel_index = travel_index
+	var size_index = prefs.get("joystick_size_index")
+	if typeof(size_index) == TYPE_INT and size_index >= 0 and size_index < TouchControlsScript.JOYSTICK_SIZE_OPTIONS.size():
+		touch_controls.joystick_size_index = size_index
 
 
 func save_preferences() -> bool:
-	return Preferences.save_to({"fullscreen": fullscreen, "fps": S.FPS, "debug_keys": S.DEBUG_KEYS}, prefs_path)
+	return Preferences.save_to({
+		"fullscreen": fullscreen,
+		"fps": S.FPS,
+		"debug_keys": S.DEBUG_KEYS,
+		"move_mode": touch_controls.move_mode,
+		"aim_mode": touch_controls.aim_mode,
+		"dynamic_base_enabled": touch_controls.dynamic_base_enabled,
+		"base_travel_index": touch_controls.base_travel_index,
+		"joystick_size_index": touch_controls.joystick_size_index,
+	}, prefs_path)
 
 
 # ---------- cambios de pantalla (los usan los estados) ----------
@@ -85,20 +113,24 @@ func save_preferences() -> bool:
 func start_run() -> void:
 	if not _reset_run():
 		return
-	states.switch_to(RoomTestStateScript.new())
+	states.switch_to(PlayStateScript.new())
 
 
 func _reset_run() -> bool:
 	var errors: Array = []
-	floor = FloorScript.load_floor("floor1", errors)
+	floor = FloorScript.load_floor("floor1", errors, Callable(self, "_make_enemy"))
 	if floor == null:
 		push_error("No se pudo cargar el piso:\n- " + "\n- ".join(errors))
 		return false
-	player = RoomTestPlayerScript.new()
 	player_shots = []
+	player = PlayerScript.new(Vector2(S.SCREEN_W / 2.0, S.SCREEN_H / 2.0), player_shots)
 	banner = null
 	hole_dialogue_shown = false
 	return true
+
+
+func _make_enemy(kind: String, pos: Vector2, shots: Array, puddles: Array):
+	return EnemyTypesScript.create(kind, pos, shots, puddles)
 
 
 var room:
@@ -180,6 +212,20 @@ func toggle_debug() -> void:
 func change_option(selected: String, direction: int) -> void:
 	if selected == "fps":
 		change_fps(direction)
+	elif selected == "move":
+		touch_controls.move_mode = "joystick" if touch_controls.move_mode == "flechas" else "flechas"
+	elif selected == "aim":
+		touch_controls.aim_mode = "joystick" if touch_controls.aim_mode == "flechas" else "flechas"
+	elif selected == "dynamic":
+		touch_controls.dynamic_base_enabled = not touch_controls.dynamic_base_enabled
+		touch_controls.reset_dynamic_bases()
+	elif selected == "travel":
+		touch_controls.base_travel_index = posmod(touch_controls.base_travel_index + direction, TouchControlsScript.BASE_TRAVEL_OPTIONS.size())
+	elif selected == "size":
+		touch_controls.joystick_size_index = posmod(touch_controls.joystick_size_index + direction, TouchControlsScript.JOYSTICK_SIZE_OPTIONS.size())
+	else:
+		return
+	save_preferences()
 
 
 ## Filas del menú de opciones: [[nombre, texto], ...]. Escritorio: sin las táctiles; móvil: sin pantalla completa.
@@ -189,6 +235,12 @@ func option_entries() -> Array:
 		entries.append(["fullscreen", "Pantalla completa: %s" % ("Sí" if fullscreen else "No")])
 	entries.append(["fps", "FPS: %d  (izq./der. o Enter)" % S.FPS])
 	entries.append(["debug", "Modo debug: %s" % ("Sí" if S.DEBUG_KEYS else "No")])
+	if is_mobile:
+		entries.append(["move", "Movimiento: %s  (izq./der. o Enter)" % touch_controls.move_mode.capitalize()])
+		entries.append(["aim", "Disparo: %s  (izq./der. o Enter)" % touch_controls.aim_mode.capitalize()])
+		entries.append(["dynamic", "Joystick dinámico: %s  (Enter)" % ("Sí" if touch_controls.dynamic_base_enabled else "No")])
+		entries.append(["travel", "Recorrido de joystick: %s  (izq./der.)" % touch_controls.base_travel_label])
+		entries.append(["size", "Tamaño joystick: %s  (izq./der.)" % touch_controls.joystick_size_label])
 	entries.append(["back", "Volver"])
 	return entries
 
@@ -212,21 +264,44 @@ func tick(dt: float) -> void:
 
 func _draw() -> void:
 	states.draw(self)
+	if is_mobile and states.top() != null and states.top().touch_overlay:
+		touch_controls.draw(self)
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	var key_event := event as InputEventKey
 	var button := event as InputEventMouseButton
 	var motion := event as InputEventMouseMotion
+	var screen_touch := event as InputEventScreenTouch
+	var screen_drag := event as InputEventScreenDrag
 	if key_event != null:
 		if key_event.pressed and not key_event.echo:
 			states.handle_key(key_event)
+	elif screen_touch != null:
+		var position := (make_input_local(screen_touch) as InputEventScreenTouch).position
+		if screen_touch.pressed:
+			touch_controls.handle_down(screen_touch.index, position)
+			states.handle_pointer(position)
+		else:
+			touch_controls.handle_up(screen_touch.index, position)
+			if not states.handle_release(position, "finger"):
+				var action = touch_controls.release_action(position)
+				if action != null:
+					states.handle_touch(action, touch_controls.current_tap_position())
+	elif screen_drag != null:
+		var position := (make_input_local(screen_drag) as InputEventScreenDrag).position
+		touch_controls.handle_motion(screen_drag.index, position)
+		states.handle_pointer(position)
 	elif button != null and button.button_index == MOUSE_BUTTON_LEFT:
 		var position := (make_input_local(button) as InputEventMouseButton).position
 		if button.pressed:
 			states.handle_pointer(position)
 		elif not states.handle_release(position, "mouse"):
-			states.handle_touch("tap", position)
+			var action = touch_controls.release_action(position)
+			if action != null:
+				states.handle_touch(action, touch_controls.current_tap_position())
+			elif not touch_controls.touch_active:
+				states.handle_touch("tap", position)
 	elif motion != null and (motion.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
 		states.handle_pointer((make_input_local(motion) as InputEventMouseMotion).position)
 

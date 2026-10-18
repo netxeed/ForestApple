@@ -172,29 +172,23 @@ Cada etapa es una PR. Python sigue jugable durante todo el proceso.
 Las etapas 2 a 4 dependen de la 1 y entre sí en ese orden. La CI de Godot (opcional) se puede
 agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entorno.
 
-> **Estado de la etapa 0:** `tools/export_golden.py`, `godot/tests/run_tests.gd`, `Geo` y los primeros
-> tests (`test_geo.gd`, `test_dialogue_golden.gd`) ya existen. Por ahora el exportador cubre solo lo
-> que no depende de pygame (fases, estructura del piso, diálogos); los valores de movimiento, patrones y
-> jefe se agregan en las etapas 3 y 4. Ojo: en `golden/layout.json` los mensajes de error traen las
-> coordenadas con el formato de Python (`(2, 0)`); el validador de Godot tiene que imitarlo.
+> **Estado de la etapa 0:** `tools/export_golden.py`, `godot/tests/run_tests.gd`, `Geo` y sus tests
+> corren en Godot 4.7.2. El exportador genera fases, layout, salas, controles táctiles, diálogos,
+> jugador, enemigos y jefe. `golden/layout.json` conserva los mensajes de error de Python, incluidas
+> las coordenadas con formato `(2, 0)`.
 
-> **Estado de la etapa 1 (mitad lógica):** ya están `states/state.gd`, `state_stack.gd`, `cursor.gd`,
-> `dialogue/dialogue_runner.gd`, `dialogue_lines.gd` (validador) y las funciones `tag_errors` y `wrap_spans`
-> en `dialogue_parser.gd`, con sus tests (`test_states`, `test_cursor`, `test_dialogue_logic`) y valores dorados
-> nuevos (errores de etiquetas, corte en renglones y avance del runner paso a paso). Faltan `settings`,
-> `controls`, `preferences`, `Game`, las pantallas (menú, opciones, pausa, game over, diálogo), la caja de
-> diálogo nueva y los controles táctiles. Diferencias respecto de Python a tener en cuenta:
+> **Estado de la etapa 1 (base y pantallas):** están `states/state.gd`, `state_stack.gd`, `cursor.gd`,
+> `dialogue/dialogue_runner.gd`, `dialogue_lines.gd` (validador), `dialogue_parser.gd`, `core/settings.gd`,
+> `controls.gd`, `preferences.gd`, `Game`, las pantallas, la caja de diálogo y los controles táctiles.
+> Los tests cubren pila, cursor, opciones, preferencias y diálogos. Diferencias respecto de Python:
 > `StateStack.switch` se llama **`switch_to`** (`switch` es palabra reservada de GDScript), `len(stack)` es
 > `size()` y `states`/`top` son métodos; los errores de la pila (pop con la pila vacía) se anotan en
 > `errors` en vez de lanzar excepciones.
 >
-> **Estado de la etapa 1 (mitad pantallas):** ya están `core/settings.gd`, `controls.gd`, `preferences.gd`
-> (ConfigFile en `user://settings.cfg`), `text_draw.gd` (anclas de texto), `game.gd` (director), los estados
-> menú / opciones / pausa / game over / diálogo, `ui/menu_view.gd`, `dialogue/dialogue_box.gd` y una partida
-> provisoria (`play_placeholder_state.gd`), con `game.tscn` como escena principal. Decisiones tomadas:
-> escalado entero (el que ya tenía `project.godot`); el ratón hace de dedo (`emulate_mouse_from_touch`),
-> así que el antirrebote del diálogo no se portó; los tamaños de letra están en `Settings.FONT_SIZES`.
-> **Pendiente de la etapa 1:** controles táctiles reales (joystick, botones) y sus opciones de móvil.
+> `touch_controls.gd` porta multitáctil, flechas, joystick, zona muerta, base dinámica, botones y opciones;
+> `touch_controls.json` compara sus resultados con Python. El proyecto desactiva la emulación de mouse al
+> tocar. Escalado entero y tamaños de letra de `Settings.FONT_SIZES` se conservan. La validación física
+> de Android queda pendiente.
 
 > **Estado de la etapa 2 (parte 1):** ya están `rooms/layout.gd` (estructura y validador, con los mismos
 > mensajes que Python), `core/data_paths.gd` (dónde buscar `data/`) y `scripts/tools/validate_floor.gd`
@@ -206,11 +200,33 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > **Estado de la etapa 2 (partes 2 y 3):** `rooms/room.gd` y `rooms/floor.gd` portan geometría, sólidos,
 > puertas abiertas/cerradas/bloqueadas, aparición a dos baldosas, espera al entrar, llave, candados a ambos
 > lados del jefe, descubrimiento del mapa y creación perezosa de salas. `ui/hud.gd` dibuja HP, minimapa,
-> avisos, llave y barra del jefe. `room_test_state.gd` permite recorrer las ocho salas, recoger la llave y
-> entrar al jefe; por ahora ignora las letras de enemigo hasta integrar la etapa 3. `room_floor.json` exporta
-> trazas Python de puertas, geometría, llave y progreso; `test_room_floor.gd` las compara y prueba la espera
-> de activación y el recorrido. El fondo usa baldosas, paredes y obstáculos simples, como se decidió en la
-> sección 9; se deja el bodegón procedural para cuando haya arte.
+> avisos, llave y barra del jefe. `room_floor.json` exporta trazas Python de puertas, geometría, llave y
+> progreso; `test_room_floor.gd` las compara y prueba la espera y el recorrido. `room_test_state.gd` queda
+> como estado auxiliar para probar salas sin enemigos; la partida normal integra combate desde
+> `play_state.gd`. El fondo usa baldosas, paredes y obstáculos simples; el bodegón procedural queda para
+> cuando haya arte.
+
+> **Estado de la etapa 3 (parte 1):** `entities/player.gd` y `entities/projectile.gd` portan el movimiento
+> acelerado, fricción, colisión por ejes, disparos de cuatro direcciones, daño, invulnerabilidad y
+> teletransporte. `entities/trinket.gd` porta la llave consumible. `player_test_state.gd` se conserva como
+> arena auxiliar; `play_state.gd` integra el jugador con `room.gd`/`floor.gd`. `player.json` contiene las
+> trazas pygame comparadas por `test_player_golden.gd`.
+
+> **Estado de la etapa 3 (parte 2):** ya están `entities/enemy.gd`, `enemy_types.gd`, fresa, piña,
+> banana, limón, durazno, `acid_drop.gd`, `acid_puddle.gd` y `patterns.gd`. `enemies.json` y los
+> patrones se comparan con valores dorados; la arena temporal permite depurar los cinco enemigos, y la
+> partida normal los integra con `room.gd`/`floor.gd`.
+
+> **Estado de la etapa 4 (lógica del jefe):** `core/phases.gd` y `entities/watermelon.gd` portan las
+> fases, diálogos, abanicos, rodada con rebotes, aturdimiento, espiral, charcos de jugo y refuerzos.
+> `boss.json` prueba esas trazas con el número de rebotes fijado. `play_state.gd` conecta salas, HUD,
+> diálogos, llave, jefe y agujero final. `test_play_state.gd` recorre las salas y comprueba el flujo de
+> cierre hasta volver al menú.
+
+> **Estado de la etapa 5 (paridad automática):** pasan los valores dorados de fases, layout, diálogos,
+> salas, controles táctiles, jugador, enemigos y jefe. La suite Godot prueba también el recorrido integrado,
+> y CI ejecuta ambos motores. No se archiva Python todavía: el último punto del checklist 8 exige validar
+> los controles táctiles y diálogos en un teléfono Android real.
 
 ## 6. Archivo por archivo
 
@@ -288,14 +304,14 @@ viejas de Python (formato JSON en otra carpeta): el equipo las reconfigura.
 `canvas_items` + `integer`, Godot da las coordenadas del lienzo directamente
 (`get_viewport().get_mouse_position()` y `InputEventScreenTouch.position` ya vienen en 480×288).
 Diferencia: pygame escalaba de forma proporcional (cualquier factor) y Godot con `integer` usa
-múltiplos enteros (2×, 3×…), dejando franjas negras más grandes; para llenar la pantalla del
-teléfono se usaría `keep`. Queda como pendiente de diseño (sección 10).
+múltiplos enteros (2×, 3×…), dejando franjas negras más grandes. Este proyecto conserva el escalado
+entero para priorizar los píxeles nítidos.
 
 **`core/touch_controls.py` → `scripts/core/touch_controls.gd`** (294 líneas; la parte más ancha)
 Controles para Android: flechas o joystick virtual para mover y disparar, botón de interactuar
 (`E`, centro `(340, 260)`, radio 19) y de pausa (centro `(240, 44)`, radio 19), con zona muerta de 9 px,
-base dinámica y tamaños configurables. Se traduce como un `Node` que procesa `InputEventScreenTouch`
-y `InputEventScreenDrag` (con el índice del dedo en lugar de `finger`). Conservar:
+base dinámica y tamaños configurables. `Game` recibe `InputEventScreenTouch` y `InputEventScreenDrag`
+(con el índice del dedo en lugar de `finger`) y delega el cálculo a una clase `RefCounted`. Conservar:
 - Los dedos se asignan a un **rol** (`move` a la izquierda de la pantalla, `aim` a la derecha) al
   apoyarse, y lo mantienen hasta soltarse.
 - `move` y `aim` son `Vector2` ya normalizados que lee el jugador (`touch_move`, `touch_aim`).
@@ -303,14 +319,11 @@ y `InputEventScreenDrag` (con el índice del dedo en lugar de `finger`). Conserv
   de **350 ms / 24 px** evita acciones repetidas.
 - Constantes: `JOYSTICK_RADIUS=42`, `DEADZONE=9`, `BASE_TRAVEL_OPTIONS=(8,14,20)`,
   `JOYSTICK_SIZE_OPTIONS=(0.8,1.0,1.2)`, etiquetas "Corto/Medio/Largo" y "Pequeño/Mediano/Grande".
-- El dibujo de los controles se hace **sobre el lienzo** (no fuera del juego como hace hoy sobre la
-  ventana): decide con el equipo si los controles van sobre las franjas negras (necesita
-  `scale_mode="keep"` y una capa `CanvasLayer`) o encima del juego. Es una decisión de diseño táctil
-  y no una traducción; se anota como pendiente.
-- Apagar `input_devices/pointing/emulate_mouse_from_touch` para que un toque no llegue dos veces
-  (el `DialogueState` de Python ya tiene un antirrebote para ese problema: se puede quitar si se apaga
-  la emulación).
-**Esta es la única pieza sin prueba automática posible: se valida a mano en el teléfono.**
+- El dibujo de los controles se hace sobre el lienzo, encima del juego.
+- `input_devices/pointing/emulate_mouse_from_touch` está apagado para que un toque no genere eventos
+  de mouse y avance dos veces un diálogo.
+Las trazas doradas verifican los cálculos de flechas, multitáctil y joystick. La recepción de gestos y
+su escala visual se valida a mano en el teléfono.
 
 **`core/phases.py` → `scripts/core/phases.gd`**
 `PHASE_DIALOGUE = {1: "sandia_intro", 2: "sandia_fase2", 3: "sandia_fase3"}`, `DEATH_DIALOGUE =
@@ -521,6 +534,51 @@ vecinas). Esto último lo usa el minimapa.
 
 ### 6.6 `entities/`
 
+**`entities/player.py` y `entities/projectile.py` → `scripts/entities/player.gd` y `projectile.gd`**
+(parte 1 de la etapa 3)
+- Son clases `RefCounted`, no nodos de física. `Player.update(dt, walls, touch_move, touch_aim)` mantiene
+  aceleración/fricción, límite de velocidad, colisión por un eje, separación entre `pos` decimal y `rect`
+  entero, enfriamiento, disparo cardinal, invulnerabilidad y el parpadeo de alfa. Las entradas vectoriales
+  opcionales permiten hacer pruebas deterministas; si no se pasan, lee las acciones WASD y flechas.
+- `Projectile` mantiene posición y velocidad decimales, `Rect2` redondeado al estilo pygame, daño,
+  duración y `alive`; el estado dueño recorre una copia de los disparos y depura los que mueren.
+- `Player.draw(canvas)` usa `Sprites.get_texture("manzana")` cuando hay arte; si falta, dibuja el
+  cuadrado rojo redondeado de 20×20. El PNG de 32×32 se muestra a tamaño nativo, como indica
+  `godot/sprites/LEEME.md`; el rectángulo de combate permanece en 20×20.
+- Los datos del objeto llave son `id`, nombre y `consumable`; su dibujo y recogida pertenecen a
+  `room.gd` y `play_state.gd`.
+- `player_test_state.gd` queda como arena temporal de depuración. Jugar abre `play_state.gd`, conectado
+  con salas, HUD, puertas y enemigos.
+
+**`entities/enemy.py`, `strawberry.py`, `pineapple.py`, `banana.py`, `patterns.py` → `scripts/entities/`**
+(parte 2 de la etapa 3)
+- `enemy.gd` carga una vez `data/enemies.json`, conserva los datos completos de estadísticas, vida,
+  daño por contacto, destello, sala asociada y colisión por ejes. Las subclases son lógica `RefCounted`
+  y `enemy_types.gd` las registra por la misma clave del JSON.
+- La fresa queda quieta y dispara al jugador con la primera espera de `fire_rate`; la piña lo persigue
+  a su velocidad; la banana conserva dirección y tiempos de carga, rango y enfriamiento tal como Python.
+- `patterns.gd` porta `fan` y `shot_at_angle` usando grados convertidos a radianes solo en el giro de
+  Godot. Los proyectiles resultantes usan la misma clase `projectile.gd`.
+- `acid_drop.gd` conserva la gota móvil y su rastro cada 0,12 s; `acid_puddle.gd` conserva el daño,
+  duración de 2,6 s y desvanecimiento del último segundo. El limón persigue y dispara ácido; el durazno
+  apunta una vez y rebota por eje sin detenerse tras el primer choque.
+- La arena temporal de `player_test_state.gd` coloca los cinco enemigos para depuración. En la partida
+  normal `room.gd` actualiza tiros y charcos, y `play_state.gd` procesa los disparos del jugador.
+- `tests/golden/enemies.json` contiene trazas pygame de los cinco comportamientos, gotas, charcos y
+  patrones; las compara `test_enemies_golden.gd` con tolerancia numérica de 1e-3 por el uso de vectores
+  float de Godot.
+
+**`core/phases.py` y `entities/watermelon.py` → `scripts/core/phases.gd` y `entities/watermelon.gd`**
+(etapa 4, lógica del jefe)
+- `phase_for_hp` y las claves de diálogo conservan los umbrales de Python.
+- `Watermelon` conserva la máquina `walk` / `telegraph` / `roll` / `stunned` / `spiral`, las ventanas
+  de gracia, el daño variable, tiros, rebotes, jugo y refuerzos de la fase 3. `roll_bounces_override`
+  permite fijar el resultado del azar solo en las pruebas.
+- `boss.json` trae trazas pygame de fases y ataques; `test_boss_golden.gd` las compara con Godot. Se
+  preservó el doble avance vertical que aparece en `_move_and_bounce` del prototipo.
+- La lógica usa la interfaz de `Room` (`layout`, `current_player`, `acid_puddles`, `say` y `spawn_enemy`).
+  `play_state.gd` conecta el jefe con las salas, HUD, diálogos, llave y agujero.
+
 **Reglas comunes de movimiento (jugador y enemigos)**
 Mueven **un eje por vez**: suman al eje, recalculan el `rect` con `round_py`, y si choca con un
 sólido lo alinean al borde (`right = wall.left` si iba hacia `+`, `left = wall.right` si iba hacia `-`),
@@ -609,44 +667,44 @@ rebotes: inyecta un `RandomNumberGenerator` para poder fijar la semilla en las p
 
 ### 6.7 `data/`, `assets/`, raíz
 
-- `data/*.json`: sin cambios. En Godot se leen desde `res://` al exportar; mientras tanto la carpeta
-  `data/` del repositorio sigue siendo la fuente (ver el cargador de la rebanada). Cuando se archive el
-  Python, se decide si `data/` se mueve dentro de `godot/` (hace falta para exportar a Android).
+- `data/*.json`: sin cambios. La carpeta raíz es la fuente de Python y `godot/data/` contiene una copia
+  byte por byte para incluirla en exportaciones. `test_data_paths.gd` comprueba que no diverjan.
+  `DataPaths` permite datos externos y tiene respaldo con recursos embebidos.
 - `assets/icon.png`: ícono del proyecto (`application/config/icon`).
 - `main.py` → `main.tscn` + `scripts/main.gd`. `buildozer.spec` → preajuste de exportación de Android
   (versión, paquete `org.forestapple.forestapple`, orientación horizontal, arquitecturas `arm64-v8a`
   y `armeabi-v7a`, API mínima 23). `requirements.txt` desaparece.
-- `.github/workflows/tests.yml`: hoy corre Python. Para Godot hace falta bajar el ejecutable en la CI
-  (por ejemplo con una acción de instalación de Godot o la imagen `barichello/godot-ci`); no está
-  probado y se decide en la etapa 0.
+- `.github/workflows/tests.yml`: corre Python y Godot 4.7.2, incluyendo importación, suite headless y
+  smoke de dibujo.
 
 ### 6.8 `tests/` — qué se porta y cómo
 
 | Test de Python | Se porta como | Notas |
 |---|---|---|
-| `test_states.py` (pila, cursor, `row_at`, pausa, flujo) | `test_states.gd` | Los mismos casos, con `posmod` y `round_py`. |
-| `test_dialogue.py` (texto, runner, líneas, caja) | `test_dialogue.gd` | Los de la caja dependen de la fuente: revisar. |
-| `test_gameover.py` | `test_gameover.gd` | |
-| `test_layout.py` (validador y salas) | `test_layout.gd` | Usa los `golden` (sección 7). |
-| `test_boss.py` (fases, daño, refuerzos) | `test_boss.gd` | Con el generador de azar fijado. |
-| `test_smoke.py` / `smoke_game.py` (partida completa) | `smoke_game.gd` | Partida guiada por script en modo sin ventana. |
+| `test_states.py` (pila, cursor, `row_at`, pausa, flujo) | `test_states.gd`, `test_cursor.gd`, `test_screens.gd` | Casos de estados, menús y game over. |
+| `test_dialogue.py` (texto, runner, líneas, caja) | `test_dialogue_golden.gd`, `test_dialogue_logic.gd` | Valida texto, pausas, líneas y runner. |
+| `test_gameover.py` | `test_screens.gd` | Incluye reintentar, salir y Esc. |
+| `test_layout.py` (validador y salas) | `test_layout.gd`, `test_room_floor.gd` | Usa los `golden` (sección 7). |
+| `test_boss.py` (fases, daño, refuerzos) | `test_boss_golden.gd` | Con los rebotes fijados para las trazas. |
+| `test_smoke.py` / `smoke_game.py` (partida completa) | `test_play_state.gd` y `smoke_room_draw.gd` | Recorrido integrado y dibujo headless. |
 
 ## 7. Cómo comprobar que la traducción es fiel
 
 El mayor riesgo es una diferencia que solo se nota jugando. Para reducirlo, **Python genera los
 valores esperados y Godot los compara**.
 
-1. **`tools/export_golden.py`** (se escribe en la etapa 0) importa los módulos puros de Python y
+1. **`tools/export_golden.py`** importa los módulos del prototipo y
    escribe archivos JSON en `godot/tests/golden/`:
    - `phases.json`: `phase_for_hp` para una malla de vidas y umbrales.
-   - `layout.json`: por sala, las puertas, los rectángulos de pared/obstáculo/puerta, los
-     `entry_point` y el resultado de `validate()` (también con los casos de error de los tests).
-   - `patterns.json`: ángulos y velocidades de `fan` y `shot_at_angle` con varios parámetros.
+   - `layout.json`: el grafo de salas y el resultado de `validate()` (también con casos de error).
+   - `room_floor.json`: rectángulos de pared/obstáculo/puerta, `entry_point`, sólidos, llave y progreso.
+   - `enemies.json`: trayectorias de los enemigos, gotas/charcos y patrones `fan` / `shot_at_angle`.
    - `dialogue.json`: para **cada** clave de `dialogues.json`, el texto visible, las pausas y los
      renglones medidos con un ancho fijo; y la traza de `DialogueRunner` (`shown_count` cada 1/60 s).
-   - `movement.json`: trayectorias del jugador y de cada enemigo con una entrada fija (por ejemplo, 3 s
-     moviendo a la derecha y disparando) sobre una sala conocida.
-   - `boss.json`: traza de la sandía con la semilla del azar fijada (estado y fase cada 1/60 s).
+   - `player.json` y `enemies.json`: trayectorias del jugador y de cada enemigo con entradas fijas,
+     sobre paredes conocidas y con posiciones/tiempos de disparo.
+   - `boss.json`: trazas pygame de fases y ataques de la sandía con el número de rebotes fijado.
+   - `touch_controls.json`: entradas, roles, vectores y bases táctiles.
 2. **`godot/tests/run_tests.gd`** extiende `SceneTree`, carga los `test_*.gd`, ejecuta cada `test_*`
    y termina con código de salida distinto de cero si algo falla. Sin dependencias externas (no se usa
    GUT, para no instalar nada). Se corre con:
@@ -658,7 +716,8 @@ valores esperados y Godot los compara**.
 
 ## 8. Checklist de paridad (etapa 5)
 
-Se recorre en Python y en Godot, uno al lado del otro, y se marcan las diferencias:
+Se recorre en Python y en Godot, uno al lado del otro, y se marcan las diferencias. Los puntos siguen
+sin marcar hasta completar esa comparación manual; los tests automáticos no los reemplazan:
 - [ ] Menú, opciones (cada entrada), pausa (cada opción) y salir al menú; se guardan las preferencias.
 - [ ] Mover con aceleración y frenado, deslizarse contra paredes y obstáculos; igual velocidad máxima.
 - [ ] Disparo en un solo eje; cadencia 0,35 s; el proyectil muere en paredes y al golpear.
@@ -679,11 +738,12 @@ Se recorre en Python y en Godot, uno al lado del otro, y se marcan las diferenci
 la compensación de toques duplicados (si se apaga la emulación de ratón) y el fondo procedural
 detallado de las salas (hasta que haya arte). Todo lo demás se porta.
 
-## 10. Pendientes de decisión antes de empezar
+## 10. Decisiones de implementación
 
-1. **Controles táctiles**: ¿sobre las franjas negras (necesita `scale_mode="keep"`) o encima del juego?
-2. **Escalado**: ¿`integer` (nítido, pero con franjas) o `keep` (llena más pantalla)?
-3. **Fondo de las salas**: ¿simple hasta tener arte, o portar los productos detallados?
-4. **Fuente**: ¿la de Godot por defecto o una fuente pixel? Afecta qué diálogos caben en 3 renglones.
-5. **Dónde viven los datos**: ¿`data/` se mueve dentro de `godot/` al archivar Python?
-6. **CI de Godot**: ¿se agrega en la etapa 0?
+1. **Controles táctiles:** se dibujan encima del juego dentro del lienzo 480×288.
+2. **Escalado:** `integer`, conservando píxeles nítidos y franjas cuando haga falta.
+3. **Fondo de salas:** baldosas, paredes y obstáculos simples hasta tener arte real.
+4. **Fuente:** la fuente predeterminada de Godot; `test_dialogue_logic.gd` comprueba el ajuste de texto.
+5. **Datos:** `data/` de la raíz sigue siendo la fuente y `godot/data/` es una copia empaquetada, comparada
+   por `test_data_paths.gd`.
+6. **CI:** el workflow ejecuta Python y Godot 4.7.2.

@@ -1,0 +1,231 @@
+{
+ "cases": [
+  {
+   "aim": [
+    0.0,
+    0.0
+   ],
+   "aim_mode": "flechas",
+   "base_travel_index": 1,
+   "dynamic_base_enabled": true,
+   "finger_bases": {},
+   "fingers": [
+    {
+     "id": 1,
+     "position": [
+      91,
+      230
+     ],
+     "role": "move"
+    }
+   ],
+   "joystick_size_index": 1,
+   "move": [
+    1.0,
+    0.0
+   ],
+   "move_mode": "flechas",
+   "name": "flecha_derecha"
+  },
+  {
+   "aim": [
+    -1.0,
+    0.0
+   ],
+   "aim_mode": "flechas",
+   "base_travel_index": 1,
+   "dynamic_base_enabled": true,
+   "finger_bases": {},
+   "fingers": [
+    {
+     "id": 2,
+     "position": [
+      389,
+      230
+     ],
+     "role": "aim"
+    }
+   ],
+   "joystick_size_index": 1,
+   "move": [
+    0.0,
+    0.0
+   ],
+   "move_mode": "flechas",
+   "name": "flecha_izquierda_disparo"
+  },
+  {
+   "aim": [
+    0.0,
+    0.0
+   ],
+   "aim_mode": "flechas",
+   "base_travel_index": 1,
+   "dynamic_base_enabled": true,
+   "finger_bases": {},
+   "fingers": [
+    {
+     "id": 1,
+     "position": [
+      91,
+      230
+     ],
+     "role": "move"
+    },
+    {
+     "id": 2,
+     "position": [
+      55,
+      194
+     ],
+     "role": "move"
+    }
+   ],
+   "joystick_size_index": 1,
+   "move": [
+    0.7071067811865475,
+    -0.7071067811865475
+   ],
+   "move_mode": "flechas",
+   "name": "multitactil_diagonal_normalizada"
+  },
+  {
+   "aim": [
+    0.0,
+    0.0
+   ],
+   "aim_mode": "flechas",
+   "base_travel_index": 1,
+   "dynamic_base_enabled": true,
+   "finger_bases": {
+    "1": [
+     42,
+     230
+    ]
+   },
+   "fingers": [
+    {
+     "id": 1,
+     "position": [
+      63,
+      230
+     ],
+     "role": "move"
+    }
+   ],
+   "joystick_size_index": 1,
+   "move": [
+    0.5,
+    0.0
+   ],
+   "move_mode": "joystick",
+   "name": "joystick_media_fuerza"
+  },
+  {
+   "aim": [
+    0.0,
+    0.0
+   ],
+   "aim_mode": "flechas",
+   "base_travel_index": 1,
+   "dynamic_base_enabled": true,
+   "finger_bases": {
+    "1": [
+     42,
+     230
+    ]
+   },
+   "fingers": [
+    {
+     "id": 1,
+     "position": [
+      50,
+      230
+     ],
+     "role": "move"
+    }
+   ],
+   "joystick_size_index": 1,
+   "move": [
+    0.0,
+    0.0
+   ],
+   "move_mode": "joystick",
+   "name": "joystick_zona_muerta"
+  },
+  {
+   "aim": [
+    0.0,
+    0.0
+   ],
+   "aim_mode": "flechas",
+   "base_travel_index": 1,
+   "dynamic_base_enabled": true,
+   "finger_bases": {
+    "1": [
+     56,
+     230
+    ]
+   },
+   "fingers": [
+    {
+     "id": 1,
+     "position": [
+      102,
+      230
+     ],
+     "role": "move"
+    }
+   ],
+   "joystick_size_index": 1,
+   "move": [
+    1.0,
+    0.0
+   ],
+   "move_mode": "joystick",
+   "name": "joystick_base_dinamica_limitada"
+  }
+ ],
+ "constants": {
+  "base_travel_labels": [
+   "Corto",
+   "Medio",
+   "Largo"
+  ],
+  "base_travel_options": [
+   8,
+   14,
+   20
+  ],
+  "button_radius": 19,
+  "deadzone": 9,
+  "default_aim_mode": "flechas",
+  "default_base_travel_index": 1,
+  "default_dynamic_base_enabled": true,
+  "default_joystick_size_index": 1,
+  "default_move_mode": "flechas",
+  "interact_center": [
+   340,
+   260
+  ],
+  "joystick_radius": 42,
+  "joystick_size_labels": [
+   "Pequeño",
+   "Mediano",
+   "Grande"
+  ],
+  "joystick_size_options": [
+   0.8,
+   1.0,
+   1.2
+  ],
+  "pause_center": [
+   240,
+   44
+  ]
+ },
+ "ui_roles": {
+  "interact": null,
+  "pause": null
+ }
+}
