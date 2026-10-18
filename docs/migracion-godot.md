@@ -187,6 +187,14 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > `StateStack.switch` se llama **`switch_to`** (`switch` es palabra reservada de GDScript), `len(stack)` es
 > `size()` y `states`/`top` son métodos; los errores de la pila (pop con la pila vacía) se anotan en
 > `errors` en vez de lanzar excepciones.
+>
+> **Estado de la etapa 1 (mitad pantallas):** ya están `core/settings.gd`, `controls.gd`, `preferences.gd`
+> (ConfigFile en `user://settings.cfg`), `text_draw.gd` (anclas de texto), `game.gd` (director), los estados
+> menú / opciones / pausa / game over / diálogo, `ui/menu_view.gd`, `dialogue/dialogue_box.gd` y una partida
+> provisoria (`play_placeholder_state.gd`), con `game.tscn` como escena principal. Decisiones tomadas:
+> escalado entero (el que ya tenía `project.godot`); el ratón hace de dedo (`emulate_mouse_from_touch`),
+> así que el antirrebote del diálogo no se portó; los tamaños de letra están en `Settings.FONT_SIZES`.
+> **Pendiente de la etapa 1:** controles táctiles reales (joystick, botones) y sus opciones de móvil.
 
 ## 6. Archivo por archivo
 
