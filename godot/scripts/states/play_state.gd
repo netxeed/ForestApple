@@ -87,7 +87,7 @@ func update(game, dt: float) -> void:
 			shot.kill()
 			continue
 		for enemy in room.enemies:
-			if bool(enemy.get("alive")) and shot.rect.intersects(enemy.rect):
+			if enemy.get("alive") == true and shot.rect.intersects(enemy.rect):
 				enemy.take_damage(shot.damage)
 				shot.kill()
 				break

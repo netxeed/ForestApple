@@ -41,7 +41,9 @@ func _draw_hints(game) -> void:
 
 func _draw_boss_bar(game, canvas: CanvasItem) -> void:
 	for enemy in game.room.enemies:
-		if not bool(enemy.get("is_boss")) or int(enemy.get("phase")) == 0:
+		if enemy.get("is_boss") != true:
+			continue
+		if int(enemy.get("phase")) == 0:
 			continue
 		var ratio := clampf(float(enemy.get("hp")) / float(enemy.get("max_hp")), 0.0, 1.0)
 		var x := (S.SCREEN_W - S.BOSS_BAR_W) / 2

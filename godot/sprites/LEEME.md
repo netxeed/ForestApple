@@ -1,40 +1,39 @@
-# Carpeta de sprites (para quien hace el arte)
+# Sprites
 
-Deja aquí tus PNG y el juego los usa. **No hay que abrir Godot ni importar nada.**
-Si falta un archivo, el juego dibuja una figura de color en su lugar.
+El juego busca los PNG en `assets/` de la raíz del repositorio. No hace falta abrir el
+importador de Godot: al iniciar, el cargador lee las imágenes del disco. En una versión
+exportada, coloca la carpeta `assets/` junto al ejecutable.
 
-## Nombres
+## Animación direccional
 
-El nombre del archivo es el del personaje, en minúsculas y sin tildes:
+Cada personaje puede tener una carpeta con su nombre en minúsculas y estos archivos:
 
-| Archivo | Quién es |
-|---|---|
-| `manzana.png` | La protagonista |
-| `gala.png` | Gala |
-| `aida.png` | Aida |
+```text
+assets/
+  Apple/
+	apple_s_idle.png
+	apple_s_1.png
+	apple_s_2.png
+	apple_n_idle.png
+	apple_n_1.png
+	apple_n_2.png
+	apple_e_idle.png
+	apple_e_1.png
+	apple_e_2.png
+	apple_w_idle.png
+	apple_w_1.png
+	apple_w_2.png
+```
 
-Más adelante se agregan (`isolde.png`, etc.) y el juego los toma por el mismo nombre.
+Se aceptan nombres de carpeta y archivo con mayúsculas o minúsculas. `w` significa oeste.
+La manzana del jugador usa estos frames cuando están presentes; si falta una pose, usa
+la pose idle correspondiente y después intenta una imagen única `<nombre>.png`.
 
-## Reglas de arte (decisiones por defecto, se pueden cambiar)
+Los personajes que no tengan frames direccionales también pueden usar una sola imagen:
+`assets/Nombre/nombre.png`. Por ejemplo, la piña usa `assets/Pineapple/pineapple_s_idle.png`
+como imagen estática si no hay `pineapple.png`.
 
-- **Formato:** PNG con fondo transparente.
-- **Tamaño:** 32 × 32 píxeles por personaje (el juego usa casillas de 32 px). Otro tamaño
-  se muestra tal cual, sin escalar.
-- **Estilo:** pixel art. El juego no suaviza los píxeles (se ven nítidos al agrandar).
-- **Punto de apoyo:** el centro de la imagen es la posición del personaje.
-- **Pantalla:** el juego se dibuja a 480 × 288 y se amplía en números enteros, así que 1 píxel
-  de tu arte = 1 píxel del juego.
-- **Una sola imagen por personaje.** Todavía no hay animación ni direcciones (ver abajo).
-
-## Cómo ver tu arte
-
-- **Desde Godot:** guarda el PNG en `godot/sprites/` y ejecuta el juego (F5).
-- **Desde el juego exportado:** crea una carpeta `sprites/` junto al ejecutable y deja ahí los PNG.
-  Reinicia el juego para ver los cambios.
-
-## Pendiente de decidir con el equipo
-
-- ¿Animaciones? Propuesta: una tira horizontal `manzana_walk.png` con cuadros de 32 × 32.
-- ¿Distintas direcciones (arriba, abajo, izquierda, derecha) o una sola vista?
-- Fondos y objetos del estante (hoy es un color liso).
-- Paleta o resolución final (si se cambia de 32 px, se ajusta el juego).
+Los PNG deben tener fondo transparente. El punto de apoyo es el centro de la imagen; el
+tamaño visual es el tamaño original del archivo y no cambia el rectángulo de colisión.
+Al agregar o reemplazar imágenes durante una ejecución, llama a `Sprites.clear_cache()`
+o reinicia el juego.

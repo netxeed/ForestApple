@@ -3,6 +3,8 @@ extends RefCounted
 
 const DataPaths = preload("res://scripts/core/data_paths.gd")
 const Geo = preload("res://scripts/core/geo.gd")
+const SpritesScript = preload("res://scripts/sprites.gd")
+const WALK_POSES := ["1", "idle", "2", "idle"]
 
 static var _enemy_data: Dictionary = {}
 
@@ -20,7 +22,16 @@ var pos := Vector2.ZERO
 var alive := true
 var _flash := 0.0
 var flash_visible := false
-var room = null
+var facing := "s"
+var _walk_frame := 0
+var _walk_elapsed := 0.0
+var _walking := false
+var _room_ref: WeakRef
+var room:
+	get:
+		return _room_ref.get_ref() if _room_ref != null else null
+	set(value):
+		_room_ref = weakref(value) if value != null else null
 
 
 func _init(enemy_kind: String, start: Vector2, shots: Array) -> void:
@@ -51,6 +62,7 @@ func attach(owner) -> void:
 func take_damage(amount: float) -> void:
 	hp -= amount
 	_flash = 0.08
+	flash_visible = true
 	if hp <= 0:
 		kill()
 
@@ -62,7 +74,22 @@ func kill() -> void:
 func update(dt: float, player, walls: Array) -> void:
 	if not alive:
 		return
+	var previous_pos := pos
 	update_behavior(dt, player, walls)
+	var movement := pos - previous_pos
+	_walking = movement.length_squared() > 0.0001
+	if _walking:
+		if absf(movement.x) > absf(movement.y):
+			facing = "e" if movement.x > 0.0 else "o"
+		else:
+			facing = "s" if movement.y > 0.0 else "n"
+		_walk_elapsed += dt
+		while _walk_elapsed >= 0.14:
+			_walk_elapsed -= 0.14
+			_walk_frame = (_walk_frame + 1) % WALK_POSES.size()
+	else:
+		_walk_elapsed = 0.0
+		_walk_frame = 0
 	if _flash > 0.0:
 		flash_visible = true
 		_flash -= dt
@@ -99,6 +126,17 @@ func _move(delta: Vector2, walls: Array) -> void:
 
 
 func draw(canvas: CanvasItem) -> void:
+	var sprite_name := "pineapple" if kind == "pineapple" else kind
+	var pose: String = WALK_POSES[_walk_frame] if _walking else "idle"
+	var texture := SpritesScript.get_frame(sprite_name, facing, pose)
+	if texture != null:
+		var texture_rect := Rect2(pos - Vector2(texture.get_size()) / 2.0, texture.get_size())
+		canvas.draw_texture_rect(texture, texture_rect, false, Color.WHITE)
+		if flash_visible:
+			var silhouette := SpritesScript.get_silhouette(sprite_name, facing, pose)
+			if silhouette != null:
+				canvas.draw_texture_rect(silhouette, texture_rect, false, Color(1.0, 0.12, 0.12, 0.88))
+		return
 	var body_color := Color.WHITE if flash_visible else color
 	var half := float(size >> 1)
 	var r := Rect2(rect.position, rect.size)

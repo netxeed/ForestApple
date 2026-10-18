@@ -6,6 +6,7 @@ extends "res://scripts/states/state.gd"
 
 const S = preload("res://scripts/core/settings.gd")
 const BoxScript = preload("res://scripts/dialogue/dialogue_box.gd")
+const TouchControlsScript = preload("res://scripts/core/touch_controls.gd")
 
 var lines: Array
 var dark: bool
@@ -38,7 +39,10 @@ func handle_key(game, event) -> void:
 
 
 ## Tocar la pantalla (en cualquier lado) pasa el diálogo.
-func handle_release(game, _position, _event_type) -> bool:
+func handle_release(game, position, _event_type) -> bool:
+	# Dejar que el botón de pausa táctil llegue a Game.handle_touch().
+	if game.is_mobile and position is Vector2 and position.distance_squared_to(TouchControlsScript.PAUSE_CENTER) <= 28.0 * 28.0:
+		return false
 	_advance(game)
 	return true
 

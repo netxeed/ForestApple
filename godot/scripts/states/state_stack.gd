@@ -91,7 +91,7 @@ func handle_release(position, event_type) -> bool:
 		return false
 	var result: Array = []  # las lambdas capturan por valor: se muta un Array, no un bool
 	_dispatch(func(): result.append(t.handle_release(ctx, position, event_type)))
-	return bool(result[0]) if not result.is_empty() else false
+	return result[0] == true if not result.is_empty() else false
 
 
 ## Actualiza el estado de arriba y, mientras no pause a los de abajo, los siguientes.

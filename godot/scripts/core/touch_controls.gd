@@ -35,8 +35,6 @@ var aim_mode := "flechas"
 var dynamic_base_enabled := true
 var base_travel_index := 1
 var joystick_size_index := 1
-var _last_release_position := Vector2.ZERO
-var _last_release_time := -1000
 
 
 var base_travel_label: String:
@@ -97,11 +95,6 @@ func release_action(position: Vector2):
 		last_tap = position
 	if action == null:
 		return null
-	var now := Time.get_ticks_msec()
-	if now - _last_release_time < 350 and position.distance_squared_to(_last_release_position) < 24.0 * 24.0:
-		return null
-	_last_release_position = position
-	_last_release_time = now
 	return action
 
 

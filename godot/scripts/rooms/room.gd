@@ -86,7 +86,7 @@ func spawn_enemy(enemy_kind: String, pos: Vector2):
 
 func cleared() -> bool:
 	for enemy in enemies:
-		if bool(enemy.get("alive")):
+		if enemy.get("alive") == true:
 			return false
 	return true
 
@@ -172,12 +172,12 @@ func update(dt: float, player) -> void:
 		return
 	var blocks := solids()
 	for enemy in enemies:
-		if bool(enemy.get("alive")):
+		if enemy.get("alive") == true:
 			enemy.update(dt, player, blocks)
 	_update_actors(enemy_shots, dt)
 	_update_actors(acid_puddles, dt)
 	for shot in enemy_shots:
-		if not bool(shot.get("alive")):
+		if shot.get("alive") != true:
 			continue
 		if _overlaps_any(shot.rect, blocks):
 			shot.kill()
@@ -185,10 +185,10 @@ func update(dt: float, player) -> void:
 			player.take_damage(shot.damage)
 			shot.kill()
 	for puddle in acid_puddles:
-		if bool(puddle.get("alive")) and puddle.rect.intersects(player.rect):
+		if puddle.get("alive") == true and puddle.rect.intersects(player.rect):
 			player.take_damage(puddle.damage)
 	for enemy in enemies:
-		if bool(enemy.get("alive")) and enemy.rect.intersects(player.rect):
+		if enemy.get("alive") == true and enemy.rect.intersects(player.rect):
 			player.take_damage(enemy.contact_damage)
 	_prune(enemies)
 	_prune(enemy_shots)
@@ -197,13 +197,13 @@ func update(dt: float, player) -> void:
 
 func _update_actors(actors: Array, dt: float) -> void:
 	for actor in actors:
-		if bool(actor.get("alive")):
+		if actor.get("alive") == true:
 			actor.update(dt)
 
 
 func _prune(actors: Array) -> void:
 	for index in range(actors.size() - 1, -1, -1):
-		if not bool(actors[index].get("alive")):
+		if actors[index].get("alive") != true:
 			actors.remove_at(index)
 
 
@@ -228,7 +228,7 @@ func draw(canvas: CanvasItem) -> void:
 		canvas.draw_rect(hole_rect, Color8(87, 70, 99), false, 2)
 	_draw_doors(canvas)
 	for enemy in enemies:
-		if bool(enemy.get("alive")):
+		if enemy.get("alive") == true:
 			enemy.draw(canvas)
 	for shot in enemy_shots:
 		shot.draw(canvas)
