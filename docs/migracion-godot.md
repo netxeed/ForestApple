@@ -196,6 +196,13 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > así que el antirrebote del diálogo no se portó; los tamaños de letra están en `Settings.FONT_SIZES`.
 > **Pendiente de la etapa 1:** controles táctiles reales (joystick, botones) y sus opciones de móvil.
 
+> **Estado de la etapa 2 (parte 1):** ya están `rooms/layout.gd` (estructura y validador, con los mismos
+> mensajes que Python), `core/data_paths.gd` (dónde buscar `data/`) y `scripts/tools/validate_floor.gd`
+> (`godot --headless --path godot --script res://scripts/tools/validate_floor.gd`), con `test_layout.gd` contra
+> `golden/layout.json` (11 pisos mal armados y 5 errores de armado, además del piso 1). Diferencia con Python:
+> `setup()` devuelve el mensaje de error en vez de lanzar `ValueError`, y `validate()` devuelve las líneas del
+> mensaje (`[]` si está bien). Faltan `room`, `floor`, el minimapa/HUD, la llave y el fundido.
+
 ## 6. Archivo por archivo
 
 Cada entrada dice **qué hace**, **cómo se traduce** y **qué no se puede perder**. Las rutas son las del

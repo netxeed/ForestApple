@@ -66,6 +66,11 @@ def _errors_for(floor_data, rooms):
     return []
 
 
+def _broken(name, floor_data, rooms):
+    """Un piso mal armado con su entrada y los mensajes que da Python (para que Godot repita el caso)."""
+    return {"name": name, "floor": floor_data, "rooms": rooms, "errors": _errors_for(floor_data, rooms)}
+
+
 def layout():
     floor = load_floor_layout("floor1")
     floor.validate(enemy_letters=ENEMY_LETTERS.keys())
@@ -89,33 +94,56 @@ def layout():
     # Pisos mal armados: el validador junta TODOS los problemas y los mensajes se conservan.
     broken = []
     two_rooms = {"a": _blank_room(), "b": _blank_room()}
-    broken.append({
-        "name": "sala_inalcanzable",
-        "errors": _errors_for({"name": "t", "start": [0, 0], "grid": [["a", None, "b"]]}, two_rooms),
-    })
-    broken.append({
-        "name": "inicio_inexistente",
-        "errors": _errors_for({"name": "t", "start": [5, 5], "grid": [["a"]]}, {"a": _blank_room()}),
-    })
+    broken.append(_broken("sala_inalcanzable", {"name": "t", "start": [0, 0], "grid": [["a", None, "b"]]}, two_rooms))
+    broken.append(_broken("inicio_inexistente", {"name": "t", "start": [5, 5], "grid": [["a"]]}, {"a": _blank_room()}))
     short = _blank_room()
     short["layout"] = short["layout"][:-1]
-    broken.append({
-        "name": "faltan_filas",
-        "errors": _errors_for({"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": short}),
-    })
+    broken.append(_broken("faltan_filas", {"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": short}))
     bad_char = _blank_room()
     bad_char["layout"][2] = bad_char["layout"][2][:3] + "Z" + bad_char["layout"][2][4:]
-    broken.append({
-        "name": "caracter_desconocido",
-        "errors": _errors_for({"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": bad_char}),
-    })
+    broken.append(_broken("caracter_desconocido", {"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": bad_char}))
     border = _blank_room()
     border["layout"][0] = "#" * 3 + "." + "#" * (COLS - 4)
-    broken.append({
-        "name": "borde_abierto",
-        "errors": _errors_for({"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": border}),
-    })
+    broken.append(_broken("borde_abierto", {"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": border}))
+    # Más pisos mal armados: enemigo pegado a la puerta, entrada ocupada, tipo inválido, sala faltante
+    # y varios problemas a la vez (el validador los junta todos y los ordena).
+    pegado = _blank_room()
+    pegado["layout"][4] = "#" + "." * 11 + "S" + "." + "#"  # fila 4, col 12: justo donde aparece el jugador
+    broken.append(_broken("enemigo_pegado", {"name": "t", "start": [0, 0], "grid": [["a", "b"]]}, {"a": pegado, "b": _blank_room()}))
+    ocupada = _blank_room()
+    ocupada["layout"][1] = "#" + "." * 6 + "X" + "." * 6 + "#"  # fila 1, col 7: la entrada de arriba
+    broken.append(_broken("entrada_ocupada", {"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": ocupada}))
+    tipo = _blank_room()
+    tipo["type"] = "secreta"
+    broken.append(_broken("tipo_invalido", {"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": tipo}))
+    broken.append(_broken("sala_faltante", {"name": "t", "start": [0, 0], "grid": [["a", "zzz"]]}, {"a": _blank_room()}))
+    ancho = _blank_room()
+    ancho["layout"][3] = ancho["layout"][3] + "."
+    ancho["layout"][5] = ancho["layout"][5][:-1]
+    broken.append(_broken("filas_de_otro_ancho", {"name": "t", "start": [0, 0], "grid": [["a"]]}, {"a": ancho}))
+    varios = _blank_room()
+    varios["layout"][0] = "#" * 3 + "." + "#" * (COLS - 4)
+    varios["layout"][2] = varios["layout"][2][:3] + "Z" + varios["layout"][2][4:]
+    broken.append(_broken("varios_problemas", {"name": "t", "start": [9, 9], "grid": [["b", None, "a"]]}, {"a": varios, "b": _blank_room()}))
+
+    # Errores al armar la estructura (antes de validar): el mensaje es el de la excepción de Python.
+    init_cases = []
+    for name, floor_data, rooms in [
+        ("grilla_vacia", {"start": [0, 0], "grid": []}, {}),
+        ("fila_no_lista", {"start": [0, 0], "grid": ["x"]}, {}),
+        ("filas_desparejas", {"start": [0, 0], "grid": [["a"], ["a", "a"]]}, {}),
+        ("inicio_mal", {"start": [0], "grid": [["a"]]}, {}),
+        ("inicio_no_entero", {"start": [0, "x"], "grid": [["a"]]}, {}),
+    ]:
+        try:
+            FloorLayout(floor_data, rooms)
+            message = ""
+        except ValueError as error:
+            message = str(error)
+        init_cases.append({"name": name, "floor": floor_data, "rooms": rooms, "error": message})
+
     return {
+        "init_cases": init_cases,
         "constants": {
             "cols": COLS,
             "rows": ROWS,
