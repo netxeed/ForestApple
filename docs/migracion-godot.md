@@ -201,7 +201,16 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > (`godot --headless --path godot --script res://scripts/tools/validate_floor.gd`), con `test_layout.gd` contra
 > `golden/layout.json` (11 pisos mal armados y 5 errores de armado, además del piso 1). Diferencia con Python:
 > `setup()` devuelve el mensaje de error en vez de lanzar `ValueError`, y `validate()` devuelve las líneas del
-> mensaje (`[]` si está bien). Faltan `room`, `floor`, el minimapa/HUD, la llave y el fundido.
+> mensaje (`[]` si está bien).
+
+> **Estado de la etapa 2 (partes 2 y 3):** `rooms/room.gd` y `rooms/floor.gd` portan geometría, sólidos,
+> puertas abiertas/cerradas/bloqueadas, aparición a dos baldosas, espera al entrar, llave, candados a ambos
+> lados del jefe, descubrimiento del mapa y creación perezosa de salas. `ui/hud.gd` dibuja HP, minimapa,
+> avisos, llave y barra del jefe. `room_test_state.gd` permite recorrer las ocho salas, recoger la llave y
+> entrar al jefe; por ahora ignora las letras de enemigo hasta integrar la etapa 3. `room_floor.json` exporta
+> trazas Python de puertas, geometría, llave y progreso; `test_room_floor.gd` las compara y prueba la espera
+> de activación y el recorrido. El fondo usa baldosas, paredes y obstáculos simples, como se decidió en la
+> sección 9; se deja el bodegón procedural para cuando haya arte.
 
 > **Estado de la etapa 3 (parte 1):** `entities/player.gd` y `entities/projectile.gd` portan el movimiento
 > acelerado, fricción, colisión por ejes, disparos de cuatro direcciones, daño, invulnerabilidad y
@@ -512,12 +521,9 @@ Una sala: `id`, `kind`, `layout`, `doors`, `locked_doors`, listas de `walls`, `o
   disparos, charcos. Puertas: bloqueadas por llave en gris plata con borde; cerradas por enemigos en
   `DOOR_CLOSED` con borde `WALL`; abiertas en `DOOR_OPEN`.
 - **El fondo procedural** (`_build_backdrop`, ~100 líneas de `pygame.draw`: heladera, bandejas, productos
-  con una semilla por sala) **no se traduce línea por línea**. Decisión propuesta: portar solo un fondo
-  simple (baldosas con las 3 tonalidades según la semilla, paredes y obstáculos como rectángulos) y
-  dejar los productos detallados para cuando haya arte real de la artista. Es una desviación
-  *deliberada*; acordarla antes de empezar. Si se quiere fiel: la semilla es
-  `sum((i+1) * ord(c) for i, c in enumerate(id))` y los productos son cinco dibujos que dependen de
-  `(semilla + índice) % 5`.
+  con una semilla por sala) no se traduce línea por línea. `room.gd` dibuja baldosas con las tres
+  tonalidades deterministas, paredes y obstáculos como rectángulos; los productos detallados quedan
+  para cuando haya arte real de la artista (sección 9).
 
 **`rooms/floor.py` → `scripts/rooms/floor.gd`**
 Piso completo: grilla de salas **creadas la primera vez que se entra** (y guardadas, para que sigan

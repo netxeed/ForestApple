@@ -170,6 +170,105 @@ def layout():
     }
 
 
+# ---------- salas y progreso del piso ----------
+def room_floor():
+    """Trazas de geometría, puertas, llave y progreso calculadas por rooms/room.py y floor.py."""
+    import pygame
+
+    from rooms.floor import Floor
+    from rooms.layout import COLS, ROWS, load_floor_layout
+    from rooms.room import Room
+
+    rows = ["#" * COLS] + ["#" + "." * (COLS - 2) + "#" for _ in range(ROWS - 2)] + ["#" * COLS]
+    center = list(rows[ROWS // 2])
+    center[COLS // 2] = "X"
+    rows[ROWS // 2] = "".join(center)
+    room = Room("prueba", {"type": "normal", "layout": rows}, {"right"})
+
+    # Una entidad mínima basta para que el grupo de pygame modele un enemigo vivo.
+    blocker = pygame.sprite.Sprite()
+    blocker.rect = pygame.Rect(100, 100, 20, 20)
+    room.enemies.add(blocker)
+    closed_solids = len(room.solids)
+    blocker.kill()
+    open_solids = len(room.solids)
+    door_rect = room.door_rects["right"]
+    door_touch = pygame.Rect(door_rect.x - 10, door_rect.y + 6, 20, 20)
+    key_room = Room("llave", {"type": "normal", "layout": rows}, set())
+    key_room.drop_key()
+    key_position = list(key_room.key_rect.topleft)
+
+    class PlayerStub:
+        def __init__(self, rect):
+            self.rect = rect
+            self.trinkets = []
+
+        def add_trinket(self, trinket_id):
+            if trinket_id not in self.trinkets:
+                self.trinkets.append(trinket_id)
+
+        def consume_trinket(self, trinket_id):
+            if trinket_id not in self.trinkets:
+                return False
+            self.trinkets.remove(trinket_id)
+            return True
+
+    collector = PlayerStub(key_room.key_rect.copy())
+    collected = key_room.collect_key(collector)
+
+    floor = Floor(load_floor_layout("floor1"))
+    initial_known = sorted([list(cell) for cell in floor.known_cells()], key=lambda c: (c[0], c[1]))
+    initial_door_count = len(floor.current_room.door_rects)
+    initially_complete = floor.all_non_boss_rooms_cleared()
+    for cell in floor.layout.cells:
+        current = floor.room_at(cell)
+        for enemy in list(current.enemies):
+            enemy.kill()
+    moved_to_window = floor.move("down")
+    window_boss_doors = sorted(floor.boss_door_directions())
+    window_locked = sorted(floor.current_room.locked_doors)
+    boss = floor.room_at((2, 2))
+    boss_locked = sorted(boss.locked_doors)
+    key_dropped = floor.drop_key_if_ready()
+    floor_key_position = list(floor.current_room.key_rect.topleft)
+    key_player = PlayerStub(floor.current_room.key_rect.copy())
+    floor_key_collected = floor.collect_key(key_player)
+    unlocked = floor.use_key_at_boss_door(key_player)
+
+    return {
+        "room": {
+            "walls": len(room.walls),
+            "obstacles": len(room.obstacles),
+            "door_rect": [door_rect.x, door_rect.y, door_rect.width, door_rect.height],
+            "entry_point_right": list(room.entry_point("right")),
+            "solids_with_enemy": closed_solids,
+            "solids_cleared": open_solids,
+            "exit_when_open": room.exit_direction(door_touch),
+            "key_position": key_position,
+            "key_collects_from_inflated_player": collected,
+            "key_trinkets": collector.trinkets,
+        },
+        "floor": {
+            "initial_known": initial_known,
+            "initial_room_doors": initial_door_count,
+            "initial_room_count": 1,
+            "initially_all_non_boss_cleared": initially_complete,
+            "moved_to_window": moved_to_window,
+            "window_boss_doors": window_boss_doors,
+            "window_locked_doors": window_locked,
+            "boss_locked_doors": boss_locked,
+            "all_non_boss_cleared": floor.all_non_boss_rooms_cleared(),
+            "key_dropped": key_dropped,
+            "key_position": floor_key_position,
+            "key_collected": floor_key_collected,
+            "key_consumed_to_unlock": unlocked,
+            "boss_unlocked": floor.boss_unlocked,
+            "window_locked_after_unlock": sorted(floor.current_room.locked_doors),
+            "boss_locked_after_unlock": sorted(boss.locked_doors),
+        },
+    }
+
+
 # ---------- diálogos ----------
 PARSE_CASES = [
     "Hola.",
@@ -638,8 +737,15 @@ def boss_golden():
                        "hp_after_phase3_stunned_hit": 27.2}}
 
 
-FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue,
-         "player.json": player_golden, "enemies.json": enemies_golden, "boss.json": boss_golden}
+FILES = {
+    "phases.json": phases,
+    "layout.json": layout,
+    "dialogue.json": dialogue,
+    "room_floor.json": room_floor,
+    "player.json": player_golden,
+    "enemies.json": enemies_golden,
+    "boss.json": boss_golden,
+}
 
 
 def render(data):
