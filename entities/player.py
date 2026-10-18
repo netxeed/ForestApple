@@ -1,4 +1,5 @@
 import pygame
+from pathlib import Path
 
 from core import settings as S
 from entities.projectile import Projectile
@@ -9,6 +10,9 @@ class Player(pygame.sprite.Sprite):
     """Jugador. Por ahora solo la manzana; el niño se agrega con `character`."""
 
     SIZE = 20
+    WALK_FRAME_TIME = 0.14
+    DIRECTIONS = {"n": "norte", "s": "sur", "e": "este", "o": "oeste"}
+    _apple_frames = None
 
     def __init__(self, pos, shots_group):
         super().__init__()
@@ -17,6 +21,10 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
         self.pos = pygame.Vector2(pos)
         self.velocity = pygame.Vector2()
+        self.facing = "s"
+        self._walk_frame = 0
+        self._walk_elapsed = 0.0
+        self._image_alpha = 255
 
         self.max_hp = S.PLAYER_HP
         self.hp = self.max_hp
@@ -32,13 +40,50 @@ class Player(pygame.sprite.Sprite):
         self.trinkets = []
         self._cooldown = 0.0
         self._invuln = 0.0
-        self._draw()
+        self._draw_placeholder()
+        self._update_sprite()
 
-    # ---------- dibujo placeholder ----------
-    def _draw(self):
+    @classmethod
+    def _load_apple_frames(cls):
+        """Carga una vez los sprites de assets/apple, tolerando archivos faltantes."""
+        if cls._apple_frames is None:
+            folder = Path(__file__).resolve().parent.parent / "assets" / "apple"
+            cls._apple_frames = {}
+            for direction in cls.DIRECTIONS:
+                for pose in ("idle", "1", "2"):
+                    suffixes = (direction, "w") if direction == "o" else (direction,)
+                    for suffix in suffixes:
+                        stems = (f"apple_{suffix}_idle",) if pose == "idle" else (
+                            f"apple_{suffix}_{pose}", f"apple_{suffix}{pose}"
+                        )
+                        for stem in stems:
+                            for extension in (".png", ".jpeg", ".jpg"):
+                                path = folder / f"{stem}{extension}"
+                                if path.is_file():
+                                    cls._apple_frames[(direction, pose)] = pygame.image.load(str(path))
+                                    break
+                            if (direction, pose) in cls._apple_frames:
+                                break
+                        if (direction, pose) in cls._apple_frames:
+                            break
+        return cls._apple_frames
+
+    # ---------- dibujo ----------
+    def _draw_placeholder(self):
         color = S.RED if self.character == "manzana" else S.KID
         self.image.fill((0, 0, 0, 0))
         pygame.draw.rect(self.image, color, self.image.get_rect(), border_radius=6)
+
+    def _update_sprite(self):
+        frames = self._load_apple_frames()
+        pose = "idle" if self.velocity.length_squared() == 0 else str(self._walk_frame + 1)
+        sprite = frames.get((self.facing, pose)) or frames.get((self.facing, "idle"))
+        if sprite is None:
+            self._draw_placeholder()
+            return
+        # El frame mide 32x32; el rect de 20x20 se conserva para las colisiones.
+        self.image = sprite.copy()
+        self.image.set_alpha(self._image_alpha)
 
     # ---------- lógica ----------
     @property
@@ -49,7 +94,10 @@ class Player(pygame.sprite.Sprite):
         """Mueve al jugador a una posición (se usa al cruzar una puerta)."""
         self.pos.update(center)
         self.velocity.update(0, 0)
+        self._walk_frame = 0
+        self._walk_elapsed = 0.0
         self.rect.center = (round(self.pos.x), round(self.pos.y))
+        self._update_sprite()
 
     def take_damage(self, amount):
         if self._invuln > 0 or not self.alive:
@@ -86,6 +134,10 @@ class Player(pygame.sprite.Sprite):
         if move.length_squared() > 0:
             move = move.normalize()
             self.velocity += move * self.acceleration * dt
+            if abs(move.x) > abs(move.y):
+                self.facing = "e" if move.x > 0 else "o"
+            else:
+                self.facing = "s" if move.y > 0 else "n"
         else:
             # El rozamiento reduce la velocidad a cero sin invertir su dirección.
             speed = self.velocity.length()
@@ -100,6 +152,15 @@ class Player(pygame.sprite.Sprite):
 
         self._move(self.velocity * dt, walls)
 
+        if self.velocity.length_squared() > 0:
+            self._walk_elapsed += dt
+            while self._walk_elapsed >= self.WALK_FRAME_TIME:
+                self._walk_elapsed -= self.WALK_FRAME_TIME
+                self._walk_frame = 1 - self._walk_frame
+        else:
+            self._walk_elapsed = 0.0
+            self._walk_frame = 0
+
         # Disparo (flechas)
         self._cooldown = max(0.0, self._cooldown - dt)
         aim = pygame.Vector2(
@@ -108,15 +169,22 @@ class Player(pygame.sprite.Sprite):
         )
         if touch_aim is not None:
             aim += touch_aim
-        if aim.length_squared() > 0 and self._cooldown <= 0:
-            self._shoot(aim)
+        if aim.length_squared() > 0:
+            # El apuntado manda sobre la dirección de movimiento mientras se dispara.
+            if abs(aim.x) >= abs(aim.y):
+                self.facing = "e" if aim.x > 0 else "o"
+            else:
+                self.facing = "s" if aim.y > 0 else "n"
+            if self._cooldown <= 0:
+                self._shoot(aim)
 
         # Invulnerabilidad (parpadeo)
         if self._invuln > 0:
             self._invuln -= dt
-            self.image.set_alpha(120 if int(self._invuln * 12) % 2 else 255)
+            self._image_alpha = 120 if int(self._invuln * 12) % 2 else 255
         else:
-            self.image.set_alpha(255)
+            self._image_alpha = 255
+        self._update_sprite()
 
     def _move(self, delta, walls):
         # Se mueve por eje para poder deslizar contra las paredes.

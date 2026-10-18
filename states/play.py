@@ -133,7 +133,7 @@ class PlayState(State):
         game.room.draw(game.canvas)
         game.player_shots.draw(game.canvas)
         if game.player.alive:
-            game.canvas.blit(game.player.image, game.player.rect)
+            game.canvas.blit(game.player.image, game.player.image.get_rect(center=game.player.rect.center))
         game.hud_view.draw(game)
         if game.is_mobile:
             game.touch_controls.draw(game.canvas)
