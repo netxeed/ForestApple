@@ -6,6 +6,7 @@ extends Node2D
 const S = preload("res://scripts/core/settings.gd")
 const Controls = preload("res://scripts/core/controls.gd")
 const Preferences = preload("res://scripts/core/preferences.gd")
+const DataPaths = preload("res://scripts/core/data_paths.gd")
 const TextDraw = preload("res://scripts/core/text_draw.gd")
 const StackScript = preload("res://scripts/states/state_stack.gd")
 const MenuStateScript = preload("res://scripts/states/menu_state.gd")
@@ -115,20 +116,15 @@ func idle_selection():
 
 
 func _load_dialogues() -> Dictionary:
-	var candidates := [
-		OS.get_executable_path().get_base_dir().path_join("data/dialogues.json"),  # versión exportada
-		ProjectSettings.globalize_path("res://").path_join("../data/dialogues.json"),  # desde el repositorio
-		"res://data/dialogues.json",
-	]
-	for path in candidates:
-		if FileAccess.file_exists(path):
-			var errors: Array = []
-			var loaded := LinesScript.load_file(path, errors)
-			if errors.is_empty():
-				return loaded
-			push_warning("Problemas en %s:\n- %s" % [path, "\n- ".join(errors)])
-	push_warning("No se encontró un data/dialogues.json válido.")
-	return {}
+	var path := DataPaths.find("dialogues.json")
+	if path == "":
+		push_warning("No se encontró data/dialogues.json.")
+		return {}
+	var errors: Array = []
+	var loaded := LinesScript.load_file(path, errors)
+	if not errors.is_empty():
+		push_warning("Problemas en %s:\n- %s" % [path, "\n- ".join(errors)])
+	return loaded
 
 
 # ---------- opciones ----------

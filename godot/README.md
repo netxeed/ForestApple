@@ -73,6 +73,7 @@ ejecutable se usa antes que `../data`.
 | `scripts/dialogue/dialogue_lines.gd` | Validación de `data/dialogues.json` (`dialogue/lines.py`) |
 | `scripts/dialogue/dialogue_runner.gd` | Efecto de escritura, pausas y paso de línea (`dialogue/runner.py`) |
 | `scripts/states/state.gd`, `state_stack.gd` | Pantallas y pila de estados (`states/base.py`) |
+| `scripts/rooms/layout.gd` | Estructura del piso y validador (`rooms/layout.py`); se corre con `scripts/tools/validate_floor.gd` |
 | `scripts/states/cursor.gd` | Cursor de menús y filas tocables (`states/cursor.py`) |
 | `scripts/states/*_state.gd` | Menú, opciones, pausa, game over, diálogo y la partida provisoria |
 | `scripts/core/` | `settings`, `controls`, `preferences`, `text_draw` y `game` (el director) |

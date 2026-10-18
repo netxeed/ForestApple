@@ -5,35 +5,434 @@
     "Problemas en el piso:",
     "- Salas inalcanzables desde el inicio: [(2, 0)]."
    ],
-   "name": "sala_inalcanzable"
+   "floor": {
+    "grid": [
+     [
+      "a",
+      null,
+      "b"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "sala_inalcanzable",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    },
+    "b": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
   },
   {
    "errors": [
     "Problemas en el piso:",
     "- La sala inicial (5, 5) no existe en la grilla."
    ],
-   "name": "inicio_inexistente"
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     5,
+     5
+    ]
+   },
+   "name": "inicio_inexistente",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
   },
   {
    "errors": [
     "Problemas en el piso:",
     "- [a] tiene 8 filas, debe tener 9."
    ],
-   "name": "faltan_filas"
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "faltan_filas",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#"
+     ],
+     "type": "normal"
+    }
+   }
   },
   {
    "errors": [
     "Problemas en el piso:",
     "- [a] carácter desconocido 'Z' en fila 2, col 3."
    ],
-   "name": "caracter_desconocido"
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "caracter_desconocido",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#..Z..........#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
   },
   {
    "errors": [
     "Problemas en el piso:",
     "- [a] el borde debe ser '#' (fila 0, col 3)."
    ],
-   "name": "borde_abierto"
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "borde_abierto",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###.###########",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- [a] el enemigo 'S' (fila 4, col 12) está a 0.0 casillas de donde aparece el jugador por la puerta 'right' (mínimo 2.5)."
+   ],
+   "floor": {
+    "grid": [
+     [
+      "a",
+      "b"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "enemigo_pegado",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#...........S.#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    },
+    "b": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- [a] la baldosa de entrada 'up' (fila 1, col 7) debe ser '.', hay 'X'."
+   ],
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "entrada_ocupada",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#......X......#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- [a] tipo 'secreta' inválido (usar ['boss', 'normal', 'start'])."
+   ],
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "tipo_invalido",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "secreta"
+    }
+   }
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- La grilla usa 'zzz' en (1, 0) pero no está en rooms.json."
+   ],
+   "floor": {
+    "grid": [
+     [
+      "a",
+      "zzz"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "sala_faltante",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- [a] filas [3, 5] no miden 15 caracteres."
+   ],
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "filas_de_otro_ancho",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#.",
+      "#.............#",
+      "#.............",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
+  },
+  {
+   "errors": [
+    "Problemas en el piso:",
+    "- La sala inicial (9, 9) no existe en la grilla.",
+    "- [a] el borde debe ser '#' (fila 0, col 3).",
+    "- [a] carácter desconocido 'Z' en fila 2, col 3."
+   ],
+   "floor": {
+    "grid": [
+     [
+      "b",
+      null,
+      "a"
+     ]
+    ],
+    "name": "t",
+    "start": [
+     9,
+     9
+    ]
+   },
+   "name": "varios_problemas",
+   "rooms": {
+    "a": {
+     "layout": [
+      "###.###########",
+      "#.............#",
+      "#..Z..........#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    },
+    "b": {
+     "layout": [
+      "###############",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "#.............#",
+      "###############"
+     ],
+     "type": "normal"
+    }
+   }
   }
  ],
  "constants": {
@@ -476,5 +875,84 @@
    1
   ],
   "validate_errors": []
- }
+ },
+ "init_cases": [
+  {
+   "error": "El piso debe tener una grilla no vacía.",
+   "floor": {
+    "grid": [],
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "grilla_vacia",
+   "rooms": {}
+  },
+  {
+   "error": "Cada fila de la grilla del piso debe ser una lista.",
+   "floor": {
+    "grid": [
+     "x"
+    ],
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "fila_no_lista",
+   "rooms": {}
+  },
+  {
+   "error": "Todas las filas de la grilla del piso deben tener el mismo ancho.",
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ],
+     [
+      "a",
+      "a"
+     ]
+    ],
+    "start": [
+     0,
+     0
+    ]
+   },
+   "name": "filas_desparejas",
+   "rooms": {}
+  },
+  {
+   "error": "'start' debe ser una coordenada [columna, fila] entera.",
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "start": [
+     0
+    ]
+   },
+   "name": "inicio_mal",
+   "rooms": {}
+  },
+  {
+   "error": "'start' debe ser una coordenada [columna, fila] entera.",
+   "floor": {
+    "grid": [
+     [
+      "a"
+     ]
+    ],
+    "start": [
+     0,
+     "x"
+    ]
+   },
+   "name": "inicio_no_entero",
+   "rooms": {}
+  }
+ ]
 }
