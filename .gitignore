@@ -8,3 +8,9 @@ bin/
 .idea/
 .vscode/
 .DS_Store
+
+# Godot export artifacts and file-manager metadata
+/godot/*.pck
+/godot/*.sh
+/godot/*.x86_64
+**/.directory
