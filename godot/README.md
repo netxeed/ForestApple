@@ -3,13 +3,14 @@
 Prueba pequeña para decidir entre Python y Godot (ver `docs/motor.md`). **Es solo un
 experimento**: el juego sigue siendo el prototipo en Python de la raíz del repositorio.
 
-## Cómo se juega hoy (migración, etapa 1)
+## Cómo se juega hoy (migración, etapa 2)
 
 La escena principal ahora es `game.tscn`: el **menú del juego** (Jugar / Opciones / Salir), las opciones
 (pantalla completa, FPS, modo debug; se guardan solas), la pausa (Esc), el game over y los diálogos, todo
-igual que en el prototipo Python. "Jugar" abre una **partida provisoria**: `Esc` pausa, `E` abre un
-diálogo, `K` muestra el game over y `R` reinicia. El piso, el jugador y los enemigos llegan en las
-etapas 2 a 4 de `docs/migracion-godot.md`. Con el mouse se puede tocar el menú, las opciones y la pausa.
+igual que en el prototipo Python. "Jugar" abre el piso 1 como sala de prueba: se recorren las ocho salas,
+se ve el minimapa, las puertas hacen fundido y la llave desbloquea la entrada al jefe. Esta etapa todavía
+no instancia enemigos ni al jugador definitivo; eso se integra en las etapas 3 y 4 de
+`docs/migracion-godot.md`. Con el mouse se puede tocar el menú, las opciones y la pausa.
 
 La rebanada original (estante con Gala y Aida) sigue en `main.tscn`: para verla, ábrela en el editor y
 ejecútala con *Ejecutar escena actual* (F6), o desde la terminal con `godot --path godot main.tscn`.
@@ -40,7 +41,7 @@ de la consola de Godot.
 
 ## Pruebas
 
-Etapas 0 y 1 de la migración (`docs/migracion-godot.md`). Se corren desde la raíz del repositorio:
+Etapas 0, 1 y 2 de la migración (`docs/migracion-godot.md`). Se corren desde la raíz del repositorio:
 
 ```
 godot --headless --path godot --script res://tests/run_tests.gd
@@ -50,8 +51,12 @@ Termina con código 1 si algo falla. Si Godot no encuentra un `class_name` nuevo
 `godot --headless --path godot --import`. Los tests viven en `tests/test_*.gd`; los valores que
 comparan los calcula Python y están en `tests/golden/` (se regeneran con
 `python tools/export_golden.py`; un test de Python avisa si quedaron viejos).
+La prueba de dibujado mínimo para menú y sala se corre con
+`godot --headless --path godot --script res://tests/smoke_room_draw.gd`.
 
-**Verificado en Godot 4.7:** la etapa 0 (9 pruebas, 187 comprobaciones, 0 fallos). La lógica de la etapa 1 (pila de estados, cursor, diálogo) también pasó: 53 pruebas, 914 comprobaciones. Las pantallas, el director y las preferencias se escribieron después y todavía no se probaron.
+**Verificado en Godot 4.7:** 105 pruebas y 1216 comprobaciones, 0 fallos. El smoke headless también dibuja
+el menú y cambia a la sala de prueba sin errores. Godot informa recursos retenidos al terminar el runner;
+no afecta el resultado de las pruebas.
 
 ## Arte
 
@@ -73,9 +78,12 @@ ejecutable se usa antes que `../data`.
 | `scripts/dialogue/dialogue_lines.gd` | Validación de `data/dialogues.json` (`dialogue/lines.py`) |
 | `scripts/dialogue/dialogue_runner.gd` | Efecto de escritura, pausas y paso de línea (`dialogue/runner.py`) |
 | `scripts/states/state.gd`, `state_stack.gd` | Pantallas y pila de estados (`states/base.py`) |
+| `scripts/rooms/room.gd`, `floor.gd` | Geometría, puertas, llave, salas visitadas y progreso del piso |
+| `scripts/ui/hud.gd` | HP, minimapa, avisos y barra del jefe |
+| `scripts/states/room_test_state.gd` | Recorrido temporal del piso hasta integrar el combate |
 | `scripts/rooms/layout.gd` | Estructura del piso y validador (`rooms/layout.py`); se corre con `scripts/tools/validate_floor.gd` |
 | `scripts/states/cursor.gd` | Cursor de menús y filas tocables (`states/cursor.py`) |
-| `scripts/states/*_state.gd` | Menú, opciones, pausa, game over, diálogo y la partida provisoria |
+| `scripts/states/*_state.gd` | Menú, opciones, pausa, game over, diálogo y sala de prueba |
 | `scripts/core/` | `settings`, `controls`, `preferences`, `text_draw` y `game` (el director) |
 | `scripts/ui/menu_view.gd`, `scripts/dialogue/dialogue_box.gd` | Dibujo de los menús y de la caja de diálogo |
 | `scripts/dialogue_box.gd` | Caja de diálogo con máquina de escribir |
