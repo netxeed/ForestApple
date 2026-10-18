@@ -201,7 +201,14 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > (`godot --headless --path godot --script res://scripts/tools/validate_floor.gd`), con `test_layout.gd` contra
 > `golden/layout.json` (11 pisos mal armados y 5 errores de armado, además del piso 1). Diferencia con Python:
 > `setup()` devuelve el mensaje de error en vez de lanzar `ValueError`, y `validate()` devuelve las líneas del
-> mensaje (`[]` si está bien). Faltan `room`, `floor`, el minimapa/HUD, la llave y el fundido.
+> mensaje (`[]` si está bien).
+>
+> **Estado de la etapa 2 (partes 2 y 3):** ya están `rooms/room.gd`, `rooms/floor.gd`, `ui/hud_view.gd`
+> y `states/room_test_state.gd`. El piso de prueba recorre las salas con WASD, conserva las visitas,
+> recoge y usa la llave, bloquea ambas caras del acceso al jefe y hace el fundido al cruzar puertas.
+> El fondo de sala usa el diseño provisional simple de baldosas; los detalles de productos quedan para el arte.
+> `test_room_floor.gd` compara geometría, entradas, movimiento, llave, puertas y alfa del fundido contra
+> `golden/room_floor.json`. El jugador y los enemigos siguen pendientes de las etapas 3 y 4.
 
 ## 6. Archivo por archivo
 
@@ -630,11 +637,13 @@ rebotes: inyecta un `RandomNumberGenerator` para poder fijar la semilla en las p
 El mayor riesgo es una diferencia que solo se nota jugando. Para reducirlo, **Python genera los
 valores esperados y Godot los compara**.
 
-1. **`tools/export_golden.py`** (se escribe en la etapa 0) importa los módulos puros de Python y
+1. **`tools/export_golden.py`** (se escribe en la etapa 0) importa los módulos Python y
    escribe archivos JSON en `godot/tests/golden/`:
    - `phases.json`: `phase_for_hp` para una malla de vidas y umbrales.
    - `layout.json`: por sala, las puertas, los rectángulos de pared/obstáculo/puerta, los
      `entry_point` y el resultado de `validate()` (también con los casos de error de los tests).
+   - `room_floor.json`: paredes, obstáculos, puertas, entradas, posiciones de enemigos del layout,
+     recorrido del piso, salas conocidas, llave, cierres del jefe y alfa del fundido.
    - `patterns.json`: ángulos y velocidades de `fan` y `shot_at_angle` con varios parámetros.
    - `dialogue.json`: para **cada** clave de `dialogues.json`, el texto visible, las pausas y los
      renglones medidos con un ancho fijo; y la traza de `DialogueRunner` (`shown_count` cada 1/60 s).

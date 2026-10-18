@@ -7,8 +7,9 @@ se vuelven a generar:
     python tools/export_golden.py            # escribe los archivos
     python tools/export_golden.py --check    # solo comprueba que estén al día (código 1 si no)
 
-Solo usa módulos sin pygame (fases, estructura del piso, diálogos). Los valores de movimiento,
-patrones de proyectiles y del jefe dependen de pygame y se agregan en las etapas 3 y 4.
+Fases, estructura del piso y diálogos son lógica pura. Para exportar la geometría de `Room` se
+necesita pygame, pero no se crea una ventana. Los valores de movimiento, patrones de proyectiles y
+del jefe se agregan en las etapas 3 y 4.
 """
 
 import json
@@ -19,6 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from core.phases import DEATH_DIALOGUE, PHASE_DIALOGUE, phase_for_hp  # noqa: E402
+from core import settings as Settings  # noqa: E402
 from dialogue.lines import dialogue_keys, load_dialogue  # noqa: E402
 from dialogue.lines import Dialogue  # noqa: E402
 from dialogue.runner import DEFAULT_SPEED, DialogueRunner  # noqa: E402
@@ -34,6 +36,8 @@ from rooms.layout import (  # noqa: E402
     FloorLayout,
     load_floor_layout,
 )
+from rooms.floor import Floor  # noqa: E402
+from rooms.room import Room  # noqa: E402
 
 GOLDEN_DIR = ROOT / "godot" / "tests" / "golden"
 
@@ -235,6 +239,99 @@ def dialogue():
     }
 
 
+# ---------- salas y estado del piso ----------
+def room_floor():
+    floor = Floor.load("floor1")
+    start = floor.current_room
+    start.drop_key()
+    room_records = []
+    rect_values = lambda rect: [int(value) for value in rect]  # noqa: E731
+    for cell in sorted(floor.layout.cells, key=lambda pos: (pos[0], pos[1])):
+        data = floor.layout.room_data(cell)
+        room = Room(floor.layout.cells[cell], data, floor.layout.doors(cell))
+        enemy_positions = [
+            {"kind": enemy.kind, "position": [int(value) for value in enemy.rect.center]}
+            for enemy in room.enemies
+        ]
+        solids_with_enemies = len(room.solids)
+        for enemy in list(room.enemies):
+            enemy.kill()
+        solids_after_clear = len(room.solids)
+        room_records.append({
+            "col": cell[0], "row": cell[1], "id": room.id, "kind": room.kind,
+            "doors": sorted(room.doors),
+            "door_rects": {direction: rect_values(rect) for direction, rect in sorted(room.door_rects.items())},
+            "entry_points": {direction: [int(value) for value in room.entry_point(direction)] for direction in sorted(room.doors)},
+            "walls": [rect_values(rect) for rect in room.walls],
+            "obstacles": [rect_values(rect) for rect in room.obstacles],
+            "enemy_positions": enemy_positions,
+            "solids_with_enemies": solids_with_enemies,
+            "solids_after_clear": solids_after_clear,
+        })
+
+    # Ejercita el modelo de Floor de Python para que las expectativas de navegación,
+    # descubrimiento y candado del jefe salgan del prototipo, no de Godot.
+    initial_known = sorted(floor.known_cells())
+    movement = []
+    for direction in ("right", "down", "left", "up", "left", "down"):
+        moved = floor.move(direction)
+        movement.append({"direction": direction, "moved": moved, "position": list(floor.pos)})
+    boss_neighbor = next(
+        cell for cell in floor.layout.cells
+        if floor.layout.room_data(cell).get("type") == "boss"
+    )
+    boss_adjacent = next(
+        cell for cell in floor.layout.cells
+        if floor.layout.room_data(cell).get("type") != "boss"
+        and any(floor.layout.neighbor(cell, direction) == boss_neighbor for direction in DIRECTIONS)
+    )
+    boss_rooms = Floor.load("floor1")
+    for cell in boss_rooms.layout.cells:
+        if boss_rooms.layout.room_data(cell).get("type") != "boss":
+            cleared_room = boss_rooms.room_at(cell)
+            for enemy in list(cleared_room.enemies):
+                enemy.kill()
+    boss_rooms.pos = boss_adjacent
+    boss_rooms.refresh_boss_locks()
+    boss_room = boss_rooms.current_room
+    locked_before_key = sorted(boss_room.locked_doors)
+    boss_adjacent_room = boss_rooms.room_at(boss_adjacent)
+    boss_adjacent_room.drop_key()
+    class _GoldenPlayer:
+        def __init__(self):
+            self.trinkets = {"key": 1}
+        def consume_trinket(self, name):
+            if self.trinkets.get(name, 0) <= 0:
+                return False
+            self.trinkets[name] -= 1
+            return True
+    key_player = _GoldenPlayer()
+    unlocked = boss_rooms.use_key_at_boss_door(key_player)
+    return {
+        "rooms": room_records,
+        "floor": {
+            "start": list(Floor.load("floor1").pos),
+            "initial_room": start.id,
+            "initial_known": [[int(value) for value in cell] for cell in initial_known],
+            "movement": movement,
+            "boss_adjacent": list(boss_adjacent),
+            "boss_doors_locked_before_key": locked_before_key,
+            "all_non_boss_cleared": boss_rooms.all_non_boss_rooms_cleared(),
+            "key_unlocked_boss": unlocked,
+            "boss_unlocked": boss_rooms.boss_unlocked,
+            "boss_doors_locked_after_key": sorted(boss_room.locked_doors),
+            "key_rect": rect_values(start.key_rect),
+        },
+        "fade": {
+            "fade_time": Settings.FADE_TIME,
+            "samples": [
+                {"time": t, "alpha": int(255 * max(0.0, min(1.0, (t / Settings.FADE_TIME if t <= Settings.FADE_TIME else 2.0 - t / Settings.FADE_TIME))))}
+                for t in (0.0, 0.05, 0.15, 0.2, 0.25, 0.3)
+            ],
+        },
+    }
+
+
 def runner_cases():
     """Avance del efecto de escritura paso a paso: letras visibles y si está en pausa tras cada `dt`."""
     cases = []
@@ -248,7 +345,7 @@ def runner_cases():
     return cases
 
 
-FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue}
+FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue, "room_floor.json": room_floor}
 
 
 def render(data):
