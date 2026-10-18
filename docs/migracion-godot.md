@@ -210,6 +210,11 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > sustituirá al integrarse `play_state.gd` con `room.gd`/`floor.gd`. `tools/export_golden.py` exporta
 > trazas desde pygame a `tests/golden/player.json`, contrastadas por `test_player_golden.gd`.
 
+> **Estado de la etapa 3 (parte 2, primer grupo):** ya están `entities/enemy.gd`, `enemy_types.gd`,
+> fresa, piña y banana. También se portaron `patterns.gd` y sus pruebas doradas de abanicos y disparos
+> angulares. La arena temporal permite combatir contra estos tres enemigos; faltan limón, durazno,
+> charcos y su integración con las salas de la etapa 2.
+
 ## 6. Archivo por archivo
 
 Cada entrada dice **qué hace**, **cómo se traduce** y **qué no se puede perder**. Las rutas son las del
@@ -535,8 +540,24 @@ vecinas). Esto último lo usa el minimapa.
   `godot/sprites/LEEME.md`; el rectángulo de combate permanece en 20×20.
 - Los datos del objeto llave son `id`, nombre y `consumable`; su dibujo y la recogida pertenecen a
   `room.gd` (etapa 2), todavía pendiente de integrar en esta rama.
-- La arena temporal se inicia con Jugar y se prueba con WASD, flechas y Esc. No implementa salas,
-  HUD, enemigos ni puertas; esos componentes dependen de la etapa 2 y se conectarán en `play_state.gd`.
+- La arena temporal se inicia con Jugar y se prueba con WASD, flechas y Esc. Las frutas de la parte 2
+	se agregan en esa arena; todavía no implementa salas, HUD ni puertas, que dependen de la etapa 2 y
+	se conectarán en `play_state.gd`.
+
+**`entities/enemy.py`, `strawberry.py`, `pineapple.py`, `banana.py`, `patterns.py` → `scripts/entities/`**
+(parte 2 de la etapa 3)
+- `enemy.gd` carga una vez `data/enemies.json`, conserva los datos completos de estadísticas, vida,
+  daño por contacto, destello, sala asociada y colisión por ejes. Las subclases son lógica `RefCounted`
+  y `enemy_types.gd` las registra por la misma clave del JSON.
+- La fresa queda quieta y dispara al jugador con la primera espera de `fire_rate`; la piña lo persigue
+  a su velocidad; la banana conserva dirección y tiempos de carga, rango y enfriamiento tal como Python.
+- `patterns.gd` porta `fan` y `shot_at_angle` usando grados convertidos a radianes solo en el giro de
+  Godot. Los proyectiles resultantes usan la misma clase `projectile.gd`.
+- La arena temporal de `player_test_state.gd` coloca un ejemplar de cada fruta, actualiza sus tiros,
+  recibe daño, resuelve el contacto, los disparos del jugador y las paredes del recinto. Al integrar
+  `play_state.gd`, estas reglas pasarán a `room.gd`.
+- `tests/golden/enemies.json` contiene trazas pygame de cada comportamiento y los patrones; las compara
+  `test_enemies_golden.gd` con tolerancia numérica de 1e-4 por el uso de vectores float de Godot.
 
 **Reglas comunes de movimiento (jugador y enemigos)**
 Mueven **un eje por vez**: suman al eje, recalculan el `rect` con `round_py`, y si choca con un

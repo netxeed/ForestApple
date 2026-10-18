@@ -36,6 +36,10 @@ from rooms.layout import (  # noqa: E402
 )
 from entities.player import Player  # noqa: E402
 from entities.projectile import Projectile  # noqa: E402
+from entities.strawberry import Strawberry  # noqa: E402
+from entities.pineapple import Pineapple  # noqa: E402
+from entities.banana import Banana  # noqa: E402
+from entities.patterns import fan, shot_at_angle  # noqa: E402
 import pygame  # noqa: E402
 
 GOLDEN_DIR = ROOT / "godot" / "tests" / "golden"
@@ -358,7 +362,92 @@ def player_golden():
     }
 
 
-FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue, "player.json": player_golden}
+def _enemy_snapshot(enemy, shots, extra=None):
+    value = {
+        "pos": [enemy.pos.x, enemy.pos.y],
+        "rect": [enemy.rect.x, enemy.rect.y, enemy.rect.w, enemy.rect.h],
+        "hp": enemy.hp,
+        "alive": enemy.alive(),
+        "flash": enemy._flash,
+        "shots": [
+            {"pos": [shot.pos.x, shot.pos.y], "velocity": [shot.velocity.x, shot.velocity.y],
+             "rect": [shot.rect.x, shot.rect.y, shot.rect.w, shot.rect.h],
+             "damage": shot.damage, "lifetime": shot.lifetime}
+            for shot in shots
+        ],
+    }
+    if extra:
+        value.update(extra)
+    return value
+
+
+def enemies_golden():
+    dt = 1 / 60
+    walls = [pygame.Rect(0, 0, 480, 8), pygame.Rect(0, 280, 480, 8),
+             pygame.Rect(0, 0, 8, 288), pygame.Rect(472, 0, 8, 288),
+             pygame.Rect(145, 70, 20, 70)]
+    target = Player((220, 100), pygame.sprite.Group())
+    trace = {}
+
+    shots = pygame.sprite.Group()
+    strawberry = Strawberry((100, 100), shots)
+    enemies = pygame.sprite.Group(strawberry)
+    strawberry_trace = []
+    for tick in range(78):
+        strawberry.update(dt, target, walls)
+        shots.update(dt)
+        if tick in {0, 35, 70, 71, 77}:
+            strawberry_trace.append({"tick": tick, **_enemy_snapshot(strawberry, shots, {"cooldown": strawberry._cooldown})})
+    trace["strawberry"] = {"start": [100, 100], "target": [220, 100], "dt": [1, 60], "trace": strawberry_trace}
+
+    shots = pygame.sprite.Group()
+    pineapple = Pineapple((100, 100), shots)
+    enemies = pygame.sprite.Group(pineapple)
+    pineapple_trace = []
+    for tick in range(48):
+        pineapple.update(dt, target, walls)
+        shots.update(dt)
+        if tick in {0, 5, 11, 17, 23, 31, 39, 47}:
+            pineapple_trace.append({"tick": tick, **_enemy_snapshot(pineapple, shots)})
+    trace["pineapple"] = {"start": [100, 100], "target": [220, 100], "dt": [1, 60],
+                          "walls": [[w.x, w.y, w.w, w.h] for w in walls], "trace": pineapple_trace}
+
+    banana_target = Player((220, 100), pygame.sprite.Group())
+    shots = pygame.sprite.Group()
+    banana = Banana((100, 100), shots)
+    enemies = pygame.sprite.Group(banana)
+    banana_trace = []
+    for tick in range(54):
+        banana.update(dt, banana_target, walls[:4])
+        if tick in {0, 1, 5, 11, 17, 18, 23, 29, 35, 41, 47, 53}:
+            banana_trace.append({"tick": tick, **_enemy_snapshot(banana, shots, {
+                "charge_time": banana._charge_time,
+                "charge_cooldown": banana._charge_cooldown,
+                "charge_direction": [banana._charge_direction.x, banana._charge_direction.y],
+            })})
+    trace["banana"] = {"start": [100, 100], "target": [220, 100], "dt": [1, 60], "trace": banana_trace}
+
+    pattern_cases = []
+    for origin, destination, count, spread, speed in [
+        ((20, 30), (120, 90), 5, 50, 115), ((4, -7), (4, -7), 1, 180, 12),
+        ((0, 0), (-20, 4), 4, 90, 35),
+    ]:
+        projectiles = fan(origin, destination, count, spread, speed, 1, (250, 230, 120))
+        pattern_cases.append({"origin": list(origin), "target": list(destination), "count": count,
+                              "spread_deg": spread, "speed": speed,
+                              "shots": [{"pos": [shot.pos.x, shot.pos.y],
+                                         "velocity": [shot.velocity.x, shot.velocity.y],
+                                         "rect": [shot.rect.x, shot.rect.y, shot.rect.w, shot.rect.h]}
+                                        for shot in projectiles]})
+    angle_cases = []
+    for angle in (0, 45, 90, 180, -90, 270):
+        shot = shot_at_angle((12, 18), angle, 80, 2, (255, 140, 140), size=5, lifetime=3.0)
+        angle_cases.append({"angle": angle, "velocity": [shot.velocity.x, shot.velocity.y]})
+    return {"trace": trace, "patterns": {"fans": pattern_cases, "angles": angle_cases}}
+
+
+FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue,
+         "player.json": player_golden, "enemies.json": enemies_golden}
 
 
 def render(data):

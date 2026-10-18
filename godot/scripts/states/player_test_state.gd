@@ -2,11 +2,15 @@ extends "res://scripts/states/state.gd"
 ## Arena temporal para comprobar el jugador y los disparos mientras se completa la integración del piso.
 
 const S = preload("res://scripts/core/settings.gd")
+const Geo = preload("res://scripts/core/geo.gd")
 const PlayerScript = preload("res://scripts/entities/player.gd")
+const EnemyTypes = preload("res://scripts/entities/enemy_types.gd")
 
 const BORDER := 8.0
 var player
 var shots: Array = []
+var enemy_shots: Array = []
+var enemies: Array = []
 var walls: Array = []
 
 
@@ -18,6 +22,11 @@ func _init() -> void:
 		Rect2(0, S.SCREEN_H - BORDER, S.SCREEN_W, BORDER),
 		Rect2(0, 0, BORDER, S.SCREEN_H),
 		Rect2(S.SCREEN_W - BORDER, 0, BORDER, S.SCREEN_H),
+	]
+	enemies = [
+		EnemyTypes.create("strawberry", Vector2(124, 86), enemy_shots),
+		EnemyTypes.create("pineapple", Vector2(240, 86), enemy_shots),
+		EnemyTypes.create("banana", Vector2(356, 86), enemy_shots),
 	]
 
 
@@ -35,9 +44,30 @@ func handle_touch(game, action: String, _position) -> void:
 
 func update(_game, dt: float) -> void:
 	player.update(dt, walls)
+	for enemy in enemies.duplicate():
+		enemy.update(dt, player, walls)
+	for shot in enemy_shots.duplicate():
+		shot.update(dt)
+		if _touches_wall(shot.rect):
+			shot.kill()
+		elif Geo.overlaps(shot.rect, player.rect):
+			player.take_damage(shot.damage)
+	for enemy in enemies:
+		if Geo.overlaps(enemy.rect, player.rect):
+			player.take_damage(enemy.contact_damage)
 	for shot in shots.duplicate():
 		shot.update(dt)
+		if _touches_wall(shot.rect):
+			shot.kill()
+			continue
+		for enemy in enemies:
+			if enemy.alive and Geo.overlaps(shot.rect, enemy.rect):
+				enemy.take_damage(shot.damage)
+				shot.kill()
+				break
 	shots = shots.filter(func(shot): return shot.alive)
+	enemy_shots = enemy_shots.filter(func(shot): return shot.alive)
+	enemies = enemies.filter(func(enemy): return enemy.alive)
 	player.shots = shots
 
 
@@ -47,6 +77,17 @@ func draw(game, canvas) -> void:
 		canvas.draw_rect(wall, S.WALL)
 	for shot in shots:
 		shot.draw(canvas)
+	for shot in enemy_shots:
+		shot.draw(canvas)
+	for enemy in enemies:
+		enemy.draw(canvas)
 	player.draw(canvas)
 	game.text("Prueba del jugador", "menu", S.WHITE, Vector2(S.SCREEN_W / 2.0, 34), "center")
 	game.text("WASD mover    Flechas disparar    Esc pausa", "text", S.WHITE, Vector2(S.SCREEN_W / 2.0, S.SCREEN_H - 20), "center")
+
+
+func _touches_wall(rect: Rect2) -> bool:
+	for wall in walls:
+		if Geo.overlaps(rect, wall):
+			return true
+	return false
