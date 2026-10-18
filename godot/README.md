@@ -16,6 +16,17 @@ El cálculo táctil se compara con valores dorados, pero la respuesta de pantall
 necesita una pasada en un teléfono Android real. La carpeta `sprites/` admite PNG de 32×32; este
 checkout no incluye sprites de personajes, así que el juego dibuja figuras de respaldo.
 
+## Exportar a Android
+
+`export_presets.cfg` incluye el preset `Android`: APK con Gradle, paquete
+`org.forestapple.forestapple`, API mínima 23, objetivo 35 y arquitecturas `arm64-v8a` y
+`armeabi-v7a`. En Godot, instala las plantillas de exportación y la plantilla de compilación Android
+desde el menú **Proyecto**; configura OpenJDK 17 y Android SDK en **Editor → Ajustes del editor →
+Exportar → Android**. Luego exporta el preset `Android` a `build/ForestApple.apk`.
+
+La exportación requiere el entorno Android local. La instalación y prueba de controles y diálogos en
+un teléfono real sigue siendo parte del checklist manual.
+
 ## Datos y pruebas
 
 `../data/` sigue siendo la fuente de Python. `godot/data/` contiene una copia idéntica para empaquetar
