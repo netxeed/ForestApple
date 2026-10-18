@@ -25,3 +25,8 @@ func golden(file_name: String) -> Variant:
 		failures.append("Falta el archivo dorado %s (corre `python tools/export_golden.py`)." % path)
 		return null
 	return JSON.parse_string(FileAccess.get_file_as_string(path))
+
+
+## Ruta al data/dialogues.json del repositorio (los tests se corren desde el repositorio).
+func dialogues_path() -> String:
+	return ProjectSettings.globalize_path("res://").path_join("../data/dialogues.json")

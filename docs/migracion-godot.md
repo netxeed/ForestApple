@@ -178,6 +178,16 @@ agregar al terminar la etapa 0; hoy no existe y no puedo probarla desde mi entor
 > jefe se agregan en las etapas 3 y 4. Ojo: en `golden/layout.json` los mensajes de error traen las
 > coordenadas con el formato de Python (`(2, 0)`); el validador de Godot tiene que imitarlo.
 
+> **Estado de la etapa 1 (mitad lógica):** ya están `states/state.gd`, `state_stack.gd`, `cursor.gd`,
+> `dialogue/dialogue_runner.gd`, `dialogue_lines.gd` (validador) y las funciones `tag_errors` y `wrap_spans`
+> en `dialogue_parser.gd`, con sus tests (`test_states`, `test_cursor`, `test_dialogue_logic`) y valores dorados
+> nuevos (errores de etiquetas, corte en renglones y avance del runner paso a paso). Faltan `settings`,
+> `controls`, `preferences`, `Game`, las pantallas (menú, opciones, pausa, game over, diálogo), la caja de
+> diálogo nueva y los controles táctiles. Diferencias respecto de Python a tener en cuenta:
+> `StateStack.switch` se llama **`switch_to`** (`switch` es palabra reservada de GDScript), `len(stack)` es
+> `size()` y `states`/`top` son métodos; los errores de la pila (pop con la pila vacía) se anotan en
+> `errors` en vez de lanzar excepciones.
+
 ## 6. Archivo por archivo
 
 Cada entrada dice **qué hace**, **cómo se traduce** y **qué no se puede perder**. Las rutas son las del

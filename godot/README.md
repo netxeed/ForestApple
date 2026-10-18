@@ -29,7 +29,7 @@ de la consola de Godot.
 
 ## Pruebas
 
-Etapa 0 de la migración (`docs/migracion-godot.md`). Se corren desde la raíz del repositorio:
+Etapas 0 y 1 de la migración (`docs/migracion-godot.md`). Se corren desde la raíz del repositorio:
 
 ```
 godot --headless --path godot --script res://tests/run_tests.gd
@@ -40,7 +40,7 @@ Termina con código 1 si algo falla. Si Godot no encuentra un `class_name` nuevo
 comparan los calcula Python y están en `tests/golden/` (se regeneran con
 `python tools/export_golden.py`; un test de Python avisa si quedaron viejos).
 
-**Sin ejecutar todavía:** el ejecutor y los tests de Godot se escribieron sin poder correr Godot.
+**Verificado en Godot 4.7:** la etapa 0 (9 pruebas, 187 comprobaciones, 0 fallos). Los tests de la etapa 1 (pila de estados, cursor, diálogo) se escribieron sin poder correr Godot y todavía no se probaron.
 
 ## Arte
 
@@ -58,5 +58,9 @@ ejecutable se usa antes que `../data`.
 | `scripts/player.gd` | Movimiento de la manzana |
 | `scripts/npc.gd` | Una fruta hablante |
 | `scripts/sprites.gd` | Carga de PNG por nombre desde `sprites/` (con respaldo a figuras) |
-| `scripts/dialogue_parser.gd` | Parseo de `{pause=...}` y líneas (equivale a `dialogue/text.py`) |
+| `scripts/dialogue/dialogue_parser.gd` | Parseo de `{pause=...}`, errores de etiquetas y corte en renglones (`dialogue/text.py`) |
+| `scripts/dialogue/dialogue_lines.gd` | Validación de `data/dialogues.json` (`dialogue/lines.py`) |
+| `scripts/dialogue/dialogue_runner.gd` | Efecto de escritura, pausas y paso de línea (`dialogue/runner.py`) |
+| `scripts/states/state.gd`, `state_stack.gd` | Pantallas y pila de estados (`states/base.py`) |
+| `scripts/states/cursor.gd` | Cursor de menús y filas tocables (`states/cursor.py`) |
 | `scripts/dialogue_box.gd` | Caja de diálogo con máquina de escribir |

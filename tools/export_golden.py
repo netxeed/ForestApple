@@ -20,8 +20,9 @@ sys.path.insert(0, str(ROOT))
 
 from core.phases import DEATH_DIALOGUE, PHASE_DIALOGUE, phase_for_hp  # noqa: E402
 from dialogue.lines import dialogue_keys, load_dialogue  # noqa: E402
-from dialogue.runner import DEFAULT_SPEED  # noqa: E402
-from dialogue.text import parse_text  # noqa: E402
+from dialogue.lines import Dialogue  # noqa: E402
+from dialogue.runner import DEFAULT_SPEED, DialogueRunner  # noqa: E402
+from dialogue.text import parse_text, tag_errors, wrap_spans  # noqa: E402
 from rooms.layout import (  # noqa: E402
     APPROACH_TILE,
     COLS,
@@ -143,6 +144,27 @@ PARSE_CASES = [
 ]
 
 
+TAG_CASES = [
+    "Hola{pause=0.5}", "Hola{pausa=1}", "Hola{pause=0}", "Hola{pause=99}", "Hola {pause=1", "Hola pause=1}",
+    "{pause=5}x", "{pause=5.1}x", "{pause=abc}", "a{b}c{pause=1}d", "{}", "{pause=1}{pause=2}",
+]
+TOY_MEASURE = lambda s: len(s) * 9  # noqa: E731
+BOX_TEXT_WIDTH = 480 - 2 * 8 - 2 * 10  # igual que DialogueBox.text_width()
+WRAP_CASES = [
+    ("uno dos", 200), ("uno dos tres cuatro", 80), ("uno\ndos tres", 200), ("uno\n\ndos", 200),
+    ("extraordinariamente corto", 30), ("uno dos\ntres cuatro cinco", 80), ("", 100), ("   ", 100),
+]
+# Cada paso `dt` se escribe como [numerador, denominador] para que Python y Godot calculen
+# exactamente el mismo número (dividir dos enteros da el mismo double; leer "0.1" de un JSON, quizá no).
+RUNNER_CASES = [
+    ("a" * 100, 45, [[1, 60]] * 30),
+    ("ab{pause=1}cd", 10, [[1, 2], [6, 10], [2, 10], [10, 10]]),
+    ("a{pause=1}b{pause=1}c", 10, [[10, 1]]),
+    ("Mira...{pause=0.6} estoy{pause=1} abierta.", 45, [[1, 60]] * 140),
+    ("hola mundo", 20, [[0, 1], [1, 10], [1, 10], [1, 2], [1, 1]]),
+]
+
+
 def dialogue():
     parse_cases = []
     for raw in PARSE_CASES:
@@ -162,7 +184,40 @@ def dialogue():
                 "speed": float(line.speed or DEFAULT_SPEED),
             })
         dialogues[key] = {"speaker": d.speaker, "lines": lines}
-    return {"default_speed": DEFAULT_SPEED, "parse_cases": parse_cases, "dialogues": dialogues}
+
+    tag_cases = [{"raw": raw, "errors": tag_errors(raw)} for raw in TAG_CASES]
+
+    # Corte en renglones con una fuente de juguete (9 px por letra) y el ancho útil de la caja.
+    wrap_cases = []
+    for key in dialogue_keys():
+        for number, line in enumerate(load_dialogue(key).all_lines()):
+            spans = wrap_spans(line.plain, TOY_MEASURE, BOX_TEXT_WIDTH)
+            wrap_cases.append({"key": key, "line": number, "spans": [[a, b] for a, b in spans]})
+    for text, width in WRAP_CASES:
+        wrap_cases.append({"text": text, "width": width, "spans": [[a, b] for a, b in wrap_spans(text, TOY_MEASURE, width)]})
+
+    return {
+        "default_speed": DEFAULT_SPEED,
+        "parse_cases": parse_cases,
+        "tag_cases": tag_cases,
+        "wrap_width": BOX_TEXT_WIDTH,
+        "wrap_cases": wrap_cases,
+        "runner_cases": runner_cases(),
+        "dialogues": dialogues,
+    }
+
+
+def runner_cases():
+    """Avance del efecto de escritura paso a paso: letras visibles y si está en pausa tras cada `dt`."""
+    cases = []
+    for text, speed, steps in RUNNER_CASES:
+        runner = DialogueRunner(Dialogue("X", (text,), (None,), (speed,), None))
+        trace = []
+        for numerator, denominator in steps:
+            runner.update(numerator / denominator)
+            trace.append({"shown": runner.shown_count, "waiting": runner.waiting, "complete": runner.line_complete})
+        cases.append({"text": text, "speed": speed, "steps": steps, "trace": trace})
+    return cases
 
 
 FILES = {"phases.json": phases, "layout.json": layout, "dialogue.json": dialogue}
