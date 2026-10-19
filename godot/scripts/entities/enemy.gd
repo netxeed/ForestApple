@@ -5,6 +5,7 @@ const DataPaths = preload("res://scripts/core/data_paths.gd")
 const Geo = preload("res://scripts/core/geo.gd")
 const SpritesScript = preload("res://scripts/sprites.gd")
 const WALK_POSES := ["1", "idle", "2", "idle"]
+const WALK_FRAME_DISTANCE := 10.0
 
 static var _enemy_data: Dictionary = {}
 
@@ -24,7 +25,7 @@ var _flash := 0.0
 var flash_visible := false
 var facing := "s"
 var _walk_frame := 0
-var _walk_elapsed := 0.0
+var _walk_distance := 0.0
 var _walking := false
 var _room_ref: WeakRef
 var room:
@@ -83,12 +84,12 @@ func update(dt: float, player, walls: Array) -> void:
 			facing = "e" if movement.x > 0.0 else "o"
 		else:
 			facing = "s" if movement.y > 0.0 else "n"
-		_walk_elapsed += dt
-		while _walk_elapsed >= 0.14:
-			_walk_elapsed -= 0.14
+		_walk_distance += movement.length()
+		while _walk_distance >= WALK_FRAME_DISTANCE:
+			_walk_distance -= WALK_FRAME_DISTANCE
 			_walk_frame = (_walk_frame + 1) % WALK_POSES.size()
 	else:
-		_walk_elapsed = 0.0
+		_walk_distance = 0.0
 		_walk_frame = 0
 	if _flash > 0.0:
 		flash_visible = true

@@ -73,7 +73,9 @@ func handle_motion(finger: int, position: Vector2) -> void:
 
 
 func handle_up(finger: int, position: Vector2) -> void:
-	touch_active = true
+	# Mantener el indicador solo mientras quede otro dedo apoyado. Este estado también
+	# distingue los clics de mouse emulados de los toques reales.
+	touch_active = fingers.size() > 1
 	last_position = position
 	fingers.erase(finger)
 	finger_roles.erase(finger)

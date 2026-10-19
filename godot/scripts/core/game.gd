@@ -22,6 +22,7 @@ const MenuViewScript = preload("res://scripts/ui/menu_view.gd")
 const HUDViewScript = preload("res://scripts/ui/hud.gd")
 const ParserScript = preload("res://scripts/dialogue/dialogue_parser.gd")
 const LinesScript = preload("res://scripts/dialogue/dialogue_lines.gd")
+const MOUSE_TOUCH_ID := -1
 
 var is_mobile: bool = OS.has_feature("mobile")
 var fullscreen := false
@@ -268,7 +269,7 @@ func _draw() -> void:
 		touch_controls.draw(self)
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	var key_event := event as InputEventKey
 	var button := event as InputEventMouseButton
 	var motion := event as InputEventMouseMotion
@@ -282,6 +283,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		if screen_touch.pressed:
 			touch_controls.handle_down(screen_touch.index, position)
 			states.handle_pointer(position)
+			# Android puede no entregar el evento de soltado tras una pulsación dentro de
+			# la pantalla. Los elementos del menú se activan al tocar, como botones nativos.
+			if states.top() is MenuStateScript and MenuStateScript._row_at(position) != null:
+				states.handle_touch("tap", position)
 		else:
 			touch_controls.handle_up(screen_touch.index, position)
 			if not states.handle_release(position, "finger"):
@@ -295,15 +300,30 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif button != null and button.button_index == MOUSE_BUTTON_LEFT:
 		var position := (make_input_local(button) as InputEventMouseButton).position
 		if button.pressed:
+			if is_mobile:
+				touch_controls.handle_down(MOUSE_TOUCH_ID, position)
 			states.handle_pointer(position)
-		elif not states.handle_release(position, "mouse"):
-			var action = touch_controls.release_action(position)
-			if action != null:
-				states.handle_touch(action, touch_controls.current_tap_position())
-			elif not touch_controls.touch_active:
+			# Algunos dispositivos/controladores entregan el toque como botón izquierdo.
+			# Activar aquí también evita depender del evento release en Android.
+			if states.top() is MenuStateScript and MenuStateScript._row_at(position) != null:
 				states.handle_touch("tap", position)
-	elif motion != null and (motion.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
-		states.handle_pointer((make_input_local(motion) as InputEventMouseMotion).position)
+		else:
+			if is_mobile:
+				touch_controls.handle_up(MOUSE_TOUCH_ID, position)
+			if not states.handle_release(position, "mouse"):
+				var action = touch_controls.release_action(position)
+				if action != null:
+					states.handle_touch(action, touch_controls.current_tap_position())
+				elif not touch_controls.touch_active:
+					states.handle_touch("tap", position)
+	elif motion != null and (
+			(motion.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0
+			or (is_mobile and touch_controls.fingers.has(MOUSE_TOUCH_ID))
+	):
+		var position := (make_input_local(motion) as InputEventMouseMotion).position
+		if is_mobile:
+			touch_controls.handle_motion(MOUSE_TOUCH_ID, position)
+		states.handle_pointer(position)
 
 
 func _notification(what: int) -> void:

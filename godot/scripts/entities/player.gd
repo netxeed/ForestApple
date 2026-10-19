@@ -128,6 +128,8 @@ func update(dt: float, walls: Array, touch_move: Variant = null, touch_aim: Vari
 		facing = _direction(aim)
 		if _cooldown <= 0.0:
 			_shoot(aim)
+	elif velocity.length_squared() > 0.0:
+		facing = _direction(velocity)
 
 	if _invuln > 0.0:
 		_invuln -= dt
