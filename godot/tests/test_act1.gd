@@ -73,7 +73,7 @@ func test_exploracion_completa_hasta_el_acto_2() -> void:
 	var game = GameScript.new()
 	game.states.quiet = true
 	game.start_act1()
-	var state = game.states.top()
+	var state = game.states.states()[0]  # el estado de exploración queda debajo del diálogo de apertura
 	check(state is Act1StateScript, "F2 abre el Acto 1")
 	check(game.in_act1, "el juego sabe que está en el Acto 1")
 	check(game.states.top() is DialogueStateScript, "abre con el diálogo del despertar")
@@ -101,8 +101,9 @@ func test_reiniciar_desde_la_pausa_reinicia_el_acto_1() -> void:
 	game.states.quiet = true
 	game.start_act1()
 	_close_dialogues(game)
+	check(game.states.top() is Act1StateScript, "tras el despertar manda el Acto 1")
 	game.start_run()  # lo que llama «Reiniciar»
-	check(game.states.top() is Act1StateScript, "reinicia el Acto 1, no el Acto 2")
+	check(game.states.states()[0] is Act1StateScript, "reinicia el Acto 1, no el Acto 2")
 	game.return_to_menu()
 	check(not game.in_act1, "al salir al menú se olvida el modo")
 	game.free()
