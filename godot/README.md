@@ -46,3 +46,6 @@ python -m unittest discover -s tests -v
 `tools/export_golden.py` genera los JSON de referencia desde el prototipo. La CI corre los tests de
 Python y Godot en cada pull request. El código Python sigue en la raíz y no se archiva hasta terminar
 el checklist manual de `docs/migracion-godot.md`, incluida la prueba en Android.
+- `F2` en el menú abre el **Acto 1** (exploración y diálogo, sin combate): se camina con WASD o las flechas y `E`
+  (o Espacio/Enter/Z) habla con quien esté cerca. La historia avanza por etapas (`scripts/story/act1_story.gd`) y el
+  escenario está en `data/act1.json`. Al terminar sigue el Acto 2. «Reiniciar» en la pausa reinicia el Acto 1.

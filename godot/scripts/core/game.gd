@@ -14,6 +14,7 @@ const PauseStateScript = preload("res://scripts/states/pause_state.gd")
 const GameOverStateScript = preload("res://scripts/states/gameover_state.gd")
 const DialogueStateScript = preload("res://scripts/states/dialogue_state.gd")
 const PlayStateScript = preload("res://scripts/states/play_state.gd")
+const Act1StateScript = preload("res://scripts/states/act1_state.gd")
 const PlayerScript = preload("res://scripts/entities/player.gd")
 const EnemyTypesScript = preload("res://scripts/entities/enemy_types.gd")
 const TouchControlsScript = preload("res://scripts/core/touch_controls.gd")
@@ -43,6 +44,8 @@ var player
 var player_shots: Array = []
 var banner
 var hole_dialogue_shown := false
+## Verdadero mientras se juega el Acto 1: «Reiniciar» del menú de pausa lo reinicia a él.
+var in_act1 := false
 
 
 func _init() -> void:
@@ -112,9 +115,28 @@ func save_preferences() -> bool:
 # ---------- cambios de pantalla (los usan los estados) ----------
 ## Empieza una partida nueva (también sirve para reiniciar).
 func start_run() -> void:
+	if in_act1:
+		start_act1()
+		return
+	_start_act2()
+
+
+func _start_act2() -> void:
 	if not _reset_run():
 		return
 	states.switch_to(PlayStateScript.new())
+
+
+## Acto 1: exploración y diálogo (se abre con F2 en el menú).
+func start_act1() -> void:
+	in_act1 = true
+	states.switch_to(Act1StateScript.new(self))
+
+
+## El Acto 1 terminó: sigue el Acto 2 (el juego de salas).
+func finish_act1() -> void:
+	in_act1 = false
+	_start_act2()
 
 
 func _reset_run() -> bool:
@@ -152,6 +174,7 @@ func open_options() -> void:
 
 
 func return_to_menu() -> void:
+	in_act1 = false
 	states.switch_to(MenuStateScript.new(self))
 
 

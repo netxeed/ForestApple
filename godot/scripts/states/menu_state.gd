@@ -27,6 +27,8 @@ func resume(game) -> void:
 func handle_key(game, event) -> void:
 	if event.is_action_pressed("pause"):
 		game.quit()
+	elif event is InputEventKey and event.pressed and event.keycode == KEY_F2:
+		game.start_act1()  # Acto 1 (en construcción): todavía no está en las opciones del menú
 	elif Controls.move_cursor(cursor, event):
 		pass
 	elif event.is_action_pressed("confirm"):
