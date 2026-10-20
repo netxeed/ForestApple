@@ -12,6 +12,7 @@ const LinesScript = preload("res://scripts/dialogue/dialogue_lines.gd")
 func test_historia_recorre_las_etapas_en_orden() -> void:
 	var story = StoryScript.new()
 	check_eq(story.stage, "dia", "empieza en un día cualquiera")
+	check_eq(story.prologue_dialogue(), "acto1_prologo", "antes de todo, el prólogo")
 	check_eq(story.opening_dialogue(), "acto1_despertar", "abre con el despertar")
 	check_eq(story.npcs(), ["gala", "aida", "isolde"], "las tres amigas")
 	check(not story.ready_to_advance(), "sin hablar con nadie no se avanza")
@@ -43,6 +44,7 @@ func test_historia_recorre_las_etapas_en_orden() -> void:
 	check(story.is_aged("gala"), "las amigas se ven envejecidas")
 	check_eq(story.dialogue_for("aida"), "acto1_aida_vieja", "despedida")
 	check_eq(story.opening_dialogue(), "", "no hay diálogo de apertura fuera del primer día")
+	check_eq(story.prologue_dialogue(), "", "ni prólogo")
 	for id in ["gala", "aida", "isolde"]:
 		story.talk(id)
 	check_eq(story.task, "hecha", "la tarea no se reinicia")
@@ -63,7 +65,7 @@ func test_todos_los_dialogos_del_acto_1_existen() -> void:
 	var dialogues: Dictionary = LinesScript.load_file(dialogues_path(), errors)
 	check_eq(errors, [], "dialogues.json sin errores")
 	var story = StoryScript.new()
-	var keys: Array = [story.opening_dialogue()]
+	var keys: Array = [story.prologue_dialogue(), story.opening_dialogue()]
 	for stage in ["dia", "tragedia", "crisis"]:
 		story.stage = stage
 		for id in story.npcs():
@@ -93,8 +95,11 @@ func test_exploracion_completa_hasta_el_acto_2() -> void:
 	var state = game.states.states()[0]  # el estado de exploración queda debajo del diálogo de apertura
 	check(state is Act1StateScript, "F2 abre el Acto 1")
 	check(game.in_act1, "el juego sabe que está en el Acto 1")
-	check(game.states.top() is DialogueStateScript, "abre con el diálogo del despertar")
+	check(game.states.top() is DialogueStateScript, "abre con el prólogo")
+	check(state.black, "el prólogo va en pantalla negra")
+	check_eq(game.states.top().snapshot()["speaker"], "", "al principio nadie tiene nombre")
 	_close_dialogues(game)
+	check(not state.black, "terminado el prólogo vuelve la imagen")
 	check(game.states.top() == state, "terminado el despertar se puede caminar")
 
 	_talk_to(game, state, "gala")

@@ -294,6 +294,12 @@ a su sección y se anota en el historial (sección 9).
 - Acto 2: se suman puzzles y cosas secretas; tras el último jefe, la manzana habla con el niño.
 - `acto1_nino_llega` ya está reescrito: el niño aparece tras la tragedia, casi se come a la manzana y le da la idea del bosque.
 
+**v0.4 (borrador)** (guion del equipo: prólogo y Misión 1)
+- El equipo escribió un **prólogo** (la manzana le habla al jugador en pantalla negra) y la **Misión 1**: encontrar a Dante, un durazno, antes de que la sandía Gutenberg lo aplaste. El texto está tal cual en `docs/acto1-guion-equipo.md`, con notas de integración y preguntas abiertas.
+- El prólogo ya es jugable en Godot (`acto1_prologo`), sin las tres imágenes (faltan de arte).
+- La Misión 1 **todavía no está implementada**: antes hay que decidir cómo convive con las mini-tareas ya hechas y cómo se busca a Dante (ver las notas del guion).
+- Se registran dos datos nuevos del mundo: las frutas hablan en rioplatense (Berazategui, cinturón verde del AMBA) y solo tienen nombre las que hicieron algo importante.
+
 **v0.3.3** (segunda mini-tarea)
 - Mini-tarea de Aida en el primer día: te pide que la acompañes al borde del estante (abajo a la derecha). Te sigue por tu mismo camino y, al llegar, hay una escena corta donde miran el vacío. Después hay que volver a hablar con ella para que el día pueda cerrar. Textos borrador: `acto1_aida_tarea`, `_recordar`, `acto1_aida_borde` y `_fin`.
 - El escenario de `data/act1.json` mueve a Isolde un poco hacia arriba para que no quede pegada a la zona del borde.

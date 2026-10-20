@@ -135,6 +135,11 @@ func advance() -> Array:
 	return keys
 
 
+## El prólogo (la manzana le habla al jugador, en pantalla negra). Solo al empezar el primer día.
+func prologue_dialogue() -> String:
+	return "acto1_prologo" if stage == "dia" else ""
+
+
 ## Diálogos que se muestran por sí solos (sin hablar con nadie) al empezar la etapa.
 func opening_dialogue() -> String:
 	return "acto1_despertar" if stage == "dia" else ""

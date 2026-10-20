@@ -42,6 +42,7 @@ var blocks: Array[Rect2] = []  # paredes y obstáculos
 var npc_info: Dictionary = {}  # id -> {name, pos, color}
 var fade := 0.0
 var busy := false  # hay una escena en curso
+var black := false  # pantalla negra (durante el prólogo)
 ## Frascos de la mini-tarea de Isolde: {pos, slot, color, placed}. `carrying` es el que se lleva (-1 si ninguno).
 var items: Array = []
 var carrying := -1
@@ -87,9 +88,14 @@ func _init(_game = null) -> void:
 
 
 func enter(game) -> void:
-	var key: String = story.opening_dialogue()
-	if key != "":
-		_say_sequence(game, [key], 0)
+	var keys: Array = []
+	if story.prologue_dialogue() != "":
+		keys.append(story.prologue_dialogue())
+		black = true
+	if story.opening_dialogue() != "":
+		keys.append(story.opening_dialogue())
+	if not keys.is_empty():
+		_say_sequence(game, keys, 0)
 
 
 # ---------- datos ----------
@@ -291,6 +297,9 @@ func _say_sequence(game, keys: Array, index: int, check_advance: bool = false) -
 
 
 func _next_in_sequence(game, keys: Array, index: int, check_advance: bool) -> void:
+	if black:  # terminó el prólogo: la escena aparece con un fundido
+		black = false
+		fade = 1.0
 	_say_sequence(game, keys, index, check_advance)
 
 
@@ -356,7 +365,9 @@ func draw(game, canvas) -> void:
 	if near != "" and not busy:
 		var pos: Vector2 = npc_info[near]["pos"]
 		game.text("E: hablar", "footer", S.WHITE, pos + Vector2(0, 22), "center")
-	if fade > 0.0:
+	if black:
+		canvas.draw_rect(Rect2(0, 0, S.SCREEN_W, S.SCREEN_H), Color.BLACK)
+	elif fade > 0.0:
 		canvas.draw_rect(Rect2(0, 0, S.SCREEN_W, S.SCREEN_H), Color(0, 0, 0, clampf(fade, 0.0, 1.0)))
 
 
