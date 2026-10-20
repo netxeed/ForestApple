@@ -16,6 +16,7 @@ const DialogueStateScript = preload("res://scripts/states/dialogue_state.gd")
 const PlayStateScript = preload("res://scripts/states/play_state.gd")
 const Act1StateScript = preload("res://scripts/states/act1_state.gd")
 const PlayerScript = preload("res://scripts/entities/player.gd")
+const KidScript = preload("res://scripts/entities/kid.gd")
 const EnemyTypesScript = preload("res://scripts/entities/enemy_types.gd")
 const TouchControlsScript = preload("res://scripts/core/touch_controls.gd")
 const FloorScript = preload("res://scripts/rooms/floor.gd")
@@ -41,6 +42,9 @@ var prefs_path: String = Preferences.DEFAULT_PATH
 var dialogues: Dictionary = {}
 var floor
 var player
+var apple
+var kid
+var character_switch_cooldown := 0.0
 var player_shots: Array = []
 var banner
 var hole_dialogue_shown := false
@@ -146,9 +150,23 @@ func _reset_run() -> bool:
 		push_error("No se pudo cargar el piso:\n- " + "\n- ".join(errors))
 		return false
 	player_shots = []
-	player = PlayerScript.new(Vector2(S.SCREEN_W / 2.0, S.SCREEN_H / 2.0), player_shots)
+	var start := Vector2(S.SCREEN_W / 2.0, S.SCREEN_H / 2.0)
+	apple = PlayerScript.new(start, player_shots)
+	kid = KidScript.new(start, player_shots)
+	player = apple
+	character_switch_cooldown = 0.0
 	banner = null
 	hole_dialogue_shown = false
+	return true
+
+
+func switch_character() -> bool:
+	if player == null or character_switch_cooldown > 0.0:
+		return false
+	var next = kid if player == apple else apple
+	player.copy_runtime_to(next)
+	player = next
+	character_switch_cooldown = 15.0
 	return true
 
 

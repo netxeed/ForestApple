@@ -25,3 +25,10 @@ func update_behavior(dt: float, player, walls: Array) -> void:
 		_move(_charge_direction * float(stats.charge_speed) * dt, walls)
 	elif distance > 0.0:
 		_move(to_player.normalized() * speed * dt, walls)
+
+
+func apply_knockback(direction: Vector2, distance: float, walls: Array) -> void:
+	super.apply_knockback(direction, distance, walls)
+	if _charge_time > 0.0:
+		_charge_time = 0.0
+		_charge_cooldown = maxf(_charge_cooldown, 0.45)

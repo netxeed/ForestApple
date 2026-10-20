@@ -72,6 +72,11 @@ func kill() -> void:
 	alive = false
 
 
+func apply_knockback(direction: Vector2, distance: float, walls: Array) -> void:
+	if alive and direction.length_squared() > 0.0:
+		_move(direction.normalized() * distance, walls)
+
+
 func update(dt: float, player, walls: Array) -> void:
 	if not alive:
 		return

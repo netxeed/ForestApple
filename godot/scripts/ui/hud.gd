@@ -7,6 +7,11 @@ const S = preload("res://scripts/core/settings.gd")
 
 func draw(game, canvas: CanvasItem) -> void:
 	game.text("HP: %d/%d" % [game.player.hp, game.player.max_hp], "text", S.WHITE, Vector2(S.TILE + 4, 8))
+	var character_name := "Niño" if game.player.character == "nino" else "Manzana"
+	var cooldown_text := "L: listo" if game.character_switch_cooldown <= 0.0 else "L: %ds" % ceili(game.character_switch_cooldown)
+	game.text("%s  |  %s" % [character_name, cooldown_text], "text", S.WHITE, Vector2(S.TILE + 4, 62))
+	var combat_hint := "Flechas: espada  F: bloquear" if game.player.character == "manzana" else "Flechas: piedras"
+	game.text(combat_hint, "text", S.WHITE, Vector2(S.TILE + 4, 80))
 	if S.DEBUG_KEYS:
 		var speed: float = game.player.velocity.length()
 		game.text("Velocidad: %.1f px/s" % speed, "text", S.WHITE, Vector2(S.TILE + 4, 26))

@@ -182,17 +182,22 @@ func update(dt: float, player) -> void:
 		if _overlaps_any(shot.rect, blocks):
 			shot.kill()
 		elif shot.rect.intersects(player.rect):
-			player.take_damage(shot.damage)
+			if not player.blocks_projectile(shot):
+				player.take_damage(shot.damage)
 			shot.kill()
 	for puddle in acid_puddles:
 		if puddle.get("alive") == true and puddle.rect.intersects(player.rect):
 			player.take_damage(puddle.damage)
-	for enemy in enemies:
-		if enemy.get("alive") == true and enemy.rect.intersects(player.rect):
-			player.take_damage(enemy.contact_damage)
 	_prune(enemies)
 	_prune(enemy_shots)
 	_prune(acid_puddles)
+
+
+func resolve_player_contacts(player) -> void:
+	for enemy in enemies:
+		if enemy.get("alive") == true and enemy.rect.intersects(player.rect) \
+				and not player.blocks_contact(enemy):
+			player.take_damage(enemy.contact_damage)
 
 
 func _update_actors(actors: Array, dt: float) -> void:

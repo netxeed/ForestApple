@@ -1,307 +1,307 @@
 {
   "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Una línea puede ser un objeto {\"text\", \"speaker\", \"speed\"} para cambiar quien habla o la velocidad solo en esa caja; dentro del texto valen {pause=0.5} (pausa) y \\n (salto de renglón).",
   "sandia_intro": {
-    "speaker": "Sandía",
-    "lines": [
-      "Así que vos sos la manzana negacionista.",
-      "Qué tontería. Todos vamos al cielo de las frutas.",
+	"speaker": "Sandía",
+	"lines": [
+	  "Así que vos sos la manzana rebelde.",
+	  "Qué tontería. Todos vamos al cielo de las frutas.",
       "Déjame mostrarte cómo se ve."
-    ]
+	]
   },
   "sandia_fase2": {
-    "speaker": "Sandía",
-    "lines": [
-      "¡Basta!",
-      "El cielo de las frutas existe.",
+	"speaker": "Sandía",
+	"lines": [
+	  "¡Basta!",
+	  "El cielo de las frutas existe.",
       "Lo entenderás en un momento."
-    ]
+	]
   },
   "sandia_fase3": {
-    "speaker": "Sandía",
-    "lines": [
-      "Mira manzana...{pause=0.6} estoy abierta.{pause=0.4} Por dentro soy dulce.",
-      "Mátame, manzana.{pause=0.5} Así se acaba esto.",
+	"speaker": "Sandía",
+	"lines": [
+	  "Mira manzana...{pause=0.6} estoy abierta.{pause=0.4} Por dentro soy dulce.",
+	  "Mátame, manzana.{pause=0.5} Así se acaba esto.",
       "INTÉNTALO."
-    ]
+	]
   },
   "sandia_death": {
-    "speaker": "Sandía",
-    "lines": [
+	"speaker": "Sandía",
+	"lines": [
       "..."
-    ]
+	]
   },
   "hole_continue": {
-    "speaker": "",
-    "lines": [
-      "...",
-      "Mientras desciende, la manzana se pregunta si podrá cumplir su objetivo.",
-      "No será fácil.",
+	"speaker": "",
+	"lines": [
+	  "...",
+	  "Mientras desciende, la manzana se pregunta si podrá cumplir su objetivo.",
+	  "No será fácil.",
       "Continuará."
-    ]
+	]
   },
   "acto1_despertar": {
-    "speaker": "",
-    "lines": [
-      {
-        "text": "Otro día en el estante.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Todo está donde siempre.{pause=0.5} Eso debería tranquilizarme.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Gala, Aida e Isolde están cerca. Podría ir a saludarlas.",
-        "speaker": "Manzana"
-      }
-    ]
+	"speaker": "",
+	"lines": [
+	  {
+		"text": "Otro día en el estante.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Todo está donde siempre.{pause=0.5} Eso debería tranquilizarme.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Gala, Aida e Isolde están cerca. Podría ir a saludarlas.",
+		"speaker": "Manzana"
+	  }
+	]
   },
   "acto1_dia_cierre": {
-    "speaker": "",
-    "lines": [
-      {
-        "text": "Las tres hablan de cosas chicas.{pause=0.4} Del sol, del estante, de nada.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Es un buen día.{pause=0.5} No sé por qué lo noto tanto.",
-        "speaker": "Manzana"
-      }
-    ]
+	"speaker": "",
+	"lines": [
+	  {
+		"text": "Las tres hablan de cosas chicas.{pause=0.4} Del sol, del estante, de nada.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Es un buen día.{pause=0.5} No sé por qué lo noto tanto.",
+		"speaker": "Manzana"
+	  }
+	]
   },
   "acto1_nino_llega": {
-    "speaker": "",
-    "lines": [
-      {
-        "text": "Qué manzana más linda. Me la voy a comer.",
-        "speaker": "Niño"
-      },
-      {
-        "text": "Entonces es verdad: no hay ningún cielo.{pause=0.5} Solo esto.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "...Esperá.{pause=0.5} Tenés ojos.",
-        "speaker": "Niño"
-      },
-      {
-        "text": "...¿Vos me escuchás?",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Sí. Hablás bajito, pero te escucho.",
-        "speaker": "Niño"
-      },
-      {
-        "text": "Pero soy una manzana.{pause=0.4} ¿No te asusta?",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Un poco raro, nada más.{pause=0.5} Con las cosas me pasa desde chico.",
-        "speaker": "Niño"
-      },
-      {
-        "text": "No quiero que me coman. No quiero terminar como ellas.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Entonces no te como.{pause=0.5} Pero tenés semillas, ¿no? Si te plantan, no morís: crecés.",
-        "speaker": "Niño"
-      },
-      {
-        "text": "Podrías hacer un bosque entero de manzanos.",
-        "speaker": "Niño"
-      },
-      {
-        "text": "Un bosque de manzanas...{pause=0.6} Eso sí se parece a un cielo.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Es un trato, entonces. Y mejor que sea un secreto entre los dos.",
-        "speaker": "Niño"
-      }
-    ]
+	"speaker": "",
+	"lines": [
+	  {
+		"text": "Qué manzana más linda. Me la voy a comer.",
+		"speaker": "Niño"
+	  },
+	  {
+		"text": "Entonces es verdad: no hay ningún cielo.{pause=0.5} Solo esto.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "...Esperá.{pause=0.5} Tenés ojos.",
+		"speaker": "Niño"
+	  },
+	  {
+		"text": "...¿Vos me escuchás?",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Sí. Hablás bajito, pero te escucho.",
+		"speaker": "Niño"
+	  },
+	  {
+		"text": "Pero soy una manzana.{pause=0.4} ¿No te asusta?",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Un poco raro, nada más.{pause=0.5} Con las cosas me pasa desde chico.",
+		"speaker": "Niño"
+	  },
+	  {
+		"text": "No quiero que me coman. No quiero terminar como ellas.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Entonces no te como.{pause=0.5} Pero tenés semillas, ¿no? Si te plantan, no morís: crecés.",
+		"speaker": "Niño"
+	  },
+	  {
+		"text": "Podrías hacer un bosque entero de manzanos.",
+		"speaker": "Niño"
+	  },
+	  {
+		"text": "Un bosque de manzanas...{pause=0.6} Eso sí se parece a un cielo.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Es un trato, entonces. Y mejor que sea un secreto entre los dos.",
+		"speaker": "Niño"
+	  }
+	]
   },
   "acto1_gala": {
-    "speaker": "Gala",
-    "lines": [
-      "¡Buen día! Mirá qué sol hay hoy.",
-      "Ojalá me coman pronto.{pause=0.4} Dicen que el cielo de las frutas es hermoso.",
-      {
-        "text": "¿Quién lo vio?",
-        "speaker": "Manzana"
-      },
+	"speaker": "Gala",
+	"lines": [
+	  "¡Buen día! Mirá qué sol hay hoy.",
+	  "Ojalá me coman pronto.{pause=0.4} Dicen que el cielo de las frutas es hermoso.",
+	  {
+		"text": "¿Quién lo vio?",
+		"speaker": "Manzana"
+	  },
       "Nadie volvió a contar.{pause=0.5} Eso es porque están muy a gusto allá."
-    ]
+	]
   },
   "acto1_aida": {
-    "speaker": "Aida",
-    "lines": [
-      "¿Alguna vez pensaste adónde vamos?",
-      "No digo que Gala se equivoque.{pause=0.5} Solo que nadie volvió a contar.",
-      {
-        "text": "Nunca lo pensé.",
-        "speaker": "Manzana"
-      },
+	"speaker": "Aida",
+	"lines": [
+	  "¿Alguna vez pensaste adónde vamos?",
+	  "No digo que Gala se equivoque.{pause=0.5} Solo que nadie volvió a contar.",
+	  {
+		"text": "Nunca lo pensé.",
+		"speaker": "Manzana"
+	  },
       "Yo sí. Casi todas las noches."
-    ]
+	]
   },
   "acto1_isolde": {
-    "speaker": "Isolde",
-    "lines": [
-      "Buen día. Acomodé el estante para que no se caiga nada.",
-      "Sobre lo que piensa Aida: yo creo que hay una explicación razonable.{pause=0.4} Nos eligen, nos comen. Es un ciclo.",
-      {
-        "text": "¿Y si no es así?",
-        "speaker": "Manzana"
-      },
-      "En realidad, no tengo pruebas.{pause=0.5} Pero conozco cada rincón de este estante. Y a vos, a Gala, a Aida.",
+	"speaker": "Isolde",
+	"lines": [
+	  "Buen día. Acomodé el estante para que no se caiga nada.",
+	  "Sobre lo que piensa Aida: yo creo que hay una explicación razonable.{pause=0.4} Nos eligen, nos comen. Es un ciclo.",
+	  {
+		"text": "¿Y si no es así?",
+		"speaker": "Manzana"
+	  },
+	  "En realidad, no tengo pruebas.{pause=0.5} Pero conozco cada rincón de este estante. Y a vos, a Gala, a Aida.",
       "Es suficiente para mí."
-    ]
+	]
   },
   "acto1_gala_vieja": {
-    "speaker": "Gala",
-    "lines": [
-      "Mirá, me salió una arruga. Chiquita, pero ahí está.",
-      "Dicen que cuando una se arruga, ya falta poco para el cielo.{pause=0.4} ¡Qué suerte!",
-      {
-        "text": "No digas eso.",
-        "speaker": "Manzana"
-      },
+	"speaker": "Gala",
+	"lines": [
+	  "Mirá, me salió una arruga. Chiquita, pero ahí está.",
+	  "Dicen que cuando una se arruga, ya falta poco para el cielo.{pause=0.4} ¡Qué suerte!",
+	  {
+		"text": "No digas eso.",
+		"speaker": "Manzana"
+	  },
       "¿Por qué? Estoy contenta.{pause=0.5} Tengo tus charlas, el sol y este estante."
-    ]
+	]
   },
   "acto1_aida_vieja": {
-    "speaker": "Aida",
-    "lines": [
-      "Estoy más blanda que ayer. ¿Lo notás?",
-      "Anoche no dormí. Pensé en lo que te dije: que nadie volvió a contar.",
-      {
-        "text": "Estoy acá. No me voy a ningún lado.",
-        "speaker": "Manzana"
-      },
+	"speaker": "Aida",
+	"lines": [
+	  "Estoy más blanda que ayer. ¿Lo notás?",
+	  "Anoche no dormí. Pensé en lo que te dije: que nadie volvió a contar.",
+	  {
+		"text": "Estoy acá. No me voy a ningún lado.",
+		"speaker": "Manzana"
+	  },
       "Eso me alcanza.{pause=0.5} Gracias por escucharme las preguntas."
-    ]
+	]
   },
   "acto1_isolde_vieja": {
-    "speaker": "Isolde",
-    "lines": [
-      "Dejé todo en orden, por si acaso.{pause=0.4} Cada cosa en su lugar.",
-      "Siempre dije que no necesitaba pruebas.{pause=0.5} Hoy, un poquito, me gustaría tenerlas.",
-      {
-        "text": "Isolde...",
-        "speaker": "Manzana"
-      },
+	"speaker": "Isolde",
+	"lines": [
+	  "Dejé todo en orden, por si acaso.{pause=0.4} Cada cosa en su lugar.",
+	  "Siempre dije que no necesitaba pruebas.{pause=0.5} Hoy, un poquito, me gustaría tenerlas.",
+	  {
+		"text": "Isolde...",
+		"speaker": "Manzana"
+	  },
       "Estoy bien.{pause=0.5} Cuidá el estante, ¿sí?"
-    ]
+	]
   },
   "acto1_basura": {
-    "speaker": "",
-    "lines": [
-      {
-        "text": "Se abrió la puerta de golpe, y entró una luz que no era la del sol.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Una mano enorme las levantó de a una.{pause=0.5} Gala, Aida, Isolde.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Gala me miró y sonrió.{pause=0.6} No dijo nada.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Después, un golpe seco, y la puerta se cerró.",
-        "speaker": "Manzana"
-      }
-    ]
+	"speaker": "",
+	"lines": [
+	  {
+		"text": "Se abrió la puerta de golpe, y entró una luz que no era la del sol.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Una mano enorme las levantó de a una.{pause=0.5} Gala, Aida, Isolde.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Gala me miró y sonrió.{pause=0.6} No dijo nada.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Después, un golpe seco, y la puerta se cerró.",
+		"speaker": "Manzana"
+	  }
+	]
   },
   "acto1_banana_nada": {
-    "speaker": "Banana",
-    "lines": [
-      "¡Buen día! Qué lindo sol, ¿no?",
-      {
-        "text": "¿No viste lo que pasó recién?",
-        "speaker": "Manzana"
-      },
-      "Se fueron al cielo de las frutas.{pause=0.4} ¡Qué suerte tuvieron!",
-      {
-        "text": "Las tiraron a la basura.",
-        "speaker": "Manzana"
-      },
+	"speaker": "Banana",
+	"lines": [
+	  "¡Buen día! Qué lindo sol, ¿no?",
+	  {
+		"text": "¿No viste lo que pasó recién?",
+		"speaker": "Manzana"
+	  },
+	  "Se fueron al cielo de las frutas.{pause=0.4} ¡Qué suerte tuvieron!",
+	  {
+		"text": "Las tiraron a la basura.",
+		"speaker": "Manzana"
+	  },
       "Qué cosas decís.{pause=0.5} Algún día nos toca a todas."
-    ]
+	]
   },
   "acto1_conclusion": {
-    "speaker": "",
-    "lines": [
-      {
-        "text": "Las frutas siguen hablando del sol, como si nada.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Gala decía que nadie volvió a contar cómo era el cielo.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Claro que nadie volvió.{pause=0.6} No había adónde volver.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "Una sombra enorme cubre el estante.",
-        "speaker": ""
-      }
-    ]
+	"speaker": "",
+	"lines": [
+	  {
+		"text": "Las frutas siguen hablando del sol, como si nada.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Gala decía que nadie volvió a contar cómo era el cielo.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Claro que nadie volvió.{pause=0.6} No había adónde volver.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "Una sombra enorme cubre el estante.",
+		"speaker": ""
+	  }
+	]
   },
   "acto1_enfrentamiento": {
-    "speaker": "",
-    "lines": [
-      {
-        "text": "Tengo que decírselo a las otras.{pause=0.5} Aunque no me quieran escuchar.",
-        "speaker": "Manzana"
-      },
-      {
-        "text": "¡Eso es mentira!{pause=0.4} ¡No hay nada más lindo que el cielo!",
-        "speaker": "Banana"
-      },
-      {
-        "text": "Una fruta que no cree... no puede quedarse con nosotras.",
-        "speaker": "Banana"
-      },
-      {
-        "text": "Entonces, que empiece.",
-        "speaker": "Manzana"
-      }
-    ]
+	"speaker": "",
+	"lines": [
+	  {
+		"text": "Tengo que decírselo a las otras.{pause=0.5} Aunque no me quieran escuchar.",
+		"speaker": "Manzana"
+	  },
+	  {
+		"text": "¡Eso es mentira!{pause=0.4} ¡No hay nada más lindo que el cielo!",
+		"speaker": "Banana"
+	  },
+	  {
+		"text": "Una fruta que no cree... no puede quedarse con nosotras.",
+		"speaker": "Banana"
+	  },
+	  {
+		"text": "Entonces, que empiece.",
+		"speaker": "Manzana"
+	  }
+	]
   },
   "acto1_isolde_tarea": {
-    "speaker": "Isolde",
-    "lines": [
-      "Ahora que lo pienso, ¿me das una mano?{pause=0.4} Tres frascos se corrieron del borde y solos no vuelven.",
-      {
-        "text": "Claro. ¿Dónde van?",
-        "speaker": "Manzana"
-      },
+	"speaker": "Isolde",
+	"lines": [
+	  "Ahora que lo pienso, ¿me das una mano?{pause=0.4} Tres frascos se corrieron del borde y solos no vuelven.",
+	  {
+		"text": "Claro. ¿Dónde van?",
+		"speaker": "Manzana"
+	  },
       "Arriba hay tres marcas en el estante.{pause=0.4} Se agarra un frasco con E, se lleva, y se deja sobre una marca con E."
-    ]
+	]
   },
   "acto1_isolde_tarea_recordar": {
-    "speaker": "Isolde",
-    "lines": [
-      "Todavía quedan frascos fuera de lugar.{pause=0.4} Las marcas están arriba, contra la pared.",
+	"speaker": "Isolde",
+	"lines": [
+	  "Todavía quedan frascos fuera de lugar.{pause=0.4} Las marcas están arriba, contra la pared.",
       "No hay apuro. El estante no se va a ningún lado."
-    ]
+	]
   },
   "acto1_isolde_tarea_fin": {
-    "speaker": "Isolde",
-    "lines": [
-      "Mirá eso.{pause=0.5} Cada cosa en su lugar.",
-      "Gracias. Ordenar con alguien es mejor que ordenar sola.",
-      {
-        "text": "A mí también me gustó.",
-        "speaker": "Manzana"
-      },
+	"speaker": "Isolde",
+	"lines": [
+	  "Mirá eso.{pause=0.5} Cada cosa en su lugar.",
+	  "Gracias. Ordenar con alguien es mejor que ordenar sola.",
+	  {
+		"text": "A mí también me gustó.",
+		"speaker": "Manzana"
+	  },
       "Eso es lo que me alcanza.{pause=0.4} Un estante en orden y una amiga al lado."
-    ]
+	]
   }
 }

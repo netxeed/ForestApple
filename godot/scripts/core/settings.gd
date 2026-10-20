@@ -12,7 +12,7 @@ const SCREEN_H := TILE * ROOM_ROWS  # 288
 const WINDOW_SCALE := 2  # solo la ventana inicial (en Python era SCALE)
 
 static var FPS := 60
-static var DEBUG_KEYS := true  # K = eliminar enemigos, R = reiniciar (para probar)
+static var DEBUG_KEYS := true  # F3 = eliminar enemigos, R = reiniciar (para probar)
 
 # Salas
 const ENEMY_WAKE_DELAY := 0.5
@@ -41,7 +41,7 @@ static var FLOOR := Color8(58, 46, 66)
 static var WALL := Color8(92, 72, 104)
 static var WHITE := Color8(240, 240, 240)
 static var RED := Color8(214, 52, 60)  # manzana
-static var KID := Color8(240, 190, 120)  # niño
+static var KID := Color8(145, 149, 156)  # niño (placeholder gris)
 static var STRAWBERRY := Color8(235, 80, 110)
 static var SEED := Color8(250, 230, 120)
 static var PLAYER_SHOT := Color8(255, 140, 140)
