@@ -17,6 +17,14 @@ func _run() -> void:
 	game.start_act1()
 	await process_frame
 	var explore = game.states.states()[0]
+	explore.story.talked = {"frutilla": true, "naranja": true}  # aparece Dante
+	explore.story.m1_time = 80.0  # Gutenberg ya está cerca
+	explore._update_mision1(game, 0.0)
+	await process_frame
+	await process_frame
+	explore.story.stage = "dia"
+	explore.view.stage = "dia"
+	explore.story.talked = {}
 	explore.black = true  # el prólogo va en pantalla negra
 	await process_frame
 	explore.black = false

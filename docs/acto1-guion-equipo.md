@@ -152,7 +152,10 @@ por escribir rápido, y se unieron las acotaciones. El texto es el mismo.)*
    decidir si sus diálogos de jefe pasan a su voz de acá (autoritaria, rioplatense).
 4. **El mapa del Acto 1 pasa a ser la canasta.** Hoy es «un estante». Habría que decidir si es una
    sola pantalla o varias, y dónde está cada fruta (las frutillas chismosas, Dante...).
-5. **Misión 1 como mecánica:** buscar a Dante por todo el mapa antes de que lo alcance Gutenberg.
+5. **(Implementado, v0.4)** Con las respuestas del equipo la Misión 1 es una búsqueda con pistas y reloj
+   suave. Abajo quedan las preguntas que seguían abiertas al escribirla:
+
+   **Misión 1 como mecánica (preguntas originales):** buscar a Dante por todo el mapa antes de que lo alcance Gutenberg.
    Preguntas abiertas: ¿hay tiempo límite?, ¿Gutenberg lo persigue de verdad (se ve moverse)?, ¿qué
    pasa si llega tarde?, ¿Dante dice dónde va a esconderse?
 6. **Las misiones que ya están** (ordenar frascos con Isolde, acompañar a Aida al borde) siguen

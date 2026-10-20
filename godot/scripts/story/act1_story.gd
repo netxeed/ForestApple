@@ -3,6 +3,7 @@ extends RefCounted
 ## con quién se habló y qué diálogo toca. El estado `Act1State` solo la consulta y la dibuja.
 ##
 ## Etapas (docs/diseno.md, «Esquema del Acto 1»):
+##   mision1   Misión 1: encontrar a Dante antes de que Gutenberg lo alcance
 ##   dia       un día cualquiera: hablar con las tres amigas
 ##   tragedia  las amigas envejecieron: hablar con cada una una última vez
 ##   crisis    las amigas ya no están; una banana actúa como si nada
@@ -10,9 +11,15 @@ extends RefCounted
 ## Faltan las mini-tareas (momento 2 del esquema) y el resto de las frutas del estante.
 
 const FRIENDS := ["gala", "aida", "isolde"]
-const STAGES := ["dia", "tragedia", "crisis", "fin"]
+const STAGES := ["mision1", "dia", "tragedia", "crisis", "fin"]
+const M1_LIMIT := 110.0  # segundos del reloj suave de la Misión 1
+const M1_CLUE_GIVERS := ["frutilla", "naranja"]
 
-var stage := "dia"
+var stage := "mision1"
+## Misión 1: busqueda (sigue buscando) → salvado (encontró a Dante a tiempo) / tarde (lo alcanzó Gutenberg).
+var m1 := "busqueda"
+var m1_time := 0.0
+var m1_limit := M1_LIMIT
 ## Con quién se habló en la etapa actual: {"gala": true, ...}. Se vacía al cambiar de etapa.
 var talked: Dictionary = {}
 ## Historial de banderas: {"dia:gala": true, ...}. Queda para consultas futuras (finales, puertas).
@@ -26,11 +33,24 @@ var aida_task := "pendiente"
 ## Quiénes están en el estante en esta etapa.
 func npcs() -> Array:
 	match stage:
+		"mision1":
+			var out: Array = M1_CLUE_GIVERS.duplicate()
+			if clues_found():
+				out.append("dante")
+			return out
 		"dia", "tragedia":
 			return FRIENDS.duplicate()
 		"crisis":
 			return ["banana"]
 	return []
+
+
+## Ya se habló con los que saben dónde se escondió Dante: aparece en el mapa.
+func clues_found() -> bool:
+	for id in M1_CLUE_GIVERS:
+		if not talked.has(id):
+			return false
+	return true
 
 
 ## Si el personaje se ve envejecido (arrugado, más oscuro).
@@ -43,6 +63,8 @@ func dialogue_for(npc_id: String) -> String:
 	if not npcs().has(npc_id):
 		return ""
 	match stage:
+		"mision1":
+			return "acto1_m1_dante_salvado" if npc_id == "dante" else "acto1_m1_" + npc_id
 		"dia":
 			return "acto1_" + npc_id
 		"tragedia":
@@ -58,6 +80,12 @@ func dialogue_for(npc_id: String) -> String:
 func talk(npc_id: String) -> Array:
 	if not npcs().has(npc_id):
 		return []
+	if stage == "mision1" and npc_id == "dante":
+		if m1 != "busqueda":
+			return []
+		m1 = "salvado"
+		flags["mision1:dante_salvado"] = true
+		return _mark_talked(npc_id, "acto1_m1_dante_salvado")
 	if stage == "dia" and npc_id == "isolde":
 		match task:
 			"pendiente":
@@ -96,6 +124,24 @@ func complete_aida_task() -> void:
 		flags["dia:aida_tarea"] = true
 
 
+## Corre el reloj suave de la Misión 1. Devuelve true en el instante en que se acaba el tiempo
+## (Gutenberg alcanzó a Dante); el llamador debe contar la escena con `advance()`.
+func tick_m1(dt: float) -> bool:
+	if stage != "mision1" or m1 != "busqueda":
+		return false
+	m1_time += dt
+	if m1_time >= m1_limit:
+		m1 = "tarde"
+		flags["mision1:dante_aplastado"] = true
+		return true
+	return false
+
+
+## Cuánto del tiempo ya pasó (0 al empezar, 1 cuando Gutenberg llega).
+func m1_progress() -> float:
+	return clampf(m1_time / m1_limit, 0.0, 1.0)
+
+
 ## Los frascos están en su lugar. Isolde todavía no lo sabe: falta hablar con ella.
 func complete_task() -> void:
 	if task == "activa":
@@ -113,6 +159,8 @@ func required_count() -> int:
 
 
 func ready_to_advance() -> bool:
+	if stage == "mision1":
+		return m1 != "busqueda"
 	return stage != "fin" and talked.size() >= npcs().size() and not npcs().is_empty()
 
 
@@ -120,6 +168,9 @@ func ready_to_advance() -> bool:
 func advance() -> Array:
 	var keys: Array = []
 	match stage:
+		"mision1":
+			stage = "dia"
+			keys = ["acto1_m1_fin_salvado" if m1 == "salvado" else "acto1_m1_tarde", "acto1_despertar"]
 		"dia":
 			stage = "tragedia"
 			keys = ["acto1_dia_cierre"]
@@ -137,12 +188,12 @@ func advance() -> Array:
 
 ## El prólogo (la manzana le habla al jugador, en pantalla negra). Solo al empezar el primer día.
 func prologue_dialogue() -> String:
-	return "acto1_prologo" if stage == "dia" else ""
+	return "acto1_prologo" if stage == "mision1" else ""
 
 
 ## Diálogos que se muestran por sí solos (sin hablar con nadie) al empezar la etapa.
 func opening_dialogue() -> String:
-	return "acto1_despertar" if stage == "dia" else ""
+	return "acto1_m1_escena" if stage == "mision1" else ""
 
 
 ## Diálogos que se muestran con el fondo oscuro (escenas que no son una charla).
@@ -152,6 +203,12 @@ func is_dark(key: String) -> bool:
 
 func hint() -> String:
 	match stage:
+		"mision1":
+			if m1_progress() >= 0.66:
+				return "¡Gutenberg se acerca a Dante!"
+			if clues_found():
+				return "Encontrá a Dante y hablale"
+			return "Encontrá a Dante: preguntales a las frutas (%d/%d)" % [talked.size(), M1_CLUE_GIVERS.size()]
 		"dia":
 			if task == "hecha" and not talked.has("isolde"):
 				return "Contale a Isolde que terminaste"
