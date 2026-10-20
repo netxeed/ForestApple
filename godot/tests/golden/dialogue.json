@@ -774,6 +774,123 @@
    ],
    "speaker": ""
   },
+  "acto1_prologo": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "¿Alguna vez te preguntaste por qué las cosas son como son?"
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "¿Por qué el fuego quema?"
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "¿Por qué el agua moja?"
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "¿Por qué las cosas que están vivas, tarde o temprano, dejan de estarlo?"
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Pareciera que son preguntas obvias: el fuego quema porque está caliente,"
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "y el agua moja porque sus moléculas se adhieren y esparcen por lo que toque."
+    },
+    {
+     "pauses": [
+      [
+       79,
+       0.4
+      ]
+     ],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Y las cosas mueren porque... bueno, porque es obvio que nada dura para siempre. Después de todo, polvo somos, y polvo seremos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Al menos, eso es lo que habría dicho antes."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Antes de que empezara a pensar demasiado."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Mi nombre no importa mucho."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "En realidad, no recuerdo que alguien me haya puesto uno."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Acá todos somos lo que somos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Peras, naranjas, duraznos, manzanas, frutillas, bananas..."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Somos comida, más específicamente, frutas."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Nacemos, crecemos, maduramos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Y después..."
+    },
+    {
+     "pauses": [
+      [
+       34,
+       0.4
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Después nos comen. Y eso es bueno. Así nos lo enseñaron."
+    }
+   ],
+   "speaker": ""
+  },
   "hole_continue": {
    "lines": [
     {
@@ -3703,6 +3820,212 @@
     [
      50,
      64
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     48
+    ],
+    [
+     49,
+     58
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     24
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     22
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     43
+    ],
+    [
+     44,
+     71
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 4,
+   "spans": [
+    [
+     0,
+     44
+    ],
+    [
+     45,
+     72
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 5,
+   "spans": [
+    [
+     0,
+     49
+    ],
+    [
+     50,
+     76
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 6,
+   "spans": [
+    [
+     0,
+     45
+    ],
+    [
+     46,
+     90
+    ],
+    [
+     91,
+     126
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 7,
+   "spans": [
+    [
+     0,
+     43
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 8,
+   "spans": [
+    [
+     0,
+     41
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 9,
+   "spans": [
+    [
+     0,
+     27
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 10,
+   "spans": [
+    [
+     0,
+     44
+    ],
+    [
+     45,
+     56
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 11,
+   "spans": [
+    [
+     0,
+     29
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 12,
+   "spans": [
+    [
+     0,
+     47
+    ],
+    [
+     48,
+     58
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 13,
+   "spans": [
+    [
+     0,
+     42
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 14,
+   "spans": [
+    [
+     0,
+     29
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 15,
+   "spans": [
+    [
+     0,
+     12
+    ]
+   ]
+  },
+  {
+   "key": "acto1_prologo",
+   "line": 16,
+   "spans": [
+    [
+     0,
+     45
+    ],
+    [
+     46,
+     56
     ]
    ]
   },

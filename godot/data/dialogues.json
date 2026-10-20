@@ -359,5 +359,58 @@
       },
       "Tenerte al lado hace que el borde parezca más chico."
     ]
+  },
+  "acto1_prologo": {
+    "speaker": "",
+    "lines": [
+      "¿Alguna vez te preguntaste por qué las cosas son como son?",
+      "¿Por qué el fuego quema?",
+      "¿Por qué el agua moja?",
+      "¿Por qué las cosas que están vivas, tarde o temprano, dejan de estarlo?",
+      "Pareciera que son preguntas obvias: el fuego quema porque está caliente,",
+      "y el agua moja porque sus moléculas se adhieren y esparcen por lo que toque.",
+      "Y las cosas mueren porque... bueno, porque es obvio que nada dura para siempre.{pause=0.4} Después de todo, polvo somos, y polvo seremos.",
+      {
+        "text": "Al menos, eso es lo que habría dicho antes.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Antes de que empezara a pensar demasiado.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Mi nombre no importa mucho.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "En realidad, no recuerdo que alguien me haya puesto uno.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Acá todos somos lo que somos.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Peras, naranjas, duraznos, manzanas, frutillas, bananas...",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Somos comida, más específicamente, frutas.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Nacemos, crecemos, maduramos.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Y después...",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "{pause=0.8}Después nos comen. Y eso es bueno.{pause=0.4} Así nos lo enseñaron.",
+        "speaker": "Manzana"
+      }
+    ],
+    "_nota": "Pendiente de arte: tres imágenes (cocina con ventana y canasta; canasta con frutas vivas; primer plano de la manzana con los ojos cerrados). Ver docs/acto1-guion-equipo.md."
   }
 }

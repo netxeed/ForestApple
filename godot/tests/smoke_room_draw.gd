@@ -17,6 +17,9 @@ func _run() -> void:
 	game.start_act1()
 	await process_frame
 	var explore = game.states.states()[0]
+	explore.black = true  # el prólogo va en pantalla negra
+	await process_frame
+	explore.black = false
 	# Mini-tarea de Isolde: marcas, un frasco en las manos y todos acomodados.
 	explore.story.task = "activa"
 	explore.carrying = 0
