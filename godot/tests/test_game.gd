@@ -33,9 +33,9 @@ func test_filas_de_opciones_en_escritorio_y_en_movil() -> void:
 	names = []
 	for entry in game.option_entries():
 		names.append(entry[0])
-	check_eq(names, ["fps", "debug", "move", "aim", "dynamic", "travel", "size", "back"], "móvil: opciones táctiles")
-	check_eq(game.option_row_y(0), 120.0, "primera fila en móvil")
-	check_eq(game.option_row_y(2), 160.0, "tercera fila en móvil")
+	check_eq(names, ["fps", "debug", "sideswipe", "move", "aim", "dynamic", "travel", "size", "back"], "móvil: opciones táctiles")
+	check_eq(game.option_row_y(0), 126.0, "primera fila en móvil")
+	check_eq(game.option_row_y(2), 158.0, "tercera fila en móvil")
 	game.is_mobile = false
 	check_eq(game.option_row_y(0), 132.0, "primera fila en escritorio")
 	check_eq(game.option_row_y(2), 192.0, "tercera fila en escritorio")
