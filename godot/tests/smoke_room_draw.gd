@@ -26,6 +26,13 @@ func _run() -> void:
 	explore.story.task = "hecha"
 	await process_frame
 	await process_frame
+	# Mini-tarea de Aida: te sigue y después queda junto al borde.
+	explore.story.aida_task = "activa"
+	await process_frame
+	await process_frame
+	explore.story.aida_task = "hecha"
+	await process_frame
+	await process_frame
 	for stage in ["dia", "tragedia", "crisis"]:
 		explore.view.stage = stage
 		explore.fade = 0.5

@@ -35,6 +35,131 @@
    ],
    "speaker": "Aida"
   },
+  "acto1_aida_borde": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "El estante termina en un vacío oscuro. Muy abajo, algo brilla."
+    },
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "¿Eso es el afuera?"
+    },
+    {
+     "pauses": [
+      [
+       13,
+       0.4
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "No sé qué es. Pero está lejos."
+    },
+    {
+     "pauses": [
+      [
+       64,
+       0.5
+      ]
+     ],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Si el cielo de las frutas estuviera ahí, ¿lo veríamos desde acá? Qué raro que nadie venga a mirar."
+    },
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Gracias por traerme. Ya no me da tanto miedo."
+    }
+   ],
+   "speaker": ""
+  },
+  "acto1_aida_tarea": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Hay algo que quiero ver, pero sola no me animo."
+    },
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Es el borde del estante, ahí abajo a la derecha. Dicen que desde ahí se ve el afuera."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Te acompaño."
+    },
+    {
+     "pauses": [
+      [
+       20,
+       0.4
+      ]
+     ],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Caminá vos adelante. Yo te sigo, despacito."
+    }
+   ],
+   "speaker": "Aida"
+  },
+  "acto1_aida_tarea_fin": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Estuve pensando en lo que vimos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Prefiero mirar algo que me asusta a que me lo cuenten."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Para eso estoy."
+    },
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Tenerte al lado hace que el borde parezca más chico."
+    }
+   ],
+   "speaker": "Aida"
+  },
+  "acto1_aida_tarea_recordar": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "El borde está a la derecha, abajo."
+    },
+    {
+     "pauses": [],
+     "speaker": "Aida",
+     "speed": 45.0,
+     "text": "Andá nomás. Yo te sigo."
+    }
+   ],
+   "speaker": "Aida"
+  },
   "acto1_aida_vieja": {
    "lines": [
     {
@@ -2620,6 +2745,180 @@
     [
      0,
      29
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_borde",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     49
+    ],
+    [
+     50,
+     62
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_borde",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     18
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_borde",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     30
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_borde",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     44
+    ],
+    [
+     45,
+     91
+    ],
+    [
+     92,
+     98
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_borde",
+   "line": 4,
+   "spans": [
+    [
+     0,
+     45
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     47
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     48
+    ],
+    [
+     49,
+     85
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     12
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     43
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea_fin",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     32
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea_fin",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     45
+    ],
+    [
+     46,
+     54
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea_fin",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     15
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea_fin",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     45
+    ],
+    [
+     46,
+     52
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea_recordar",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     34
+    ]
+   ]
+  },
+  {
+   "key": "acto1_aida_tarea_recordar",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     23
     ]
    ]
   },

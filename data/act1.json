@@ -44,7 +44,7 @@
       "name": "Isolde",
       "pos": [
         368,
-        128
+        112
       ],
       "color": [
         120,
@@ -113,6 +113,20 @@
           220
         ]
       }
+    ]
+  },
+  "task_aida": {
+    "_nota": "Acompañar a Aida al borde del estante: spot = dónde hay que pararse, range = a qué distancia cuenta, edge = el vacío (no se puede pisar).",
+    "spot": [
+      392,
+      208
+    ],
+    "range": 40,
+    "edge": [
+      416,
+      160,
+      32,
+      96
     ]
   }
 }

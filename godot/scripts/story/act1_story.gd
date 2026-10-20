@@ -19,6 +19,8 @@ var talked: Dictionary = {}
 var flags: Dictionary = {}
 ## Mini-tarea de Isolde (ordenar los frascos): pendiente → activa (la propuso) → hecha (los ordenó).
 var task := "pendiente"
+## Mini-tarea de Aida (acompañarla al borde del estante): pendiente → activa (te sigue) → hecha (ya lo vieron).
+var aida_task := "pendiente"
 
 
 ## Quiénes están en el estante en esta etapa.
@@ -66,6 +68,16 @@ func talk(npc_id: String) -> Array:
 				return ["acto1_isolde_tarea_recordar"]
 			_:
 				return _mark_talked(npc_id, "acto1_isolde_tarea_fin")
+	if stage == "dia" and npc_id == "aida":
+		match aida_task:
+			"pendiente":
+				aida_task = "activa"
+				flags["dia:aida_tarea_ofrecida"] = true
+				return ["acto1_aida", "acto1_aida_tarea"]
+			"activa":
+				return ["acto1_aida_tarea_recordar"]
+			_:
+				return _mark_talked(npc_id, "acto1_aida_tarea_fin")
 	return _mark_talked(npc_id, dialogue_for(npc_id))
 
 
@@ -75,6 +87,13 @@ func _mark_talked(npc_id: String, key: String) -> Array:
 	talked[npc_id] = true
 	flags["%s:%s" % [stage, npc_id]] = true
 	return [key]
+
+
+## Aida ya vio el borde. Falta hablar con ella.
+func complete_aida_task() -> void:
+	if aida_task == "activa":
+		aida_task = "hecha"
+		flags["dia:aida_tarea"] = true
 
 
 ## Los frascos están en su lugar. Isolde todavía no lo sabe: falta hablar con ella.
@@ -131,6 +150,10 @@ func hint() -> String:
 		"dia":
 			if task == "hecha" and not talked.has("isolde"):
 				return "Contale a Isolde que terminaste"
+			if aida_task == "activa":
+				return "Acompañá a Aida al borde del estante"
+			if aida_task == "hecha" and not talked.has("aida"):
+				return "Volvé con Aida"
 			return "Hablá con tus amigas (%d/%d)" % [talked.size(), FRIENDS.size()]
 		"tragedia":
 			return "Despedite de tus amigas (%d/%d)" % [talked.size(), FRIENDS.size()]

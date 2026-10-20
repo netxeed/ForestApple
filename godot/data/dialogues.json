@@ -303,5 +303,61 @@
       },
       "Eso es lo que me alcanza.{pause=0.4} Un estante en orden y una amiga al lado."
     ]
+  },
+  "acto1_aida_tarea": {
+    "speaker": "Aida",
+    "lines": [
+      "Hay algo que quiero ver, pero sola no me animo.",
+      "Es el borde del estante, ahí abajo a la derecha. Dicen que desde ahí se ve el afuera.",
+      {
+        "text": "Te acompaño.",
+        "speaker": "Manzana"
+      },
+      "Caminá vos adelante.{pause=0.4} Yo te sigo, despacito."
+    ]
+  },
+  "acto1_aida_tarea_recordar": {
+    "speaker": "Aida",
+    "lines": [
+      "El borde está a la derecha, abajo.",
+      "Andá nomás. Yo te sigo."
+    ]
+  },
+  "acto1_aida_borde": {
+    "speaker": "",
+    "lines": [
+      {
+        "text": "El estante termina en un vacío oscuro. Muy abajo, algo brilla.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "¿Eso es el afuera?",
+        "speaker": "Aida"
+      },
+      {
+        "text": "No sé qué es.{pause=0.4} Pero está lejos.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Si el cielo de las frutas estuviera ahí, ¿lo veríamos desde acá?{pause=0.5} Qué raro que nadie venga a mirar.",
+        "speaker": "Aida"
+      },
+      {
+        "text": "Gracias por traerme. Ya no me da tanto miedo.",
+        "speaker": "Aida"
+      }
+    ]
+  },
+  "acto1_aida_tarea_fin": {
+    "speaker": "Aida",
+    "lines": [
+      "Estuve pensando en lo que vimos.",
+      "Prefiero mirar algo que me asusta a que me lo cuenten.",
+      {
+        "text": "Para eso estoy.",
+        "speaker": "Manzana"
+      },
+      "Tenerte al lado hace que el borde parezca más chico."
+    ]
   }
 }
