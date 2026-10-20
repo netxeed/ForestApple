@@ -211,18 +211,24 @@ Ya existen las piezas técnicas que usarán los tres actos: una **pila de estado
 (menú, opciones, partida, pausa, diálogo y game over), el **sistema de diálogo**
 (hablante por línea, velocidad, pausas y saltos de renglón) y un prototipo de
 **soporte para Android** con controles táctiles (sin probar en un teléfono). El
-Acto 1 y el Acto 3 todavía no existen como juego; del Acto 1 hay solo textos
-borrador en `data/dialogues.json`.
+Acto 3 todavía no existe como juego. Del **Acto 1 hay una primera versión
+jugable en Godot** (un estante, las tres amigas, la tragedia, la banana, el niño y
+el enfrentamiento; textos borrador en `data/dialogues.json`). Se abre con `F2`
+en el menú y al terminar sigue el Acto 2. Faltan las mini-tareas, más pantallas,
+el arte de las amigas envejecidas y el enfrentamiento jugado.
 
 ## 7. Implicaciones técnicas
 
 - Cada acto se juega distinto, y por eso el juego usa **estados** (`states/`).
   Hoy hay estados de menú, opciones, partida (el combate del Acto 2), pausa,
-  diálogo y game over. Faltan los de exploración del Acto 1 y de batalla final.
+  diálogo y game over. En Godot ya hay un estado de exploración del Acto 1
+  (`act1_state.gd`); falta el de batalla final.
 - El sistema de diálogo es clave: lo usan el Acto 1, las peleas del Acto 2 y el
-  final. Ya está hecho (ver `README.md`); falta conectarlo a escenas del Acto 1.
+  final. Ya está hecho (ver `README.md`) y el Acto 1 en Godot lo usa.
 - Los textos van en `data/` (JSON) para que quien escriba no toque código.
-- El Acto 1 necesita **banderas de historia** (qué tareas se hicieron, con quién se habló) y NPCs con diálogos que cambian según eso. Hoy no existe.
+- El Acto 1 necesita **banderas de historia** (qué tareas se hicieron, con quién se habló) y NPCs con diálogos que cambian según eso. En Godot ya existe una versión mínima
+(`godot/scripts/story/act1_story.gd`: etapas día → tragedia → crisis → fin, con
+quién se habló y qué diálogo toca); las mini-tareas todavía no.
 
 ### Motor: Python y Godot [Propuesta]
 
@@ -286,4 +292,8 @@ a su sección y se anota en el historial (sección 9).
 - **El niño aparece después de la tragedia**, no al comienzo: casi se come a la manzana, la entiende y le da la idea de volverse un bosque (antes la idea era de la manzana).
 - El Acto 1 termina con la guerra civil ya declarada (antes terminaba con la alianza).
 - Acto 2: se suman puzzles y cosas secretas; tras el último jefe, la manzana habla con el niño.
-- Pendiente de ajustar: el diálogo `acto1_nino_llega` de `data/dialogues.json`, que todavía supone al niño al comienzo.
+- `acto1_nino_llega` ya está reescrito: el niño aparece tras la tragedia, casi se come a la manzana y le da la idea del bosque.
+
+**v0.3.1** (primer Acto 1 jugable, en Godot)
+- Nuevos diálogos borrador: `acto1_gala_vieja`, `acto1_aida_vieja`, `acto1_isolde_vieja`, `acto1_basura`, `acto1_banana_nada`, `acto1_conclusion` y `acto1_enfrentamiento`. Todos son provisorios y esperan la historia larga.
+- Decisiones tomadas **por defecto** (a confirmar): las amigas se despiden de la manzana antes de irse; la manzana *no* ve a las demás frutas darse cuenta; el niño aparece justo tras la conclusión y el enfrentamiento queda como escena hablada.

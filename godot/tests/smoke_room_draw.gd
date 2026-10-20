@@ -1,5 +1,5 @@
 extends SceneTree
-## Smoke test visual mínimo: dibuja el menú y una sala recorrible sin abrir una ventana.
+## Smoke test visual mínimo: dibuja el menú y una sala recorrible y el Acto 1 sin abrir una ventana.
 
 
 func _initialize() -> void:
@@ -13,4 +13,13 @@ func _run() -> void:
 	game.start_run()
 	await process_frame
 	await process_frame
+	# Acto 1: dibuja el estante en cada etapa (con las amigas envejecidas y con la banana).
+	game.start_act1()
+	await process_frame
+	var explore = game.states.states()[0]
+	for stage in ["dia", "tragedia", "crisis"]:
+		explore.view.stage = stage
+		explore.fade = 0.5
+		await process_frame
+		await process_frame
 	quit()

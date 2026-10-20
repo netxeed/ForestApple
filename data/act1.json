@@ -1,0 +1,21 @@
+{
+  "_nota": "Acto 1 (exploración). layout: 9 filas de 15 caracteres (# pared, . piso, X obstáculo). Posiciones en píxeles del lienzo de 480x288. Las amigas, el estado de cada etapa y los diálogos se definen en godot/scripts/story/act1_story.gd.",
+  "layout": [
+    "###############",
+    "#.............#",
+    "#..X.......X..#",
+    "#.............#",
+    "#.............#",
+    "#.............#",
+    "#..X.......X..#",
+    "#.............#",
+    "###############"
+  ],
+  "player_start": [240, 232],
+  "npcs": {
+    "gala":    {"name": "Gala",    "pos": [112, 128], "color": [232, 96, 72]},
+    "aida":    {"name": "Aida",    "pos": [240, 104], "color": [170, 40, 70]},
+    "isolde":  {"name": "Isolde",  "pos": [368, 128], "color": [120, 190, 90]},
+    "banana":  {"name": "Banana",  "pos": [240, 120], "color": [240, 210, 80]}
+  }
+}
