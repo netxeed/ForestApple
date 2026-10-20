@@ -273,5 +273,35 @@
         "speaker": "Manzana"
       }
     ]
+  },
+  "acto1_isolde_tarea": {
+    "speaker": "Isolde",
+    "lines": [
+      "Ahora que lo pienso, ¿me das una mano?{pause=0.4} Tres frascos se corrieron del borde y solos no vuelven.",
+      {
+        "text": "Claro. ¿Dónde van?",
+        "speaker": "Manzana"
+      },
+      "Arriba hay tres marcas en el estante.{pause=0.4} Se agarra un frasco con E, se lleva, y se deja sobre una marca con E."
+    ]
+  },
+  "acto1_isolde_tarea_recordar": {
+    "speaker": "Isolde",
+    "lines": [
+      "Todavía quedan frascos fuera de lugar.{pause=0.4} Las marcas están arriba, contra la pared.",
+      "No hay apuro. El estante no se va a ningún lado."
+    ]
+  },
+  "acto1_isolde_tarea_fin": {
+    "speaker": "Isolde",
+    "lines": [
+      "Mirá eso.{pause=0.5} Cada cosa en su lugar.",
+      "Gracias. Ordenar con alguien es mejor que ordenar sola.",
+      {
+        "text": "A mí también me gustó.",
+        "speaker": "Manzana"
+      },
+      "Eso es lo que me alcanza.{pause=0.4} Un estante en orden y una amiga al lado."
+    ]
   }
 }

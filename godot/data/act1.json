@@ -11,11 +11,108 @@
     "#.............#",
     "###############"
   ],
-  "player_start": [240, 232],
+  "player_start": [
+    240,
+    232
+  ],
   "npcs": {
-    "gala":    {"name": "Gala",    "pos": [112, 128], "color": [232, 96, 72]},
-    "aida":    {"name": "Aida",    "pos": [240, 104], "color": [170, 40, 70]},
-    "isolde":  {"name": "Isolde",  "pos": [368, 128], "color": [120, 190, 90]},
-    "banana":  {"name": "Banana",  "pos": [240, 120], "color": [240, 210, 80]}
+    "gala": {
+      "name": "Gala",
+      "pos": [
+        112,
+        128
+      ],
+      "color": [
+        232,
+        96,
+        72
+      ]
+    },
+    "aida": {
+      "name": "Aida",
+      "pos": [
+        240,
+        104
+      ],
+      "color": [
+        170,
+        40,
+        70
+      ]
+    },
+    "isolde": {
+      "name": "Isolde",
+      "pos": [
+        368,
+        128
+      ],
+      "color": [
+        120,
+        190,
+        90
+      ]
+    },
+    "banana": {
+      "name": "Banana",
+      "pos": [
+        240,
+        120
+      ],
+      "color": [
+        240,
+        210,
+        80
+      ]
+    }
+  },
+  "task_isolde": {
+    "_nota": "Tres frascos fuera de lugar (pos) que hay que llevar a su marca (slot).",
+    "items": [
+      {
+        "pos": [
+          64,
+          176
+        ],
+        "slot": [
+          176,
+          48
+        ],
+        "color": [
+          120,
+          200,
+          230
+        ]
+      },
+      {
+        "pos": [
+          416,
+          176
+        ],
+        "slot": [
+          240,
+          48
+        ],
+        "color": [
+          230,
+          170,
+          70
+        ]
+      },
+      {
+        "pos": [
+          300,
+          176
+        ],
+        "slot": [
+          304,
+          48
+        ],
+        "color": [
+          170,
+          120,
+          220
+        ]
+      }
+    ]
   }
 }

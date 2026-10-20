@@ -12,6 +12,9 @@ const SpritesScript = preload("res://scripts/sprites.gd")
 const NPC_SIZE := 24.0
 const TALK_MARGIN := 16.0
 const FADE_SPEED := 1.5  # el fundido tras cada etapa dura unos 0,7 s
+const PICK_RANGE := 26.0   # a qué distancia se agarra un frasco
+const PLACE_RANGE := 30.0  # a qué distancia de su marca se deja
+const JAR_SIZE := Vector2(14, 18)
 
 ## Datos de respaldo si falta data/act1.json (así el juego no se rompe).
 const FALLBACK := {
@@ -36,6 +39,9 @@ var blocks: Array[Rect2] = []  # paredes y obstáculos
 var npc_info: Dictionary = {}  # id -> {name, pos, color}
 var fade := 0.0
 var busy := false  # hay una escena en curso
+## Frascos de la mini-tarea de Isolde: {pos, slot, color, placed}. `carrying` es el que se lleva (-1 si ninguno).
+var items: Array = []
+var carrying := -1
 
 
 func _init(_game = null) -> void:
@@ -46,6 +52,14 @@ func _init(_game = null) -> void:
 	_build_blocks()
 	var start: Array = data["player_start"]
 	player = PlayerScript.new(Vector2(float(start[0]), float(start[1])), [])
+	var task: Dictionary = data.get("task_isolde", {})
+	for item in task.get("items", []):
+		var item_pos: Array = item["pos"]
+		var item_slot: Array = item["slot"]
+		var item_color: Array = item["color"]
+		items.append({"pos": Vector2(float(item_pos[0]), float(item_pos[1])),
+			"slot": Vector2(float(item_slot[0]), float(item_slot[1])),
+			"color": Color8(int(item_color[0]), int(item_color[1]), int(item_color[2])), "placed": false})
 	for id in data["npcs"]:
 		var info: Dictionary = data["npcs"][id]
 		var pos: Array = info["pos"]
@@ -126,14 +140,63 @@ func handle_touch(game, action: String, _position) -> void:
 func _interact(game) -> void:
 	if busy:
 		return
+	if _handle_jar():
+		return
 	var id := nearby_npc()
 	if id == "":
 		return
-	var key: String = story.talk(id)
-	if key == "":
+	var keys: Array = story.talk(id)
+	if keys.is_empty():
 		return
 	busy = true
-	_say_sequence(game, [key], 0, true)
+	_say_sequence(game, keys, 0, true)
+
+
+# ---------- mini-tarea de Isolde ----------
+func jars_placed() -> int:
+	var count := 0
+	for item in items:
+		if item["placed"]:
+			count += 1
+	return count
+
+
+## Agarra el frasco cercano o deja el que se lleva sobre su marca. Devuelve true si hizo algo.
+func _handle_jar() -> bool:
+	if story.task != "activa":
+		return false
+	if carrying >= 0:
+		var held: Dictionary = items[carrying]
+		if player.pos.distance_to(held["slot"]) > PLACE_RANGE:
+			return false
+		held["pos"] = held["slot"]
+		held["placed"] = true
+		carrying = -1
+		if jars_placed() >= items.size():
+			story.complete_task()
+		return true
+	var best := -1
+	var best_distance := PICK_RANGE
+	for index in range(items.size()):
+		if items[index]["placed"]:
+			continue
+		var distance: float = player.pos.distance_to(items[index]["pos"])
+		if distance <= best_distance:
+			best_distance = distance
+			best = index
+	if best < 0:
+		return false
+	carrying = best
+	return true
+
+
+## El texto de ayuda de arriba (cambia mientras se hace la tarea).
+func hint_text() -> String:
+	if story.stage == "dia" and story.task == "activa" and not items.is_empty():
+		if carrying >= 0:
+			return "Dejalo sobre una marca (E)"
+		return "Acomodá los frascos con E (%d/%d)" % [jars_placed(), items.size()]
+	return story.hint() if story.stage == view.stage else ""  # durante una escena de transición no se muestra
 
 
 # ---------- escenas ----------
@@ -168,6 +231,8 @@ func _sequence_done(game, check_advance: bool) -> void:
 # ---------- cuadro a cuadro ----------
 func update(game, dt: float) -> void:
 	fade = maxf(0.0, fade - FADE_SPEED * dt)
+	if story.task == "activa" and items.is_empty():
+		story.complete_task()  # sin frascos en los datos no hay nada que acomodar
 	var move := Vector2(
 		(1.0 if Input.is_action_pressed("move_right") or Input.is_action_pressed("aim_right") else 0.0)
 		- (1.0 if Input.is_action_pressed("move_left") or Input.is_action_pressed("aim_left") else 0.0),
@@ -175,6 +240,8 @@ func update(game, dt: float) -> void:
 		- (1.0 if Input.is_action_pressed("move_up") or Input.is_action_pressed("aim_up") else 0.0))
 	# Sin combate: las flechas también caminan y no se dispara (aim fijo en cero).
 	player.update(dt, solids(), game.touch_controls.move, null, move, Vector2.ZERO)
+	if carrying >= 0:
+		items[carrying]["pos"] = player.pos + Vector2(0, -16)
 
 
 func draw(game, canvas) -> void:
@@ -191,10 +258,13 @@ func draw(game, canvas) -> void:
 				canvas.draw_rect(tile, S.FLOOR)
 				if ch == "X":
 					canvas.draw_rect(tile.grow(-4), S.OBSTACLE)
+	_draw_jars(canvas)
 	for id in view.npcs():
 		_draw_npc(game, canvas, id, view.is_aged(id))
 	player.draw(canvas)
-	var hint: String = view.hint()
+	if carrying >= 0:
+		_draw_jar(canvas, items[carrying]["pos"], items[carrying]["color"])
+	var hint: String = hint_text()
 	if hint != "":
 		game.text(hint, "text", S.WHITE, Vector2(S.SCREEN_W / 2.0, 16), "center")
 	var near := nearby_npc()
@@ -203,6 +273,25 @@ func draw(game, canvas) -> void:
 		game.text("E: hablar", "footer", S.WHITE, pos + Vector2(0, 22), "center")
 	if fade > 0.0:
 		canvas.draw_rect(Rect2(0, 0, S.SCREEN_W, S.SCREEN_H), Color(0, 0, 0, clampf(fade, 0.0, 1.0)))
+
+
+## Las marcas (mientras dura la tarea) y los frascos que no se están llevando.
+func _draw_jars(canvas) -> void:
+	if story.task == "pendiente":
+		return
+	for index in range(items.size()):
+		var item: Dictionary = items[index]
+		if story.task == "activa" and not item["placed"]:
+			var slot: Vector2 = item["slot"]
+			canvas.draw_rect(Rect2(slot - JAR_SIZE / 2.0 - Vector2(2, 2), JAR_SIZE + Vector2(4, 4)), Color(1, 1, 1, 0.5), false, 1.0)
+		if index != carrying:
+			_draw_jar(canvas, item["pos"], item["color"])
+
+
+func _draw_jar(canvas, pos: Vector2, color: Color) -> void:
+	canvas.draw_rect(Rect2(pos - JAR_SIZE / 2.0, JAR_SIZE), color)
+	canvas.draw_rect(Rect2(pos + Vector2(-JAR_SIZE.x / 2.0 - 1, -JAR_SIZE.y / 2.0 - 3), Vector2(JAR_SIZE.x + 2, 4)), color.darkened(0.4))
+	canvas.draw_rect(Rect2(pos + Vector2(-3, -3), Vector2(3, 6)), Color(1, 1, 1, 0.45))
 
 
 func _draw_npc(game, canvas, id: String, aged: bool) -> void:

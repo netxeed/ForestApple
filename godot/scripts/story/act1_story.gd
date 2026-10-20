@@ -17,6 +17,8 @@ var stage := "dia"
 var talked: Dictionary = {}
 ## Historial de banderas: {"dia:gala": true, ...}. Queda para consultas futuras (finales, puertas).
 var flags: Dictionary = {}
+## Mini-tarea de Isolde (ordenar los frascos): pendiente → activa (la propuso) → hecha (los ordenó).
+var task := "pendiente"
 
 
 ## Quiénes están en el estante en esta etapa.
@@ -48,13 +50,38 @@ func dialogue_for(npc_id: String) -> String:
 	return ""
 
 
-## Registra que se habló con `npc_id` y devuelve su diálogo ("" si no corresponde).
-func talk(npc_id: String) -> String:
-	var key := dialogue_for(npc_id)
-	if key != "":
-		talked[npc_id] = true
-		flags["%s:%s" % [stage, npc_id]] = true
-	return key
+## Registra que se habló con `npc_id` y devuelve los diálogos que toca contar, en orden
+## (`[]` si no corresponde). Isolde, en el primer día, pide ayuda con los frascos: no cuenta como
+## «habló con ella» hasta que la tarea esté hecha y se lo cuente.
+func talk(npc_id: String) -> Array:
+	if not npcs().has(npc_id):
+		return []
+	if stage == "dia" and npc_id == "isolde":
+		match task:
+			"pendiente":
+				task = "activa"
+				flags["dia:isolde_tarea_ofrecida"] = true
+				return ["acto1_isolde", "acto1_isolde_tarea"]
+			"activa":
+				return ["acto1_isolde_tarea_recordar"]
+			_:
+				return _mark_talked(npc_id, "acto1_isolde_tarea_fin")
+	return _mark_talked(npc_id, dialogue_for(npc_id))
+
+
+func _mark_talked(npc_id: String, key: String) -> Array:
+	if key == "":
+		return []
+	talked[npc_id] = true
+	flags["%s:%s" % [stage, npc_id]] = true
+	return [key]
+
+
+## Los frascos están en su lugar. Isolde todavía no lo sabe: falta hablar con ella.
+func complete_task() -> void:
+	if task == "activa":
+		task = "hecha"
+		flags["dia:isolde_tarea"] = true
 
 
 func talked_count() -> int:
@@ -102,6 +129,8 @@ func is_dark(key: String) -> bool:
 func hint() -> String:
 	match stage:
 		"dia":
+			if task == "hecha" and not talked.has("isolde"):
+				return "Contale a Isolde que terminaste"
 			return "Hablá con tus amigas (%d/%d)" % [talked.size(), FRIENDS.size()]
 		"tragedia":
 			return "Despedite de tus amigas (%d/%d)" % [talked.size(), FRIENDS.size()]
