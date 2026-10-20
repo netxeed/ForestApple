@@ -34,6 +34,8 @@ func handle_touch(game, action: String, _position) -> void:
 		game.open_pause()
 	elif action == "interact":
 		_interact(game)
+	elif action == "switch_character":
+		game.switch_character()
 
 
 func _interact(game) -> void:
@@ -82,7 +84,9 @@ func update(game, dt: float) -> void:
 		(1.0 if Input.is_action_pressed("aim_down") else 0.0) - (1.0 if Input.is_action_pressed("aim_up") else 0.0)
 	)
 	game.player.update(dt, room.solids(), game.touch_controls.move, game.touch_controls.aim,
-		null, null, melee_direction, Input.is_action_pressed("block"))
+		null, null, melee_direction, Input.is_action_pressed("block") or game.touch_controls.block_pressed
+		or game.touch_controls.block_just_pressed)
+	game.touch_controls.block_just_pressed = false
 	for shot in game.player_shots.duplicate():
 		if shot.alive:
 			shot.update(dt)

@@ -12,7 +12,7 @@ const SCREEN_H := TILE * ROOM_ROWS  # 288
 const WINDOW_SCALE := 2  # solo la ventana inicial (en Python era SCALE)
 
 static var FPS := 60
-static var DEBUG_KEYS := true  # F3 = eliminar enemigos, R = reiniciar (para probar)
+static var DEBUG_KEYS := false  # F3 = eliminar enemigos, R = reiniciar (para probar)
 
 # Salas
 const ENEMY_WAKE_DELAY := 0.5

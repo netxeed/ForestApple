@@ -7,11 +7,6 @@ const S = preload("res://scripts/core/settings.gd")
 
 func draw(game, canvas: CanvasItem) -> void:
 	game.text("HP: %d/%d" % [game.player.hp, game.player.max_hp], "text", S.WHITE, Vector2(S.TILE + 4, 8))
-	var character_name := "Niño" if game.player.character == "nino" else "Manzana"
-	var cooldown_text := "L: listo" if game.character_switch_cooldown <= 0.0 else "L: %ds" % ceili(game.character_switch_cooldown)
-	game.text("%s  |  %s" % [character_name, cooldown_text], "text", S.WHITE, Vector2(S.TILE + 4, 62))
-	var combat_hint := "Flechas: espada  F: bloquear" if game.player.character == "manzana" else "Flechas: piedras"
-	game.text(combat_hint, "text", S.WHITE, Vector2(S.TILE + 4, 80))
 	if S.DEBUG_KEYS:
 		var speed: float = game.player.velocity.length()
 		game.text("Velocidad: %.1f px/s" % speed, "text", S.WHITE, Vector2(S.TILE + 4, 26))
@@ -19,29 +14,6 @@ func draw(game, canvas: CanvasItem) -> void:
 	_draw_trinkets(game, canvas)
 	_draw_minimap(game, canvas)
 	_draw_boss_bar(game, canvas)
-	_draw_hints(game)
-	if game.player.alive and game.banner != null:
-		var message: String = game.banner[0]
-		var text_size: Vector2 = game.font.get_string_size(message, HORIZONTAL_ALIGNMENT_LEFT, -1, game.font_size("text"))
-		var rect := Rect2(Vector2.ZERO, text_size)
-		rect.position = Vector2(S.SCREEN_W / 2.0 - rect.size.x / 2.0, S.TILE * 2.0 - rect.size.y / 2.0)
-		canvas.draw_rect(Rect2(rect.position - Vector2(6, 4), rect.size + Vector2(12, 8)), S.BG)
-		game.text(message, "text", S.WHITE, rect.get_center(), "center")
-
-
-func _draw_hints(game) -> void:
-	var boss_doors: Array = game.floor.boss_door_directions()
-	if not game.floor.boss_unlocked and not boss_doors.is_empty():
-		for direction in boss_doors:
-			if game.room.door_rects.has(direction) and _inflate(game.room.door_rects[direction], 32).intersects(game.player.rect):
-				var hint := "E: usar llave" if game.player.has_trinket("key") else "Necesito una llave para entrar"
-				game.text(hint, "text", S.WHITE, Vector2(S.SCREEN_W / 2.0, S.SCREEN_H - 18), "center")
-				return
-	if game.room.key_drop and _inflate(game.room.key_rect, 28).intersects(game.player.rect):
-		game.text("E: agarrar llave", "text", S.WHITE, Vector2(S.SCREEN_W / 2.0, S.SCREEN_H - 18), "center")
-	if game.room.kind == "boss" and game.room.cleared() and not game.hole_dialogue_shown \
-			and _inflate(game.room.hole_rect, 28).intersects(game.player.rect):
-		game.text("E: bajar", "text", S.WHITE, Vector2(S.SCREEN_W / 2.0, S.SCREEN_H - 18), "center")
 
 
 func _draw_boss_bar(game, canvas: CanvasItem) -> void:
@@ -101,7 +73,3 @@ func _draw_trinkets(game, canvas: CanvasItem) -> void:
 			canvas.draw_rect(Rect2(x + 3, y + 3, 6, 6), Color8(160, 166, 177))
 			canvas.draw_rect(Rect2(x + 3, y + 3, 2, 2), Color8(242, 244, 248))
 		x += 12 + gap
-
-
-func _inflate(rect: Rect2, amount: float) -> Rect2:
-	return Rect2(rect.position - Vector2(amount, amount) / 2.0, rect.size + Vector2(amount, amount))

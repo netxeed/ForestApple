@@ -4,9 +4,10 @@ extends "res://scripts/states/state.gd"
 const S = preload("res://scripts/core/settings.gd")
 const Controls = preload("res://scripts/core/controls.gd")
 const CursorScript = preload("res://scripts/states/cursor.gd")
-const GeoScript = preload("res://scripts/core/geo.gd")
 
 const PAUSE_OPTIONS := ["Continuar", "Reiniciar", "Salir"]
+const FIRST_Y := S.SCREEN_H / 2.0 - 12.0
+const SPACING := 32.0
 
 var cursor
 
@@ -31,9 +32,9 @@ func handle_touch(game, action: String, position) -> void:
 	if action == "pause":
 		game.states.pop()
 	elif action == "tap" and position != null:
-		var top: float = floorf(S.SCREEN_H / 2.0) - 12.0
-		if position.y >= top - 18.0 and position.y <= top + 80.0:
-			cursor.index = clampi(GeoScript.round_py((position.y - top) / 32.0), 0, PAUSE_OPTIONS.size() - 1)
+		var row = CursorScript.row_at(position, FIRST_Y, SPACING, PAUSE_OPTIONS.size(), 18.0, S.SCREEN_W / 2.0, S.SCREEN_W * 0.34)
+		if row != null:
+			cursor.index = row
 			choose(game)
 
 
