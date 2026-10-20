@@ -15,6 +15,9 @@ const FADE_SPEED := 1.5  # el fundido tras cada etapa dura unos 0,7 s
 const PICK_RANGE := 26.0   # a qué distancia se agarra un frasco
 const PLACE_RANGE := 30.0  # a qué distancia de su marca se deja
 const JAR_SIZE := Vector2(14, 18)
+const FOLLOW_GAP := 34.0      # a cuántos píxeles de camino detrás de la manzana va Aida
+const FOLLOW_SPEED := 150.0
+const ARRIVE_AIDA_RANGE := 80.0  # Aida tiene que estar cerca del borde cuando llega la manzana
 
 ## Datos de respaldo si falta data/act1.json (así el juego no se rompe).
 const FALLBACK := {
@@ -42,6 +45,13 @@ var busy := false  # hay una escena en curso
 ## Frascos de la mini-tarea de Isolde: {pos, slot, color, placed}. `carrying` es el que se lleva (-1 si ninguno).
 var items: Array = []
 var carrying := -1
+## Mini-tarea de Aida: dónde pararse (spot), a qué distancia cuenta (aida_range) y el vacío (edge).
+var aida_spot := Vector2.ZERO
+var aida_range := 40.0
+var edge := Rect2()
+var has_aida_task := false
+## Por dónde caminó la manzana: Aida la sigue por ese mismo camino, así que nunca atraviesa paredes.
+var trail: Array = []
 
 
 func _init(_game = null) -> void:
@@ -60,6 +70,14 @@ func _init(_game = null) -> void:
 		items.append({"pos": Vector2(float(item_pos[0]), float(item_pos[1])),
 			"slot": Vector2(float(item_slot[0]), float(item_slot[1])),
 			"color": Color8(int(item_color[0]), int(item_color[1]), int(item_color[2])), "placed": false})
+	var aida_data: Dictionary = data.get("task_aida", {})
+	if aida_data.has("spot") and aida_data.has("edge"):
+		var spot: Array = aida_data["spot"]
+		var edge_data: Array = aida_data["edge"]
+		aida_spot = Vector2(float(spot[0]), float(spot[1]))
+		aida_range = float(aida_data.get("range", 40.0))
+		edge = Rect2(float(edge_data[0]), float(edge_data[1]), float(edge_data[2]), float(edge_data[3]))
+		has_aida_task = true
 	for id in data["npcs"]:
 		var info: Dictionary = data["npcs"][id]
 		var pos: Array = info["pos"]
@@ -97,7 +115,11 @@ func _build_blocks() -> void:
 ## Todo lo que bloquea el paso: paredes, obstáculos y las frutas que están en pantalla.
 func solids() -> Array:
 	var out: Array = blocks.duplicate()
+	if has_aida_task:
+		out.append(edge)
 	for id in view.npcs():
+		if id == "aida" and story.aida_task == "activa":
+			continue  # mientras te sigue no estorba
 		out.append(npc_rect(id))
 	return out
 
@@ -190,6 +212,64 @@ func _handle_jar() -> bool:
 	return true
 
 
+# ---------- mini-tarea de Aida ----------
+## Aida sigue a la manzana (por su rastro) y, cuando llegan al borde, se cuenta la escena.
+func _update_aida(game, dt: float) -> void:
+	if story.aida_task != "activa" or story.stage != "dia":
+		return
+	if not has_aida_task:
+		story.complete_aida_task()  # sin datos del borde no hay nada que mirar
+		return
+	if trail.is_empty() or trail[trail.size() - 1].distance_to(player.pos) >= 3.0:
+		trail.append(player.pos)
+		if trail.size() > 400:
+			trail.pop_front()
+	var target := _trail_point_behind(FOLLOW_GAP)
+	if target != Vector2.INF:
+		var aida_pos: Vector2 = npc_info["aida"]["pos"]
+		npc_info["aida"]["pos"] = aida_pos.move_toward(target, FOLLOW_SPEED * dt)
+	if busy:
+		return
+	var aida_now: Vector2 = npc_info["aida"]["pos"]
+	if player.pos.distance_to(aida_spot) <= aida_range and aida_now.distance_to(aida_spot) <= ARRIVE_AIDA_RANGE:
+		busy = true
+		story.complete_aida_task()
+		_place_aida_at_edge()
+		_say_sequence(game, ["acto1_aida_borde"], 0, false)
+
+
+## El punto del rastro que queda a `gap` píxeles de camino de la manzana (Vector2.INF si todavía no caminó tanto).
+func _trail_point_behind(gap: float) -> Vector2:
+	var previous: Vector2 = player.pos
+	var walked := 0.0
+	for index in range(trail.size() - 1, -1, -1):
+		var point: Vector2 = trail[index]
+		var segment := previous.distance_to(point)
+		if walked + segment >= gap:
+			return previous.lerp(point, (gap - walked) / segment) if segment > 0.0 else point
+		walked += segment
+		previous = point
+	return Vector2.INF
+
+
+## Deja a Aida cerca del borde, a un lado de la manzana (que no se pisen).
+func _place_aida_at_edge() -> void:
+	for offset in [Vector2(0, -40), Vector2(-40, 0), Vector2(0, -70), Vector2(-70, 0)]:
+		var candidate: Vector2 = aida_spot + offset
+		var rect := Rect2(candidate - Vector2(NPC_SIZE, NPC_SIZE) / 2.0, Vector2(NPC_SIZE, NPC_SIZE))
+		if candidate.distance_to(player.pos) < 30.0:
+			continue
+		var free := true
+		for block in blocks:
+			if rect.intersects(block):
+				free = false
+				break
+		if free:
+			npc_info["aida"]["pos"] = candidate
+			return
+	npc_info["aida"]["pos"] = aida_spot + Vector2(0, -40)
+
+
 ## El texto de ayuda de arriba (cambia mientras se hace la tarea).
 func hint_text() -> String:
 	if story.stage == "dia" and story.task == "activa" and not items.is_empty():
@@ -242,6 +322,7 @@ func update(game, dt: float) -> void:
 	player.update(dt, solids(), game.touch_controls.move, null, move, Vector2.ZERO)
 	if carrying >= 0:
 		items[carrying]["pos"] = player.pos + Vector2(0, -16)
+	_update_aida(game, dt)
 
 
 func draw(game, canvas) -> void:
@@ -258,6 +339,10 @@ func draw(game, canvas) -> void:
 				canvas.draw_rect(tile, S.FLOOR)
 				if ch == "X":
 					canvas.draw_rect(tile.grow(-4), S.OBSTACLE)
+	if has_aida_task:  # el borde del estante: un vacío oscuro que se pierde hacia abajo
+		canvas.draw_rect(edge, Color(0.04, 0.03, 0.06))
+		canvas.draw_rect(Rect2(edge.position, Vector2(edge.size.x, 3)), Color(0.3, 0.25, 0.36))
+		canvas.draw_rect(Rect2(edge.position + Vector2(6, 14), Vector2(edge.size.x - 12, 2)), Color(0.12, 0.1, 0.16))
 	_draw_jars(canvas)
 	for id in view.npcs():
 		_draw_npc(game, canvas, id, view.is_aged(id))

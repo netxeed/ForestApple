@@ -214,7 +214,7 @@ Ya existen las piezas técnicas que usarán los tres actos: una **pila de estado
 Acto 3 todavía no existe como juego. Del **Acto 1 hay una primera versión
 jugable en Godot** (un estante, las tres amigas, la tragedia, la banana, el niño y
 el enfrentamiento; textos borrador en `data/dialogues.json`). Se abre con `F2`
-en el menú y al terminar sigue el Acto 2. Hay una **mini-tarea** hecha (Isolde: acomodar tres frascos); faltan las de Gala y Aida, más pantallas,
+en el menú y al terminar sigue el Acto 2. Hay dos **mini-tareas** hechas (Isolde: acomodar tres frascos; Aida: acompañarla al borde del estante); falta la de Gala, más pantallas,
 el arte de las amigas envejecidas y el enfrentamiento jugado.
 
 ## 7. Implicaciones técnicas
@@ -293,6 +293,10 @@ a su sección y se anota en el historial (sección 9).
 - El Acto 1 termina con la guerra civil ya declarada (antes terminaba con la alianza).
 - Acto 2: se suman puzzles y cosas secretas; tras el último jefe, la manzana habla con el niño.
 - `acto1_nino_llega` ya está reescrito: el niño aparece tras la tragedia, casi se come a la manzana y le da la idea del bosque.
+
+**v0.3.3** (segunda mini-tarea)
+- Mini-tarea de Aida en el primer día: te pide que la acompañes al borde del estante (abajo a la derecha). Te sigue por tu mismo camino y, al llegar, hay una escena corta donde miran el vacío. Después hay que volver a hablar con ella para que el día pueda cerrar. Textos borrador: `acto1_aida_tarea`, `_recordar`, `acto1_aida_borde` y `_fin`.
+- El escenario de `data/act1.json` mueve a Isolde un poco hacia arriba para que no quede pegada a la zona del borde.
 
 **v0.3.2** (primera mini-tarea)
 - Mini-tarea de Isolde en el primer día: acomodar tres frascos del estante (se agarran y se dejan con `E` sobre una marca). Isolde la pide en su charla y el día no cierra hasta contárselo. Textos borrador: `acto1_isolde_tarea`, `_recordar` y `_fin`.

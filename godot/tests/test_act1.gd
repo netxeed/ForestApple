@@ -18,7 +18,14 @@ func test_historia_recorre_las_etapas_en_orden() -> void:
 	check_eq(story.talk("gala"), ["acto1_gala"], "Gala")
 	check_eq(story.talk("gala"), ["acto1_gala"], "se puede repetir una charla")
 	check_eq(story.talked_count(), 1, "pero cuenta una sola vez")
-	story.talk("aida")
+	check_eq(story.talk("aida"), ["acto1_aida", "acto1_aida_tarea"], "Aida pide que la acompañen al borde")
+	check_eq(story.aida_task, "activa", "la tarea de Aida queda activa")
+	check_eq(story.hint(), "Acompañá a Aida al borde del estante", "la ayuda lo dice")
+	check_eq(story.talk("aida"), ["acto1_aida_tarea_recordar"], "si vuelve antes, se lo recuerda")
+	story.complete_aida_task()
+	check_eq(story.aida_task, "hecha", "Aida ya vio el borde")
+	check_eq(story.hint(), "Volvé con Aida", "falta hablar con ella")
+	check_eq(story.talk("aida"), ["acto1_aida_tarea_fin"], "Aida cuenta lo que pensó")
 	check(not story.ready_to_advance(), "faltan una")
 	check_eq(story.talk("isolde"), ["acto1_isolde", "acto1_isolde_tarea"], "Isolde pide ayuda con los frascos")
 	check_eq(story.task, "activa", "la tarea queda activa")
@@ -62,7 +69,7 @@ func test_todos_los_dialogos_del_acto_1_existen() -> void:
 		for id in story.npcs():
 			keys.append(story.dialogue_for(id))
 		keys.append_array(StoryScript.new().advance())
-	keys.append_array(["acto1_isolde_tarea", "acto1_isolde_tarea_recordar", "acto1_isolde_tarea_fin", "acto1_dia_cierre", "acto1_basura", "acto1_conclusion", "acto1_nino_llega", "acto1_enfrentamiento"])
+	keys.append_array(["acto1_aida_tarea", "acto1_aida_tarea_recordar", "acto1_aida_borde", "acto1_aida_tarea_fin", "acto1_isolde_tarea", "acto1_isolde_tarea_recordar", "acto1_isolde_tarea_fin", "acto1_dia_cierre", "acto1_basura", "acto1_conclusion", "acto1_nino_llega", "acto1_enfrentamiento"])
 	for key in keys:
 		check(dialogues.has(key), "existe el diálogo " + str(key))
 
@@ -72,7 +79,7 @@ func test_estado_carga_datos_y_arma_el_escenario() -> void:
 	var state = Act1StateScript.new()
 	check_eq(state.blocks.size() > 40, true, "paredes y obstáculos")
 	check_eq(state.npc_info.keys().size(), 4, "cuatro personajes")
-	check_eq(state.solids().size(), state.blocks.size() + 3, "las tres amigas bloquean el paso")
+	check_eq(state.solids().size(), state.blocks.size() + 4, "el borde y las tres amigas bloquean el paso")
 	check_eq(state.nearby_npc(), "", "al empezar no hay nadie cerca")
 	state.player.teleport(state.npc_info["gala"]["pos"] + Vector2(0, 26))
 	check_eq(state.nearby_npc(), "gala", "al lado de Gala se puede hablar")
@@ -91,6 +98,10 @@ func test_exploracion_completa_hasta_el_acto_2() -> void:
 	check(game.states.top() == state, "terminado el despertar se puede caminar")
 
 	_talk_to(game, state, "gala")
+	_talk_to(game, state, "aida")
+	check_eq(state.story.aida_task, "activa", "Aida pide que la acompañen")
+	_walk_aida_to_edge(game, state)
+	check_eq(state.story.aida_task, "hecha", "llegaron al borde")
 	_talk_to(game, state, "aida")
 	_talk_to(game, state, "isolde")
 	check_eq(state.story.task, "activa", "Isolde pide ayuda")
@@ -139,6 +150,48 @@ func test_tarea_de_los_frascos_paso_a_paso() -> void:
 	check_eq(state.hint_text(), "Contale a Isolde que terminaste", "falta contárselo a Isolde")
 
 
+func test_aida_sigue_a_la_manzana_y_llegan_al_borde() -> void:
+	Controls.setup()
+	var game = GameScript.new()
+	game.states.quiet = true
+	game.start_act1()
+	var state = game.states.states()[0]
+	_close_dialogues(game)
+	check(state.has_aida_task, "los datos traen el borde")
+	check(state.solids().has(state.edge), "el borde es sólido")
+	state.story.talk("aida")
+	var start: Vector2 = state.npc_info["aida"]["pos"]
+	check(not state.solids().has(state.npc_rect("aida")), "mientras te sigue, Aida no estorba")
+	# La manzana camina hacia la derecha por la fila de abajo; Aida va detrás por el mismo camino.
+	var x := 80.0
+	while x < 300.0:
+		x += 6.0
+		state.player.teleport(Vector2(x, 244))
+		state.update(game, 0.1)
+	var aida: Vector2 = state.npc_info["aida"]["pos"]
+	check(aida.distance_to(Vector2(x, 244)) < 60.0, "Aida quedó pegada a la manzana")
+	check(aida.distance_to(start) > 100.0, "Aida se movió de su lugar")
+	check_eq(state.story.aida_task, "activa", "todavía no llegaron")
+	check(game.states.top() == state, "no hay escena todavía")
+	# llegada
+	while x < state.aida_spot.x:
+		x += 6.0
+		state.player.teleport(Vector2(minf(x, state.aida_spot.x), state.aida_spot.y))
+		state.update(game, 0.1)
+	for i in range(30):
+		state.update(game, 0.1)
+		if state.story.aida_task == "hecha":
+			break
+	check_eq(state.story.aida_task, "hecha", "al llegar al borde se cuenta la escena")
+	check(game.states.top() is DialogueStateScript, "se abre el diálogo del borde")
+	_close_dialogues(game)
+	check(not state.busy, "terminada la escena se puede seguir")
+	var placed: Vector2 = state.npc_info["aida"]["pos"]
+	check(placed.distance_to(state.player.pos) >= 30.0, "Aida queda al lado, sin pisar a la manzana")
+	check(state.solids().has(state.npc_rect("aida")), "ya quieta, Aida vuelve a ser sólida")
+	game.free()
+
+
 func test_reiniciar_desde_la_pausa_reinicia_el_acto_1() -> void:
 	Controls.setup()
 	var game = GameScript.new()
@@ -175,3 +228,17 @@ func _do_task(game, state) -> void:
 		game.states.handle_key(make_key(KEY_E))
 		state.player.teleport(item["slot"] + Vector2(0, 6))
 		game.states.handle_key(make_key(KEY_E))
+
+
+## Camina con la manzana (con Aida detrás) hasta el borde y deja que se cuente la escena.
+func _walk_aida_to_edge(game, state) -> void:
+	var x := 100.0
+	while x < state.aida_spot.x:
+		x = minf(x + 6.0, state.aida_spot.x)
+		state.player.teleport(Vector2(x, state.aida_spot.y))
+		game.states.update(0.1)
+	for i in range(40):
+		game.states.update(0.1)
+		if state.story.aida_task == "hecha":
+			break
+	_close_dialogues(game)
