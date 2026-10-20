@@ -17,6 +17,15 @@ func _run() -> void:
 	game.start_act1()
 	await process_frame
 	var explore = game.states.states()[0]
+	# Mini-tarea de Isolde: marcas, un frasco en las manos y todos acomodados.
+	explore.story.task = "activa"
+	explore.carrying = 0
+	await process_frame
+	await process_frame
+	explore.carrying = -1
+	explore.story.task = "hecha"
+	await process_frame
+	await process_frame
 	for stage in ["dia", "tragedia", "crisis"]:
 		explore.view.stage = stage
 		explore.fade = 0.5

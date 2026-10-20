@@ -404,6 +404,100 @@
    ],
    "speaker": "Isolde"
   },
+  "acto1_isolde_tarea": {
+   "lines": [
+    {
+     "pauses": [
+      [
+       38,
+       0.4
+      ]
+     ],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Ahora que lo pienso, ¿me das una mano? Tres frascos se corrieron del borde y solos no vuelven."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Claro. ¿Dónde van?"
+    },
+    {
+     "pauses": [
+      [
+       37,
+       0.4
+      ]
+     ],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Arriba hay tres marcas en el estante. Se agarra un frasco con E, se lleva, y se deja sobre una marca con E."
+    }
+   ],
+   "speaker": "Isolde"
+  },
+  "acto1_isolde_tarea_fin": {
+   "lines": [
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ]
+     ],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Mirá eso. Cada cosa en su lugar."
+    },
+    {
+     "pauses": [],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Gracias. Ordenar con alguien es mejor que ordenar sola."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "A mí también me gustó."
+    },
+    {
+     "pauses": [
+      [
+       25,
+       0.4
+      ]
+     ],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Eso es lo que me alcanza. Un estante en orden y una amiga al lado."
+    }
+   ],
+   "speaker": "Isolde"
+  },
+  "acto1_isolde_tarea_recordar": {
+   "lines": [
+    {
+     "pauses": [
+      [
+       38,
+       0.4
+      ]
+     ],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "Todavía quedan frascos fuera de lugar. Las marcas están arriba, contra la pared."
+    },
+    {
+     "pauses": [],
+     "speaker": "Isolde",
+     "speed": 45.0,
+     "text": "No hay apuro. El estante no se va a ningún lado."
+    }
+   ],
+   "speaker": "Isolde"
+  },
   "acto1_isolde_vieja": {
    "lines": [
     {
@@ -3000,6 +3094,124 @@
     [
      0,
      22
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     43
+    ],
+    [
+     44,
+     85
+    ],
+    [
+     86,
+     94
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     18
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     47
+    ],
+    [
+     48,
+     94
+    ],
+    [
+     95,
+     107
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea_fin",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     32
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea_fin",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     49
+    ],
+    [
+     50,
+     55
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea_fin",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     22
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea_fin",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     47
+    ],
+    [
+     48,
+     66
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea_recordar",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     49
+    ],
+    [
+     50,
+     80
+    ]
+   ]
+  },
+  {
+   "key": "acto1_isolde_tarea_recordar",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     48
     ]
    ]
   },
