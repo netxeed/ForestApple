@@ -63,6 +63,42 @@
         210,
         80
       ]
+    },
+    "frutilla": {
+      "name": "Frutilla",
+      "pos": [
+        176,
+        72
+      ],
+      "color": [
+        220,
+        60,
+        90
+      ]
+    },
+    "naranja": {
+      "name": "Naranja",
+      "pos": [
+        320,
+        100
+      ],
+      "color": [
+        240,
+        150,
+        40
+      ]
+    },
+    "dante": {
+      "name": "Dante",
+      "pos": [
+        76,
+        226
+      ],
+      "color": [
+        245,
+        175,
+        125
+      ]
     }
   },
   "task_isolde": {
@@ -127,6 +163,19 @@
       160,
       32,
       96
+    ]
+  },
+  "task_mision1": {
+    "_nota": "Misión 1: encontrar a Dante antes de que Gutenberg lo alcance. gutenberg_start: dónde empieza a rodar (va hacia el escondite de Dante). limit: segundos (reloj suave).",
+    "gutenberg_start": [
+      372,
+      176
+    ],
+    "limit": 110,
+    "gutenberg_color": [
+      60,
+      140,
+      70
     ]
   }
 }

@@ -43,7 +43,7 @@
     "speaker": "",
     "lines": [
       {
-        "text": "Otro día en el estante.",
+        "text": "Después de todo eso, la canasta vuelve a su rutina.",
         "speaker": "Manzana"
       },
       {
@@ -65,6 +65,14 @@
       },
       {
         "text": "Es un buen día.{pause=0.5} No sé por qué lo noto tanto.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "¡Ya empezaron! María y Adán están eligiendo las frutas para la ensalada.",
+        "speaker": "Frutilla"
+      },
+      {
+        "text": "Todas fingimos que no escuchamos.",
         "speaker": "Manzana"
       }
     ]
@@ -203,7 +211,15 @@
         "speaker": "Manzana"
       },
       {
-        "text": "Una mano enorme las levantó de a una.{pause=0.5} Gala, Aida, Isolde.",
+        "text": "Una mano enorme fue eligiendo las frutas para la ensalada: las más firmes, las más lindas.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "A Gala, Aida e Isolde no las eligió.{pause=0.5} Estaban demasiado blandas.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Las levantó de a una, y las tiró.",
         "speaker": "Manzana"
       },
       {
@@ -236,6 +252,14 @@
     "speaker": "",
     "lines": [
       {
+        "text": "A las que eligieron para la ensalada, se las come. Y eso es bueno: así nos lo enseñaron.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Pero a ellas las tiraron.{pause=0.5} Y a nadie le pareció que eso estuviera mal.",
+        "speaker": "Manzana"
+      },
+      {
         "text": "Las frutas siguen hablando del sol, como si nada.",
         "speaker": "Manzana"
       },
@@ -248,7 +272,7 @@
         "speaker": "Manzana"
       },
       {
-        "text": "Una sombra enorme cubre el estante.",
+        "text": "Una sombra enorme cubre la canasta.",
         "speaker": ""
       }
     ]
@@ -412,5 +436,232 @@
       }
     ],
     "_nota": "Pendiente de arte: tres imágenes (cocina con ventana y canasta; canasta con frutas vivas; primer plano de la manzana con los ojos cerrados). Ver docs/acto1-guion-equipo.md."
+  },
+  "acto1_m1_escena": {
+    "speaker": "",
+    "lines": [
+      {
+        "text": "¡Buen día!",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Buen día.",
+        "speaker": "Frutilla"
+      },
+      {
+        "text": "¿Ya es la hora?",
+        "speaker": "Frutilla"
+      },
+      {
+        "text": "¿La hora de qué?",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Del almuerzo. Ayer María estaba hablando con Adán. Parece que van a invitar a la familia a almorzar.",
+        "speaker": "Frutilla"
+      },
+      {
+        "text": "¿Y?",
+        "speaker": "Dante"
+      },
+      {
+        "text": "¡Y van a hacer ensalada de frutas!",
+        "speaker": "Frutilla"
+      },
+      {
+        "text": "Ah, mirá vos.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Eso dijeron, van a usar bananas, uvas, frutillas, piñas... De todo un poco.",
+        "speaker": "Frutilla 2"
+      },
+      {
+        "text": "Mirá qué generosos.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "¿Vos decís que nos toca hoy?",
+        "speaker": "Frutilla"
+      },
+      {
+        "text": "No sé.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Yo escuché que María dijo que quería que hubiera bastante para todos.",
+        "speaker": "Frutilla 3"
+      },
+      {
+        "text": "¡Exacto!",
+        "speaker": "Frutilla 2"
+      },
+      {
+        "text": "La sandía Gutenberg pasa cerca de ellos.",
+        "speaker": ""
+      },
+      {
+        "text": "¿Vos sabés algo, Gutenberg?",
+        "speaker": "Dante"
+      },
+      {
+        "text": "No sé de nada. No jodás.",
+        "speaker": "Gutenberg"
+      },
+      {
+        "text": "Ah.{pause=0.4} Bien. Bien que contestes bien.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Dante se acerca a las frutillas para hablar más bajo.",
+        "speaker": ""
+      },
+      {
+        "text": "¡¡Andá, seguí rodando por ahí, sarnoso!!",
+        "speaker": "Dante"
+      },
+      {
+        "text": "¿Qué dijiste?",
+        "speaker": "Gutenberg"
+      },
+      {
+        "text": "¿Eh? Nada, nada. Que se nota que te levantaste de buen humor.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "¿Tenés algún problema, durazno piojoso?",
+        "speaker": "Gutenberg"
+      },
+      {
+        "text": "¿Yo? No, ninguno. ¿Vos? Estoy preguntando por el almuerzo nomás. ¿Hace falta insultar?",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Entonces andá a preguntarle a otro.",
+        "speaker": "Gutenberg"
+      },
+      {
+        "text": "Dale, tranquilo, andá, seguí rodando por ahí.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Las frutillas estallan de risa.",
+        "speaker": ""
+      },
+      {
+        "text": "Gutenberg carga contra Dante y este lo esquiva por muy poco. Si le hubiera dado, salía volando.",
+        "speaker": ""
+      },
+      {
+        "text": "¡¿Qué hacés?! ¡Me vas a matar! No se te puede hacer un chiste a vos.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Te vas a tragar cada palabra. A mí no me hacés chistes.",
+        "speaker": "Gutenberg"
+      },
+      {
+        "text": "¡Bueno, listo! No te hago más.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Vení, te quiero decir algo.",
+        "speaker": "Gutenberg"
+      },
+      {
+        "text": "No, no, no...",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Dante sale corriendo.",
+        "speaker": ""
+      },
+      {
+        "text": "Vení, piojoso, te voy a decir algo.",
+        "speaker": "Gutenberg"
+      },
+      {
+        "text": "Gutenberg va tras él. Los dos salen de la escena.",
+        "speaker": ""
+      },
+      {
+        "text": "Tengo que encontrarlo antes de que lo alcance.",
+        "speaker": "Manzana"
+      }
+    ]
+  },
+  "acto1_m1_frutilla": {
+    "speaker": "Frutilla",
+    "lines": [
+      "¡Ay, qué lío! ¿Viste cómo salió Gutenberg detrás de Dante?",
+      "Yo no me meto, yo solo cuento lo que pasa.{pause=0.4} Pero preguntale a la naranja, que estaba más cerca.",
+      {
+        "text": "¿Y si lo alcanza?",
+        "speaker": "Manzana"
+      },
+      "Y bueno... lo aplasta.{pause=0.4} ¡Qué horror! ¿Te imaginás?"
+    ]
+  },
+  "acto1_m1_naranja": {
+    "speaker": "Naranja",
+    "lines": [
+      "Dante se fue rodando para el fondo, abajo a la izquierda.",
+      "Se escondió detrás de las cajas, creo.{pause=0.4} Pero Gutenberg viene siguiéndole el olor a durazno.",
+      "Si lo encuentra, lo hace puré. Apurate."
+    ]
+  },
+  "acto1_m1_dante_salvado": {
+    "speaker": "Dante",
+    "lines": [
+      "¡Shhh! ¿Quién...{pause=0.4} ah, sos vos.",
+      "¡Menos mal! Pensé que era Gutenberg.",
+      {
+        "text": "Se acerca rodando. Hay que irse de acá.",
+        "speaker": "Manzana"
+      },
+      "Tenés razón. Gracias, eh.{pause=0.4} Si no fuera por vos, hoy me hacían puré de durazno."
+    ]
+  },
+  "acto1_m1_fin_salvado": {
+    "speaker": "",
+    "lines": [
+      {
+        "text": "Escondimos a Dante entre las frutillas.{pause=0.4} Gutenberg pasó rodando de largo, bufando.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Nadie sabe bien por qué una sandía quiere aplastar a un durazno.{pause=0.4} Pero así son las cosas en la canasta.",
+        "speaker": "Manzana"
+      }
+    ]
+  },
+  "acto1_m1_tarde": {
+    "speaker": "",
+    "lines": [
+      {
+        "text": "Llegué tarde.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "¡¡NOOOO!!",
+        "speaker": "Dante"
+      },
+      {
+        "text": "Gutenberg pasó rodando por encima de Dante.{pause=0.5} Quedó chato, pero vivo.",
+        "speaker": ""
+      },
+      {
+        "text": "Estoy bien...{pause=0.4} estoy bien...{pause=0.4} ay.",
+        "speaker": "Dante"
+      },
+      {
+        "text": "A mí no me hacés chistes.",
+        "speaker": "Gutenberg"
+      },
+      {
+        "text": "A Dante le va a costar volver a hacerlos.",
+        "speaker": "Manzana"
+      }
+    ]
   }
 }

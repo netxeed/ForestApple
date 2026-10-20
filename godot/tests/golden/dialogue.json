@@ -248,15 +248,27 @@
      "text": "Se abrió la puerta de golpe, y entró una luz que no era la del sol."
     },
     {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Una mano enorme fue eligiendo las frutas para la ensalada: las más firmes, las más lindas."
+    },
+    {
      "pauses": [
       [
-       37,
+       36,
        0.5
       ]
      ],
      "speaker": "Manzana",
      "speed": 45.0,
-     "text": "Una mano enorme las levantó de a una. Gala, Aida, Isolde."
+     "text": "A Gala, Aida e Isolde no las eligió. Estaban demasiado blandas."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Las levantó de a una, y las tiró."
     },
     {
      "pauses": [
@@ -284,6 +296,23 @@
      "pauses": [],
      "speaker": "Manzana",
      "speed": 45.0,
+     "text": "A las que eligieron para la ensalada, se las come. Y eso es bueno: así nos lo enseñaron."
+    },
+    {
+     "pauses": [
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Pero a ellas las tiraron. Y a nadie le pareció que eso estuviera mal."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
      "text": "Las frutas siguen hablando del sol, como si nada."
     },
     {
@@ -307,7 +336,7 @@
      "pauses": [],
      "speaker": "",
      "speed": 45.0,
-     "text": "Una sombra enorme cubre el estante."
+     "text": "Una sombra enorme cubre la canasta."
     }
    ],
    "speaker": ""
@@ -318,7 +347,7 @@
      "pauses": [],
      "speaker": "Manzana",
      "speed": 45.0,
-     "text": "Otro día en el estante."
+     "text": "Después de todo eso, la canasta vuelve a su rutina."
     },
     {
      "pauses": [
@@ -363,6 +392,18 @@
      "speaker": "Manzana",
      "speed": 45.0,
      "text": "Es un buen día. No sé por qué lo noto tanto."
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "¡Ya empezaron! María y Adán están eligiendo las frutas para la ensalada."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Todas fingimos que no escuchamos."
     }
    ],
    "speaker": ""
@@ -666,6 +707,426 @@
     }
    ],
    "speaker": "Isolde"
+  },
+  "acto1_m1_dante_salvado": {
+   "lines": [
+    {
+     "pauses": [
+      [
+       16,
+       0.4
+      ]
+     ],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¡Shhh! ¿Quién... ah, sos vos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¡Menos mal! Pensé que era Gutenberg."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Se acerca rodando. Hay que irse de acá."
+    },
+    {
+     "pauses": [
+      [
+       25,
+       0.4
+      ]
+     ],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "Tenés razón. Gracias, eh. Si no fuera por vos, hoy me hacían puré de durazno."
+    }
+   ],
+   "speaker": "Dante"
+  },
+  "acto1_m1_escena": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¡Buen día!"
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "Buen día."
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "¿Ya es la hora?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¿La hora de qué?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "Del almuerzo. Ayer María estaba hablando con Adán. Parece que van a invitar a la familia a almorzar."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¿Y?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "¡Y van a hacer ensalada de frutas!"
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "Ah, mirá vos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla 2",
+     "speed": 45.0,
+     "text": "Eso dijeron, van a usar bananas, uvas, frutillas, piñas... De todo un poco."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "Mirá qué generosos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "¿Vos decís que nos toca hoy?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "No sé."
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla 3",
+     "speed": 45.0,
+     "text": "Yo escuché que María dijo que quería que hubiera bastante para todos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Frutilla 2",
+     "speed": 45.0,
+     "text": "¡Exacto!"
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "La sandía Gutenberg pasa cerca de ellos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¿Vos sabés algo, Gutenberg?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Gutenberg",
+     "speed": 45.0,
+     "text": "No sé de nada. No jodás."
+    },
+    {
+     "pauses": [
+      [
+       3,
+       0.4
+      ]
+     ],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "Ah. Bien. Bien que contestes bien."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Dante se acerca a las frutillas para hablar más bajo."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¡¡Andá, seguí rodando por ahí, sarnoso!!"
+    },
+    {
+     "pauses": [],
+     "speaker": "Gutenberg",
+     "speed": 45.0,
+     "text": "¿Qué dijiste?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¿Eh? Nada, nada. Que se nota que te levantaste de buen humor."
+    },
+    {
+     "pauses": [],
+     "speaker": "Gutenberg",
+     "speed": 45.0,
+     "text": "¿Tenés algún problema, durazno piojoso?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¿Yo? No, ninguno. ¿Vos? Estoy preguntando por el almuerzo nomás. ¿Hace falta insultar?"
+    },
+    {
+     "pauses": [],
+     "speaker": "Gutenberg",
+     "speed": 45.0,
+     "text": "Entonces andá a preguntarle a otro."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "Dale, tranquilo, andá, seguí rodando por ahí."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Las frutillas estallan de risa."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Gutenberg carga contra Dante y este lo esquiva por muy poco. Si le hubiera dado, salía volando."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¡¿Qué hacés?! ¡Me vas a matar! No se te puede hacer un chiste a vos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Gutenberg",
+     "speed": 45.0,
+     "text": "Te vas a tragar cada palabra. A mí no me hacés chistes."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¡Bueno, listo! No te hago más."
+    },
+    {
+     "pauses": [],
+     "speaker": "Gutenberg",
+     "speed": 45.0,
+     "text": "Vení, te quiero decir algo."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "No, no, no..."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Dante sale corriendo."
+    },
+    {
+     "pauses": [],
+     "speaker": "Gutenberg",
+     "speed": 45.0,
+     "text": "Vení, piojoso, te voy a decir algo."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Gutenberg va tras él. Los dos salen de la escena."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Tengo que encontrarlo antes de que lo alcance."
+    }
+   ],
+   "speaker": ""
+  },
+  "acto1_m1_fin_salvado": {
+   "lines": [
+    {
+     "pauses": [
+      [
+       39,
+       0.4
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Escondimos a Dante entre las frutillas. Gutenberg pasó rodando de largo, bufando."
+    },
+    {
+     "pauses": [
+      [
+       64,
+       0.4
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Nadie sabe bien por qué una sandía quiere aplastar a un durazno. Pero así son las cosas en la canasta."
+    }
+   ],
+   "speaker": ""
+  },
+  "acto1_m1_frutilla": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "¡Ay, qué lío! ¿Viste cómo salió Gutenberg detrás de Dante?"
+    },
+    {
+     "pauses": [
+      [
+       42,
+       0.4
+      ]
+     ],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "Yo no me meto, yo solo cuento lo que pasa. Pero preguntale a la naranja, que estaba más cerca."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "¿Y si lo alcanza?"
+    },
+    {
+     "pauses": [
+      [
+       22,
+       0.4
+      ]
+     ],
+     "speaker": "Frutilla",
+     "speed": 45.0,
+     "text": "Y bueno... lo aplasta. ¡Qué horror! ¿Te imaginás?"
+    }
+   ],
+   "speaker": "Frutilla"
+  },
+  "acto1_m1_naranja": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Naranja",
+     "speed": 45.0,
+     "text": "Dante se fue rodando para el fondo, abajo a la izquierda."
+    },
+    {
+     "pauses": [
+      [
+       38,
+       0.4
+      ]
+     ],
+     "speaker": "Naranja",
+     "speed": 45.0,
+     "text": "Se escondió detrás de las cajas, creo. Pero Gutenberg viene siguiéndole el olor a durazno."
+    },
+    {
+     "pauses": [],
+     "speaker": "Naranja",
+     "speed": 45.0,
+     "text": "Si lo encuentra, lo hace puré. Apurate."
+    }
+   ],
+   "speaker": "Naranja"
+  },
+  "acto1_m1_tarde": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Llegué tarde."
+    },
+    {
+     "pauses": [],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "¡¡NOOOO!!"
+    },
+    {
+     "pauses": [
+      [
+       43,
+       0.5
+      ]
+     ],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Gutenberg pasó rodando por encima de Dante. Quedó chato, pero vivo."
+    },
+    {
+     "pauses": [
+      [
+       13,
+       0.4
+      ],
+      [
+       27,
+       0.4
+      ]
+     ],
+     "speaker": "Dante",
+     "speed": 45.0,
+     "text": "Estoy bien... estoy bien... ay."
+    },
+    {
+     "pauses": [],
+     "speaker": "Gutenberg",
+     "speed": 45.0,
+     "text": "A mí no me hacés chistes."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "A Dante le va a costar volver a hacerlos."
+    }
+   ],
+   "speaker": ""
   },
   "acto1_nino_llega": {
    "lines": [
@@ -3161,11 +3622,11 @@
    "spans": [
     [
      0,
-     49
+     48
     ],
     [
-     50,
-     57
+     49,
+     90
     ]
    ]
   },
@@ -3175,13 +3636,37 @@
    "spans": [
     [
      0,
-     36
+     44
+    ],
+    [
+     45,
+     63
     ]
    ]
   },
   {
    "key": "acto1_basura",
    "line": 3,
+   "spans": [
+    [
+     0,
+     33
+    ]
+   ]
+  },
+  {
+   "key": "acto1_basura",
+   "line": 4,
+   "spans": [
+    [
+     0,
+     36
+    ]
+   ]
+  },
+  {
+   "key": "acto1_basura",
+   "line": 5,
    "spans": [
     [
      0,
@@ -3195,13 +3680,41 @@
    "spans": [
     [
      0,
-     49
+     44
+    ],
+    [
+     45,
+     88
     ]
    ]
   },
   {
    "key": "acto1_conclusion",
    "line": 1,
+   "spans": [
+    [
+     0,
+     46
+    ],
+    [
+     47,
+     69
+    ]
+   ]
+  },
+  {
+   "key": "acto1_conclusion",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     49
+    ]
+   ]
+  },
+  {
+   "key": "acto1_conclusion",
+   "line": 3,
    "spans": [
     [
      0,
@@ -3215,7 +3728,7 @@
   },
   {
    "key": "acto1_conclusion",
-   "line": 2,
+   "line": 4,
    "spans": [
     [
      0,
@@ -3225,7 +3738,7 @@
   },
   {
    "key": "acto1_conclusion",
-   "line": 3,
+   "line": 5,
    "spans": [
     [
      0,
@@ -3239,7 +3752,11 @@
    "spans": [
     [
      0,
-     23
+     43
+    ],
+    [
+     44,
+     51
     ]
    ]
   },
@@ -3292,6 +3809,30 @@
     [
      0,
      44
+    ]
+   ]
+  },
+  {
+   "key": "acto1_dia_cierre",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     47
+    ],
+    [
+     48,
+     72
+    ]
+   ]
+  },
+  {
+   "key": "acto1_dia_cierre",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     33
     ]
    ]
   },
@@ -3676,6 +4217,642 @@
     [
      0,
      34
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_dante_salvado",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     29
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_dante_salvado",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     36
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_dante_salvado",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     39
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_dante_salvado",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     46
+    ],
+    [
+     47,
+     77
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     10
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     9
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     15
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     16
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 4,
+   "spans": [
+    [
+     0,
+     44
+    ],
+    [
+     45,
+     90
+    ],
+    [
+     91,
+     100
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 5,
+   "spans": [
+    [
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 6,
+   "spans": [
+    [
+     0,
+     34
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 7,
+   "spans": [
+    [
+     0,
+     13
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 8,
+   "spans": [
+    [
+     0,
+     49
+    ],
+    [
+     50,
+     75
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 9,
+   "spans": [
+    [
+     0,
+     19
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 10,
+   "spans": [
+    [
+     0,
+     28
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 11,
+   "spans": [
+    [
+     0,
+     6
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 12,
+   "spans": [
+    [
+     0,
+     48
+    ],
+    [
+     49,
+     69
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 13,
+   "spans": [
+    [
+     0,
+     8
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 14,
+   "spans": [
+    [
+     0,
+     40
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 15,
+   "spans": [
+    [
+     0,
+     27
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 16,
+   "spans": [
+    [
+     0,
+     24
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 17,
+   "spans": [
+    [
+     0,
+     34
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 18,
+   "spans": [
+    [
+     0,
+     47
+    ],
+    [
+     48,
+     53
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 19,
+   "spans": [
+    [
+     0,
+     40
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 20,
+   "spans": [
+    [
+     0,
+     13
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 21,
+   "spans": [
+    [
+     0,
+     49
+    ],
+    [
+     50,
+     61
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 22,
+   "spans": [
+    [
+     0,
+     39
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 23,
+   "spans": [
+    [
+     0,
+     48
+    ],
+    [
+     49,
+     86
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 24,
+   "spans": [
+    [
+     0,
+     35
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 25,
+   "spans": [
+    [
+     0,
+     45
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 26,
+   "spans": [
+    [
+     0,
+     31
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 27,
+   "spans": [
+    [
+     0,
+     46
+    ],
+    [
+     47,
+     95
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 28,
+   "spans": [
+    [
+     0,
+     45
+    ],
+    [
+     46,
+     68
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 29,
+   "spans": [
+    [
+     0,
+     46
+    ],
+    [
+     47,
+     55
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 30,
+   "spans": [
+    [
+     0,
+     30
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 31,
+   "spans": [
+    [
+     0,
+     27
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 32,
+   "spans": [
+    [
+     0,
+     13
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 33,
+   "spans": [
+    [
+     0,
+     21
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 34,
+   "spans": [
+    [
+     0,
+     35
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 35,
+   "spans": [
+    [
+     0,
+     49
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_escena",
+   "line": 36,
+   "spans": [
+    [
+     0,
+     46
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_fin_salvado",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     49
+    ],
+    [
+     50,
+     81
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_fin_salvado",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     41
+    ],
+    [
+     42,
+     90
+    ],
+    [
+     91,
+     102
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_frutilla",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     48
+    ],
+    [
+     49,
+     58
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_frutilla",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     47
+    ],
+    [
+     48,
+     94
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_frutilla",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     17
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_frutilla",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     49
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_naranja",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     46
+    ],
+    [
+     47,
+     57
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_naranja",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     43
+    ],
+    [
+     44,
+     90
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_naranja",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     39
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_tarde",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     13
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_tarde",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     9
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_tarde",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     49
+    ],
+    [
+     50,
+     67
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_tarde",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     31
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_tarde",
+   "line": 4,
+   "spans": [
+    [
+     0,
+     25
+    ]
+   ]
+  },
+  {
+   "key": "acto1_m1_tarde",
+   "line": 5,
+   "spans": [
+    [
+     0,
+     41
     ]
    ]
   },

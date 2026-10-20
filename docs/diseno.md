@@ -297,7 +297,9 @@ a su sección y se anota en el historial (sección 9).
 **v0.4 (borrador)** (guion del equipo: prólogo y Misión 1)
 - El equipo escribió un **prólogo** (la manzana le habla al jugador en pantalla negra) y la **Misión 1**: encontrar a Dante, un durazno, antes de que la sandía Gutenberg lo aplaste. El texto está tal cual en `docs/acto1-guion-equipo.md`, con notas de integración y preguntas abiertas.
 - El prólogo ya es jugable en Godot (`acto1_prologo`), sin las tres imágenes (faltan de arte).
-- La Misión 1 **todavía no está implementada**: antes hay que decidir cómo convive con las mini-tareas ya hechas y cómo se busca a Dante (ver las notas del guion).
+- **Misión 1 implementada (primera versión)**, con las decisiones del equipo: Dante va **primero** y después las mini-tareas; la **ensalada de frutas es el detonante de la tragedia** (las frutas más maduras no se eligen y las tiran); y la búsqueda es **con pistas y reloj suave**. Se habla con la frutilla y la naranja, que dicen dónde se escondió Dante; mientras tanto Gutenberg rueda visible hacia el escondite (110 s). Si se llega a tiempo, Dante se salva; si no, queda aplastado pero vivo y la historia sigue.
+- Textos nuevos o ajustados (borrador): `acto1_m1_*`, `acto1_despertar`, `acto1_dia_cierre`, `acto1_basura` y `acto1_conclusion`, para que la ensalada conecte con la tragedia.
+- Pendiente: sprites de Dante, Gutenberg, frutilla y naranja (hoy son formas simples), las frutillas 2 y 3 y el resto de la canasta, y si Dante reaparece más adelante.
 - Se registran dos datos nuevos del mundo: las frutas hablan en rioplatense (Berazategui, cinturón verde del AMBA) y solo tienen nombre las que hicieron algo importante.
 
 **v0.3.3** (segunda mini-tarea)

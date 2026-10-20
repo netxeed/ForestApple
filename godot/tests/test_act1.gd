@@ -11,9 +11,21 @@ const LinesScript = preload("res://scripts/dialogue/dialogue_lines.gd")
 
 func test_historia_recorre_las_etapas_en_orden() -> void:
 	var story = StoryScript.new()
-	check_eq(story.stage, "dia", "empieza en un día cualquiera")
+	check_eq(story.stage, "mision1", "empieza con la Misión 1")
 	check_eq(story.prologue_dialogue(), "acto1_prologo", "antes de todo, el prólogo")
-	check_eq(story.opening_dialogue(), "acto1_despertar", "abre con el despertar")
+	check_eq(story.opening_dialogue(), "acto1_m1_escena", "después, la escena de Dante y Gutenberg")
+	check_eq(story.npcs(), ["frutilla", "naranja"], "los que saben dónde está Dante")
+	check(not story.ready_to_advance(), "sin encontrar a Dante no se avanza")
+	check_eq(story.talk("frutilla"), ["acto1_m1_frutilla"], "la frutilla chismosa")
+	check_eq(story.talk("dante"), [], "Dante todavía no aparece")
+	check_eq(story.talk("naranja"), ["acto1_m1_naranja"], "la naranja dice dónde se escondió")
+	check_eq(story.npcs(), ["frutilla", "naranja", "dante"], "con las dos pistas aparece Dante")
+	check(not story.ready_to_advance(), "falta hablar con Dante")
+	check_eq(story.talk("dante"), ["acto1_m1_dante_salvado"], "Dante a salvo")
+	check_eq(story.m1, "salvado", "se lo salvó a tiempo")
+	check(story.ready_to_advance(), "terminó la misión")
+	check_eq(story.advance(), ["acto1_m1_fin_salvado", "acto1_despertar"], "fin de la misión y vuelta a la rutina")
+	check_eq(story.stage, "dia", "empieza un día cualquiera")
 	check_eq(story.npcs(), ["gala", "aida", "isolde"], "las tres amigas")
 	check(not story.ready_to_advance(), "sin hablar con nadie no se avanza")
 	check_eq(story.talk("gala"), ["acto1_gala"], "Gala")
@@ -43,7 +55,7 @@ func test_historia_recorre_las_etapas_en_orden() -> void:
 	check_eq(story.stage, "tragedia", "sigue la tragedia")
 	check(story.is_aged("gala"), "las amigas se ven envejecidas")
 	check_eq(story.dialogue_for("aida"), "acto1_aida_vieja", "despedida")
-	check_eq(story.opening_dialogue(), "", "no hay diálogo de apertura fuera del primer día")
+	check_eq(story.opening_dialogue(), "", "no hay diálogo de apertura fuera de la Misión 1")
 	check_eq(story.prologue_dialogue(), "", "ni prólogo")
 	for id in ["gala", "aida", "isolde"]:
 		story.talk(id)
@@ -60,18 +72,34 @@ func test_historia_recorre_las_etapas_en_orden() -> void:
 	check_eq(story.advance(), [], "avanzar al final no hace nada")
 
 
+func test_mision1_si_se_acaba_el_tiempo_gutenberg_alcanza_a_dante() -> void:
+	var story = StoryScript.new()
+	check(not story.tick_m1(30.0), "al principio hay tiempo")
+	check_eq(story.hint(), "Encontrá a Dante: preguntales a las frutas (0/2)", "la ayuda dice qué hacer")
+	check(not story.tick_m1(50.0), "todavía no se acabó")
+	check_eq(story.hint(), "¡Gutenberg se acerca a Dante!", "avisa cuando falta poco")
+	check(story.tick_m1(40.0), "se acaba el tiempo")
+	check_eq(story.m1, "tarde", "llegaste tarde")
+	check(story.flags.has("mision1:dante_aplastado"), "queda anotado")
+	check(not story.tick_m1(1.0), "el reloj ya no corre")
+	check(story.ready_to_advance(), "la misión terminó igual")
+	check_eq(story.advance(), ["acto1_m1_tarde", "acto1_despertar"], "la escena de Dante aplastado")
+	check_eq(story.stage, "dia", "la historia sigue")
+	check_eq(story.talk("dante"), [], "Dante ya no está")
+
+
 func test_todos_los_dialogos_del_acto_1_existen() -> void:
 	var errors: Array = []
 	var dialogues: Dictionary = LinesScript.load_file(dialogues_path(), errors)
 	check_eq(errors, [], "dialogues.json sin errores")
 	var story = StoryScript.new()
 	var keys: Array = [story.prologue_dialogue(), story.opening_dialogue()]
-	for stage in ["dia", "tragedia", "crisis"]:
+	for stage in ["mision1", "dia", "tragedia", "crisis"]:
 		story.stage = stage
 		for id in story.npcs():
 			keys.append(story.dialogue_for(id))
 		keys.append_array(StoryScript.new().advance())
-	keys.append_array(["acto1_aida_tarea", "acto1_aida_tarea_recordar", "acto1_aida_borde", "acto1_aida_tarea_fin", "acto1_isolde_tarea", "acto1_isolde_tarea_recordar", "acto1_isolde_tarea_fin", "acto1_dia_cierre", "acto1_basura", "acto1_conclusion", "acto1_nino_llega", "acto1_enfrentamiento"])
+	keys.append_array(["acto1_m1_dante_salvado", "acto1_m1_fin_salvado", "acto1_m1_tarde", "acto1_despertar", "acto1_aida_tarea", "acto1_aida_tarea_recordar", "acto1_aida_borde", "acto1_aida_tarea_fin", "acto1_isolde_tarea", "acto1_isolde_tarea_recordar", "acto1_isolde_tarea_fin", "acto1_dia_cierre", "acto1_basura", "acto1_conclusion", "acto1_nino_llega", "acto1_enfrentamiento"])
 	for key in keys:
 		check(dialogues.has(key), "existe el diálogo " + str(key))
 
@@ -80,11 +108,13 @@ func test_estado_carga_datos_y_arma_el_escenario() -> void:
 	Controls.setup()
 	var state = Act1StateScript.new()
 	check_eq(state.blocks.size() > 40, true, "paredes y obstáculos")
-	check_eq(state.npc_info.keys().size(), 4, "cuatro personajes")
-	check_eq(state.solids().size(), state.blocks.size() + 4, "el borde y las tres amigas bloquean el paso")
+	check_eq(state.npc_info.keys().size(), 7, "siete personajes en los datos")
+	check(state.has_m1, "los datos traen la Misión 1")
+	check_eq(state.visible_npcs(), ["frutilla", "naranja"], "al empezar solo están los que dan pistas")
+	check_eq(state.solids().size(), state.blocks.size() + 3, "el borde y las dos frutas bloquean el paso")
 	check_eq(state.nearby_npc(), "", "al empezar no hay nadie cerca")
-	state.player.teleport(state.npc_info["gala"]["pos"] + Vector2(0, 26))
-	check_eq(state.nearby_npc(), "gala", "al lado de Gala se puede hablar")
+	state.player.teleport(state.npc_info["frutilla"]["pos"] + Vector2(0, 26))
+	check_eq(state.nearby_npc(), "frutilla", "al lado de la frutilla se puede hablar")
 
 
 func test_exploracion_completa_hasta_el_acto_2() -> void:
@@ -100,6 +130,15 @@ func test_exploracion_completa_hasta_el_acto_2() -> void:
 	check_eq(game.states.top().snapshot()["speaker"], "", "al principio nadie tiene nombre")
 	_close_dialogues(game)
 	check(not state.black, "terminado el prólogo vuelve la imagen")
+	check(game.states.top() == state, "terminada la escena inicial se puede caminar")
+	check(not state.visible_npcs().has("dante"), "Dante está escondido")
+	_talk_to(game, state, "frutilla")
+	check(not state.visible_npcs().has("dante"), "con una sola pista no aparece")
+	_talk_to(game, state, "naranja")
+	check(state.visible_npcs().has("dante"), "con las dos pistas aparece Dante")
+	_talk_to(game, state, "dante")
+	check_eq(state.story.m1, "salvado", "Dante a salvo")
+	check_eq(state.view.stage, "dia", "empieza el día")
 	check(game.states.top() == state, "terminado el despertar se puede caminar")
 
 	_talk_to(game, state, "gala")
@@ -130,6 +169,7 @@ func test_exploracion_completa_hasta_el_acto_2() -> void:
 func test_tarea_de_los_frascos_paso_a_paso() -> void:
 	Controls.setup()
 	var state = Act1StateScript.new()
+	_skip_to_day(state)
 	check_eq(state.items.size(), 3, "tres frascos en los datos")
 	state.player.teleport(state.items[0]["pos"])
 	check(not state._handle_jar(), "sin la tarea activa los frascos no se tocan")
@@ -162,6 +202,7 @@ func test_aida_sigue_a_la_manzana_y_llegan_al_borde() -> void:
 	game.start_act1()
 	var state = game.states.states()[0]
 	_close_dialogues(game)
+	_skip_to_day(state)
 	check(state.has_aida_task, "los datos traen el borde")
 	check(state.solids().has(state.edge), "el borde es sólido")
 	state.story.talk("aida")
@@ -197,6 +238,30 @@ func test_aida_sigue_a_la_manzana_y_llegan_al_borde() -> void:
 	game.free()
 
 
+func test_mision1_sin_encontrar_a_dante_gutenberg_llega() -> void:
+	Controls.setup()
+	var game = GameScript.new()
+	game.states.quiet = true
+	game.start_act1()
+	var state = game.states.states()[0]
+	_close_dialogues(game)
+	var start: Vector2 = state.gut_pos
+	game.states.update(30.0)
+	check(state.gut_pos.distance_to(start) > 10.0, "Gutenberg rueda hacia el escondite")
+	var guard := 0
+	while state.story.m1 == "busqueda" and guard < 400:
+		game.states.update(1.0)
+		guard += 1
+	check_eq(state.story.m1, "tarde", "se acabó el tiempo")
+	check(game.states.top() is DialogueStateScript, "se cuenta la escena de Dante aplastado")
+	check(state.gut_pos.distance_to(state.gut_target) < 10.0, "Gutenberg llegó al escondite")
+	_close_dialogues(game)
+	check_eq(state.story.stage, "dia", "la historia sigue")
+	check_eq(state.view.stage, "dia", "y la vista también")
+	check(game.states.top() == state, "se vuelve a poder caminar")
+	game.free()
+
+
 func test_reiniciar_desde_la_pausa_reinicia_el_acto_1() -> void:
 	Controls.setup()
 	var game = GameScript.new()
@@ -218,6 +283,13 @@ func _close_dialogues(game) -> void:
 		game.states.update(0.5)
 		game.states.handle_key(make_key(KEY_SPACE))
 		guard += 1
+
+
+## Salta la Misión 1 (para probar lo del primer día sin repetirla).
+func _skip_to_day(state) -> void:
+	state.story.stage = "dia"
+	state.view.stage = "dia"
+	state.story.m1 = "salvado"
 
 
 func _talk_to(game, state, id: String) -> void:

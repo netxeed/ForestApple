@@ -29,6 +29,9 @@ const FALLBACK := {
 		"aida": {"name": "Aida", "pos": [240, 104], "color": [170, 40, 70]},
 		"isolde": {"name": "Isolde", "pos": [368, 128], "color": [120, 190, 90]},
 		"banana": {"name": "Banana", "pos": [240, 120], "color": [240, 210, 80]},
+		"frutilla": {"name": "Frutilla", "pos": [176, 72], "color": [220, 60, 90]},
+		"naranja": {"name": "Naranja", "pos": [320, 100], "color": [240, 150, 40]},
+		"dante": {"name": "Dante", "pos": [76, 226], "color": [245, 175, 125]},
 	},
 }
 
@@ -51,6 +54,12 @@ var aida_spot := Vector2.ZERO
 var aida_range := 40.0
 var edge := Rect2()
 var has_aida_task := false
+## Misión 1: Gutenberg rueda desde `gut_start` hacia el escondite de Dante a medida que pasa el tiempo.
+var has_m1 := false
+var gut_start := Vector2.ZERO
+var gut_target := Vector2.ZERO
+var gut_pos := Vector2.ZERO
+var gut_color := Color8(60, 140, 70)
 ## Por dónde caminó la manzana: Aida la sigue por ese mismo camino, así que nunca atraviesa paredes.
 var trail: Array = []
 
@@ -71,6 +80,22 @@ func _init(_game = null) -> void:
 		items.append({"pos": Vector2(float(item_pos[0]), float(item_pos[1])),
 			"slot": Vector2(float(item_slot[0]), float(item_slot[1])),
 			"color": Color8(int(item_color[0]), int(item_color[1]), int(item_color[2])), "placed": false})
+	var m1_data: Dictionary = data.get("task_mision1", {})
+	if m1_data.has("gutenberg_start") and data["npcs"].has("dante"):
+		var g_start: Array = m1_data["gutenberg_start"]
+		var dante_pos: Array = data["npcs"]["dante"]["pos"]
+		gut_start = Vector2(float(g_start[0]), float(g_start[1]))
+		gut_target = Vector2(float(dante_pos[0]), float(dante_pos[1]))
+		gut_pos = gut_start
+		story.m1_limit = float(m1_data.get("limit", story.M1_LIMIT))
+		if m1_data.has("gutenberg_color"):
+			var g_color: Array = m1_data["gutenberg_color"]
+			gut_color = Color8(int(g_color[0]), int(g_color[1]), int(g_color[2]))
+		has_m1 = true
+	else:  # sin datos de la Misión 1 se empieza directamente en el primer día
+		story.stage = "dia"
+		view.stage = "dia"
+		story.m1 = "salvado"
 	var aida_data: Dictionary = data.get("task_aida", {})
 	if aida_data.has("spot") and aida_data.has("edge"):
 		var spot: Array = aida_data["spot"]
@@ -118,12 +143,23 @@ func _build_blocks() -> void:
 				blocks.append(Rect2(col * S.TILE, row * S.TILE, S.TILE, S.TILE))
 
 
+## Quiénes se ven ahora: la lista de la historia mientras no hay una transición en curso
+## (así Dante aparece apenas se juntan las pistas) y la de la vista durante las escenas.
+func visible_npcs() -> Array:
+	var ids: Array = story.npcs() if view.stage == story.stage else view.npcs()
+	var out: Array = []
+	for id in ids:
+		if npc_info.has(id):
+			out.append(id)
+	return out
+
+
 ## Todo lo que bloquea el paso: paredes, obstáculos y las frutas que están en pantalla.
 func solids() -> Array:
 	var out: Array = blocks.duplicate()
 	if has_aida_task:
 		out.append(edge)
-	for id in view.npcs():
+	for id in visible_npcs():
 		if id == "aida" and story.aida_task == "activa":
 			continue  # mientras te sigue no estorba
 		out.append(npc_rect(id))
@@ -140,7 +176,7 @@ func nearby_npc() -> String:
 	var reach: Rect2 = player.rect.grow(TALK_MARGIN)
 	var best := ""
 	var best_distance := INF
-	for id in view.npcs():
+	for id in visible_npcs():
 		if not reach.intersects(npc_rect(id)):
 			continue
 		var distance: float = player.pos.distance_to(npc_info[id]["pos"])
@@ -216,6 +252,36 @@ func _handle_jar() -> bool:
 		return false
 	carrying = best
 	return true
+
+
+# ---------- Misión 1: Dante y Gutenberg ----------
+## Corre el reloj suave; Gutenberg rueda hacia el escondite de Dante y, si llega, se cuenta la escena.
+func _update_mision1(game, dt: float) -> void:
+	if not has_m1 or story.stage != "mision1" or story.m1 != "busqueda" or busy:
+		return
+	var expired: bool = story.tick_m1(dt)
+	var progress: float = story.m1_progress()
+	gut_pos = gut_start.lerp(gut_target, progress) + Vector2(0, sin(float(Time.get_ticks_msec()) / 1000.0 * 9.0) * 2.0)
+	if expired:
+		busy = true
+		var keys: Array = story.advance()
+		_say_sequence(game, keys, 0, false)
+
+
+func _draw_gutenberg(game, canvas) -> void:
+	var texture: Texture2D = SpritesScript.get_texture("Gutenberg")
+	if texture != null:
+		var size := Vector2(texture.get_size())
+		canvas.draw_texture_rect(texture, Rect2(gut_pos - size / 2.0, size), false)
+	else:
+		canvas.draw_circle(gut_pos, 17.0, gut_color)
+		for offset in [-9.0, 0.0, 9.0]:  # las rayas de la sandía
+			canvas.draw_line(gut_pos + Vector2(offset, -15), gut_pos + Vector2(offset * 0.7, 15), gut_color.darkened(0.45), 2.0)
+		canvas.draw_circle(gut_pos + Vector2(-5, -3), 2.0, Color.WHITE)
+		canvas.draw_circle(gut_pos + Vector2(5, -3), 2.0, Color.WHITE)
+		canvas.draw_line(gut_pos + Vector2(-8, -9), gut_pos + Vector2(-2, -6), Color.BLACK, 2.0)  # ceño fruncido
+		canvas.draw_line(gut_pos + Vector2(8, -9), gut_pos + Vector2(2, -6), Color.BLACK, 2.0)
+	game.text("Gutenberg", "footer", S.WHITE, gut_pos + Vector2(0, -26), "center")
 
 
 # ---------- mini-tarea de Aida ----------
@@ -332,6 +398,7 @@ func update(game, dt: float) -> void:
 	if carrying >= 0:
 		items[carrying]["pos"] = player.pos + Vector2(0, -16)
 	_update_aida(game, dt)
+	_update_mision1(game, dt)
 
 
 func draw(game, canvas) -> void:
@@ -353,7 +420,9 @@ func draw(game, canvas) -> void:
 		canvas.draw_rect(Rect2(edge.position, Vector2(edge.size.x, 3)), Color(0.3, 0.25, 0.36))
 		canvas.draw_rect(Rect2(edge.position + Vector2(6, 14), Vector2(edge.size.x - 12, 2)), Color(0.12, 0.1, 0.16))
 	_draw_jars(canvas)
-	for id in view.npcs():
+	if has_m1 and view.stage == "mision1":
+		_draw_gutenberg(game, canvas)
+	for id in visible_npcs():
 		_draw_npc(game, canvas, id, view.is_aged(id))
 	player.draw(canvas)
 	if carrying >= 0:
