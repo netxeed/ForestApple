@@ -30,7 +30,7 @@ func test_constantes() -> void:
 		check_eq(LayoutScript.APPROACH_TILE[direction], _vec(c["approach_tile"][direction]), "baldosa de entrada " + direction)
 	check_eq(LayoutScript.DIRECTIONS.size(), c["directions"].size(), "cantidad de direcciones")
 	# Las letras del Python se conservan; las de enemigos nuevos de Godot (uva del piso 2) se suman.
-	var godot_only := {"G": "grape"}
+	var godot_only := {"G": "grape", "C": "cherries", "M": "mango", "O": "orange"}
 	var expected_letters: Dictionary = c["enemy_letters"].duplicate()
 	expected_letters.merge(godot_only)
 	check_eq(LayoutScript.ENEMY_LETTERS, expected_letters, "letras de enemigos")
@@ -77,7 +77,14 @@ func test_pisos_mal_armados_dan_los_mismos_mensajes_que_python() -> void:
 		var layout = LayoutScript.new()
 		var problem: String = layout.setup(item["floor"], item["rooms"])
 		check_eq(problem, "", "'%s': la estructura se arma (el error está en la validación)" % item["name"])
-		check_eq(layout.validate(), item["errors"], "mensajes de '%s'" % item["name"])
+		var errors: Array = layout.validate()
+		# Las salas ahora pueden tener cualquier tamaño: estos dos casos ya no dan el mensaje de Python.
+		if item["name"] == "faltan_filas":
+			check(errors.size() > 1 and errors[0] == "Problemas en el piso:", "una sala corta ya no falla por la cantidad de filas, sino por el borde")
+		elif item["name"] == "filas_de_otro_ancho":
+			check_eq(errors, ["Problemas en el piso:", "- [a] filas [3, 5] no miden lo mismo."], "mensajes de 'filas_de_otro_ancho'")
+		else:
+			check_eq(errors, item["errors"], "mensajes de '%s'" % item["name"])
 
 
 func test_errores_al_armar_la_estructura() -> void:

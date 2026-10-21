@@ -74,7 +74,7 @@ func test_recorrido_completo_llave_jefe_dialogo_y_agujero() -> void:
 	play.update(game, 0.0)
 	play.update(game, 0.0)
 	check(game.states.top() is DialogueStateScript, "la muerte de la sandía abre su diálogo")
-	check_eq(game.states.top().snapshot().speaker, "Sandía", "se usa el diálogo de muerte del jefe")
+	check_eq(game.states.top().snapshot().speaker, "Gutenberg", "se usa el diálogo de muerte del jefe")
 	_finish_dialogue(game)
 	play.update(game, 0.0)
 	check_eq(game.banner[0], "¡Piso completado!", "el piso se completa al cerrar el diálogo")

@@ -79,7 +79,8 @@ func test_al_morir_se_divide_hasta_la_ultima_generacion() -> void:
 	var grape = room.spawn_enemy("grape", Vector2(180, 100))
 	grape.take_damage(1000.0)
 	check(not grape.alive, "la uva grande muere")
-	var alive: Array = room.enemies.filter(func(e): return e.alive)
+	# La uva grande también llama refuerzos de otras frutas: se cuentan solo las uvas.
+	var alive: Array = room.enemies.filter(func(e): return e.alive and e.kind == "grape")
 	check_eq(alive.size(), 2, "se divide en dos")
 	for child in alive:
 		check_eq(child.generation, 1, "las hijas son medianas")
@@ -89,13 +90,18 @@ func test_al_morir_se_divide_hasta_la_ultima_generacion() -> void:
 	for child in alive:
 		child.grace = 0.0
 		child.take_damage(1000.0)
-	var smalls: Array = room.enemies.filter(func(e): return e.alive)
+	var smalls: Array = room.enemies.filter(func(e): return e.alive and e.kind == "grape")
 	check_eq(smalls.size(), 4, "las medianas se dividen en cuatro chicas")
 	for child in smalls:
 		child.grace = 0.0
 		child.take_damage(1000.0)
-	check(room.enemies.filter(func(e): return e.alive).is_empty(), "las chicas no se dividen")
-	check(room.cleared(), "al morir todas, la sala queda despejada")
+	check(room.enemies.filter(func(e): return e.alive and e.kind == "grape").is_empty(), "las chicas no se dividen")
+	var reinforcements: Array = room.enemies.filter(func(e): return e.alive)
+	check(not reinforcements.is_empty(), "los refuerzos de la primera división siguen vivos")
+	check(not room.cleared(), "la sala no se despeja mientras queden refuerzos")
+	for other in reinforcements:
+		other.kill()
+	check(room.cleared(), "al morir las uvas y los refuerzos, la sala queda despejada")
 
 
 func test_la_explosion_daña_al_jugador_via_la_sala() -> void:

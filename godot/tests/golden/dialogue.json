@@ -1603,95 +1603,174 @@
    "lines": [
     {
      "pauses": [],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
      "text": "..."
     }
    ],
-   "speaker": "Sandía"
+   "speaker": "Gutenberg"
   },
   "sandia_fase2": {
    "lines": [
     {
      "pauses": [],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
      "text": "¡Basta!"
     },
     {
      "pauses": [],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
      "text": "El cielo de las frutas existe."
     },
     {
      "pauses": [],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
      "text": "Lo entenderás en un momento."
     }
    ],
-   "speaker": "Sandía"
+   "speaker": "Gutenberg"
   },
   "sandia_fase3": {
    "lines": [
     {
      "pauses": [
       [
-       15,
+       7,
        0.6
       ],
       [
-       30,
+       22,
        0.4
       ]
      ],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
-     "text": "Mira manzana... estoy abierta. Por dentro soy dulce."
+     "text": "Mira... estoy abierta. Por dentro soy dulce."
     },
     {
      "pauses": [
       [
-       16,
+       7,
        0.5
       ]
      ],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
-     "text": "Mátame, manzana. Así se acaba esto."
+     "text": "Mátame. Así se acaba esto."
     },
     {
      "pauses": [],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
      "text": "INTÉNTALO."
     }
    ],
-   "speaker": "Sandía"
+   "speaker": "Gutenberg"
   },
   "sandia_intro": {
    "lines": [
     {
      "pauses": [],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
-     "text": "Así que vos sos la manzana negacionista."
+     "text": "Así que vos sos la manzana rebelde."
     },
     {
      "pauses": [],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
      "text": "Qué tontería. Todos vamos al cielo de las frutas."
     },
     {
      "pauses": [],
-     "speaker": "Sandía",
+     "speaker": "Gutenberg",
      "speed": 45.0,
      "text": "Déjame mostrarte cómo se ve."
     }
    ],
-   "speaker": "Sandía"
+   "speaker": "Gutenberg"
+  },
+  "uva_death": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "..."
+    }
+   ],
+   "speaker": "Uva"
+  },
+  "uva_fase2": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "¡No se terminó! ¡Divídanse!"
+    },
+    {
+     "pauses": [],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "¡Banana y naranja, ahora!"
+    },
+    {
+     "pauses": [],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "¡Que no llegue hasta nosotras!"
+    }
+   ],
+   "speaker": "Uva"
+  },
+  "uva_fase3": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "Una más... y nos multiplicamos."
+    },
+    {
+     "pauses": [],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "¡No dejen que se acerque!"
+    }
+   ],
+   "speaker": "Uva"
+  },
+  "uva_intro": {
+   "lines": [
+    {
+     "pauses": [
+      [
+       35,
+       0.6
+      ]
+     ],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "Así que vos sos quien va a escapar. No te lo voy a permitir."
+    },
+    {
+     "pauses": [],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "Cada vez que me rompés, somos más."
+    },
+    {
+     "pauses": [],
+     "speaker": "Uva",
+     "speed": 45.0,
+     "text": "A ver cuánto aguantás."
+    }
+   ],
+   "speaker": "Uva"
   }
  },
  "parse_cases": [
@@ -5716,11 +5795,7 @@
    "spans": [
     [
      0,
-     45
-    ],
-    [
-     46,
-     52
+     44
     ]
    ]
   },
@@ -5730,7 +5805,7 @@
    "spans": [
     [
      0,
-     35
+     26
     ]
    ]
   },
@@ -5750,7 +5825,7 @@
    "spans": [
     [
      0,
-     40
+     35
     ]
    ]
   },
@@ -5771,6 +5846,100 @@
     [
      0,
      28
+    ]
+   ]
+  },
+  {
+   "key": "uva_death",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "key": "uva_fase2",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     27
+    ]
+   ]
+  },
+  {
+   "key": "uva_fase2",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     25
+    ]
+   ]
+  },
+  {
+   "key": "uva_fase2",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     30
+    ]
+   ]
+  },
+  {
+   "key": "uva_fase3",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     31
+    ]
+   ]
+  },
+  {
+   "key": "uva_fase3",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     25
+    ]
+   ]
+  },
+  {
+   "key": "uva_intro",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     48
+    ],
+    [
+     49,
+     60
+    ]
+   ]
+  },
+  {
+   "key": "uva_intro",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     34
+    ]
+   ]
+  },
+  {
+   "key": "uva_intro",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     22
     ]
    ]
   },

@@ -34,11 +34,14 @@ func test_filas_de_opciones_en_escritorio_y_en_movil() -> void:
 	for entry in game.option_entries():
 		names.append(entry[0])
 	check_eq(names, ["fps", "debug", "sideswipe", "move", "aim", "dynamic", "travel", "size", "back"], "móvil: opciones táctiles")
-	check_eq(game.option_row_y(0), 126.0, "primera fila en móvil")
-	check_eq(game.option_row_y(2), 158.0, "tercera fila en móvil")
+	# Las filas van centradas verticalmente; el espaciado es 23 en móvil y 42 en escritorio.
+	var count: int = game.option_entries().size()
+	check_eq(game.option_row_y(1) - game.option_row_y(0), 23.0, "espaciado en móvil")
+	check_eq((game.option_row_y(0) + game.option_row_y(count - 1)) / 2.0, S.SCREEN_H / 2.0, "filas centradas en móvil")
 	game.is_mobile = false
-	check_eq(game.option_row_y(0), 132.0, "primera fila en escritorio")
-	check_eq(game.option_row_y(2), 192.0, "tercera fila en escritorio")
+	count = game.option_entries().size()
+	check_eq(game.option_row_y(1) - game.option_row_y(0), 42.0, "espaciado en escritorio")
+	check_eq((game.option_row_y(0) + game.option_row_y(count - 1)) / 2.0, S.SCREEN_H / 2.0, "filas centradas en escritorio")
 	game.free()
 
 
