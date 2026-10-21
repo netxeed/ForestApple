@@ -19,6 +19,10 @@ func update_behavior(dt: float, player, walls: Array) -> void:
 	_move_and_bounce(dt, walls)
 
 
+func apply_knockback(_direction: Vector2, _distance: float, _walls: Array) -> void:
+	pass
+
+
 func _move_and_bounce(dt: float, walls: Array) -> void:
 	pos.x += velocity.x * dt
 	rect.position.x = Geo.round_py(pos.x) - (size >> 1)

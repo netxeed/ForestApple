@@ -194,6 +194,9 @@ func _align_player_to_open_door(room, player, touch_move: Vector2, dt: float) ->
 		if not approaching or absf(current - target) > ALIGN_RANGE:
 			continue
 		var aligned := move_toward(current, target, ALIGN_SPEED * dt)
+		var delta := aligned - current
+		if _door_alignment_blocked(room.solids_for_player(player), player.rect, axis, delta):
+			continue
 		if axis == 0:
 			player.pos.x = aligned
 			player.velocity.x = move_toward(player.velocity.x, 0.0, ALIGN_SPEED * dt)
@@ -205,6 +208,19 @@ func _align_player_to_open_door(room, player, touch_move: Vector2, dt: float) ->
 		return
 
 
+func _door_alignment_blocked(solids: Array, player_rect: Rect2, axis: int, delta: float) -> bool:
+	var destination := player_rect
+	if axis == 0:
+		destination.position.x += delta
+	else:
+		destination.position.y += delta
+	var swept := player_rect.merge(destination)
+	for solid in solids:
+		if swept.intersects(solid):
+			return true
+	return false
+
+
 func _update_transition(game, dt: float) -> void:
 	transition["t"] += dt
 	if not transition["swapped"] and transition["t"] >= S.FADE_TIME:
@@ -212,18 +228,40 @@ func _update_transition(game, dt: float) -> void:
 		var direction: String = transition["dir"]
 		game.floor.move(direction)
 		game.player_shots.clear()
+		if _room_has_watermelon(game.room) and game.player != game.apple:
+			game.player.copy_runtime_to(game.apple)
+			game.player = game.apple
+			game.character_switch_cooldown = 0.0
 		game.player.teleport(game.room.entry_point(LayoutScript.OPPOSITE[direction]))
 		game.banner = null
 	if transition["t"] >= 2.0 * S.FADE_TIME:
 		transition.clear()
 
 
+func _room_has_watermelon(room) -> bool:
+	for enemy in room.enemies:
+		if enemy.get("kind") == "watermelon":
+			return true
+	return false
+
+
 func draw(game, canvas: CanvasItem) -> void:
+	var camera_offset := Vector2.ZERO
+	var room = game.room
+	var world_size := Vector2(room.room_width * S.TILE, room.room_height * S.TILE)
+	if world_size.x > S.SCREEN_W or world_size.y > S.SCREEN_H:
+		var player_center: Vector2 = game.player.pos if game.player.alive else Vector2(S.SCREEN_W / 2.0, S.SCREEN_H / 2.0)
+		var camera := player_center - Vector2(S.SCREEN_W / 2.0, S.SCREEN_H / 2.0)
+		camera.x = clampf(camera.x, 0.0, maxf(0.0, world_size.x - S.SCREEN_W))
+		camera.y = clampf(camera.y, 0.0, maxf(0.0, world_size.y - S.SCREEN_H))
+		camera_offset = -camera
+	canvas.draw_set_transform(camera_offset)
 	game.room.draw(canvas, game.player if game.player.alive else null)
 	for shot in game.player_shots:
 		shot.draw(canvas)
 	if game.player.alive:
 		game.player.draw(canvas)
+	canvas.draw_set_transform(Vector2.ZERO)
 	game.hud_view.draw(game, canvas)
 	if not transition.is_empty():
 		var elapsed: float = transition["t"]

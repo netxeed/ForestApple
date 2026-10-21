@@ -29,6 +29,10 @@ func handle_key(game, event) -> void:
 		choose(game)
 
 
+func handle_pointer(_game, position) -> void:
+	cursor.index = CursorScript.row_at(position, FIRST_Y, SPACING, GAME_OVER_OPTIONS.size(), 18.0, S.SCREEN_W / 2.0, S.SCREEN_W * 0.44)
+
+
 func handle_touch(game, action: String, position) -> void:
 	if action != "tap":
 		return

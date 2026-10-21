@@ -21,6 +21,8 @@ const LETTERS := LayoutScript.ENEMY_LETTERS
 var id := ""
 var kind := "normal"
 var layout: Array = []
+var room_width := 0
+var room_height := 0
 var doors: Array = []
 var locked_doors: Dictionary = {}
 var walls: Array[Rect2] = []
@@ -39,6 +41,11 @@ var wake_timer := 0.0
 var announced := false
 var had_enemies := false
 var current_player = null
+var grape_intro_shown := false
+var grape_phase2_shown := false
+var grape_phase3_shown := false
+var grape_death_shown := false
+var grape_reinforcements_spawned := false
 var enemy_factory: Callable
 var _solids: Array[Rect2] = []
 var _solids_state: Array = []
@@ -48,6 +55,8 @@ func _init(room_id: String, data: Dictionary, room_doors: Array, factory: Callab
 	id = room_id
 	kind = str(data.get("type", "normal"))
 	layout = data.get("layout", []).duplicate()
+	room_height = layout.size()
+	room_width = layout[0].length() if room_height > 0 else 0
 	doors = room_doors.duplicate()
 	enemy_factory = factory
 	hole_rect = Rect2(S.SCREEN_W / 2.0 - 28.0, S.SCREEN_H / 2.0 - 14.0, 56.0, 28.0)
@@ -58,7 +67,7 @@ func _init(room_id: String, data: Dictionary, room_doors: Array, factory: Callab
 func _build() -> void:
 	var door_by_tile: Dictionary = {}
 	for direction in doors:
-		door_by_tile[LayoutScript.DOOR_TILE[direction]] = direction
+		door_by_tile[_door_tile(direction)] = direction
 	for row in range(layout.size()):
 		var line: String = layout[row]
 		for col in range(line.length()):
@@ -219,10 +228,19 @@ func say(dialogue_key: String) -> void:
 
 
 func entry_point(door_dir: String) -> Vector2:
-	var tile: Vector2i = LayoutScript.DOOR_TILE[door_dir]
+	var tile: Vector2i = _door_tile(door_dir)
 	var outward: Vector2i = LayoutScript.DIRECTIONS[door_dir]
 	return Vector2((tile.x + 0.5) * S.TILE - outward.x * 2 * S.TILE,
 		(tile.y + 0.5) * S.TILE - outward.y * 2 * S.TILE)
+
+
+func _door_tile(direction: String) -> Vector2i:
+	match direction:
+		"up": return Vector2i(room_width / 2, 0)
+		"down": return Vector2i(room_width / 2, room_height - 1)
+		"left": return Vector2i(0, room_height / 2)
+		"right": return Vector2i(room_width - 1, room_height / 2)
+	return Vector2i.ZERO
 
 
 func exit_direction(player_rect: Rect2):
@@ -326,8 +344,8 @@ func _draw_backdrop(canvas: CanvasItem) -> void:
 	var seed := 0
 	for index in range(id.length()):
 		seed += (index + 1) * id.unicode_at(index)
-	for row in range(S.ROOM_ROWS):
-		for col in range(S.ROOM_COLS):
+	for row in range(room_height):
+		for col in range(room_width):
 			var tile := Rect2(col * S.TILE, row * S.TILE, S.TILE, S.TILE)
 			var floor_variant := posmod(seed + col + row, FLOOR_TEXTURES.size())
 			canvas.draw_texture_rect(FLOOR_TEXTURES[floor_variant], tile, false)

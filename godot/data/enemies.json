@@ -43,6 +43,43 @@
     "size": 23,
     "color": [240, 145, 145]
   },
+  "mango": {
+    "hp": 7,
+    "speed": 0,
+    "contact_damage": 1,
+    "size": 27,
+    "color": [242, 168, 54],
+    "attack_interval": 3.0,
+    "warning_time": 0.9,
+    "blast_radius": 28,
+    "shot_damage": 1
+  },
+  "cherries": {
+    "hp": 5,
+    "speed": 75,
+    "shooting_speed": 44,
+    "contact_damage": 1,
+    "size": 20,
+    "color": [215, 46, 73],
+    "shoot_interval": 1.25,
+    "shot_speed": 125,
+    "shot_damage": 1,
+    "rage_start_speed": 110,
+    "rage_acceleration": 14,
+    "rage_max_speed": 280
+  },
+  "orange": {
+    "hp": 6,
+    "speed": 0,
+    "contact_damage": 1,
+    "size": 25,
+    "color": [242, 139, 38],
+    "attack_interval": 4.0,
+    "projectile_start_speed": 45,
+    "projectile_acceleration": 32,
+    "projectile_max_speed": 190,
+    "shot_damage": 1
+  },
   "watermelon": {
     "_nota": "Jefe del piso 1. Todos los números son PROVISORIOS: ajustar jugando. Tiempos en segundos, velocidades en px/s, ángulos en grados.",
     "hp": 110,
@@ -97,6 +134,7 @@
     "split_children": 2,
     "split_offset": 16,
     "death_explosion": true,
+    "reinforcements": ["banana", "orange"],
     "generations": [
       {"hp": 50, "size": 34, "speed": 28, "explosions": 3, "radius": 40, "telegraph": 1.0, "cooldown": 2.0, "color": [132, 70, 168]},
       {"hp": 20, "size": 26, "speed": 42, "explosions": 2, "radius": 32, "telegraph": 0.8, "cooldown": 1.6, "color": [150, 88, 184]},

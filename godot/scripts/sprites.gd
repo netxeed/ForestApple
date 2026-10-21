@@ -6,6 +6,10 @@ extends RefCounted
 static var _cache: Dictionary = {}
 static var _silhouette_cache: Dictionary = {}
 
+# No intentar cargar estos recursos hasta que existan sus PNG. Para activarlos luego, cambiar
+# su valor a `true`; mientras tanto los enemigos usan el dibujo de respaldo de enemy.gd.
+const SPRITE_ENABLED := {"peach": false, "watermelon": false}
+
 
 static func folders() -> Array[String]:
 	# Las texturas dentro del APK deben leerse desde el PCK (res://). Las carpetas
@@ -22,6 +26,8 @@ static func folders() -> Array[String]:
 ## Busca un PNG suelto o la pose idle hacia el sur de una hoja animada.
 static func get_texture(sprite_name: String) -> Texture2D:
 	var key := _key(sprite_name)
+	if not SPRITE_ENABLED.get(key, true):
+		return null
 	var folder := _folder_name(key)
 	var cache_key := key + "|single"
 	if _cache.has(cache_key):
@@ -38,6 +44,8 @@ static func get_texture(sprite_name: String) -> Texture2D:
 ## Carga una pose direccional; si falta, cae a idle y después a la imagen única.
 static func get_frame(sprite_name: String, direction: String, pose: String) -> Texture2D:
 	var key := _key(sprite_name)
+	if not SPRITE_ENABLED.get(key, true):
+		return null
 	var folder := _folder_name(key)
 	var dir := direction.to_lower()
 	var normalized_pose := pose.to_lower()

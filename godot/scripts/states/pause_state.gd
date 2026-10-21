@@ -6,8 +6,8 @@ const Controls = preload("res://scripts/core/controls.gd")
 const CursorScript = preload("res://scripts/states/cursor.gd")
 
 const PAUSE_OPTIONS := ["Continuar", "Reiniciar", "Salir"]
-const FIRST_Y := S.SCREEN_H / 2.0 - 12.0
-const SPACING := 32.0
+const FIRST_Y := S.SCREEN_H / 2.0 - 34.0
+const SPACING := 34.0
 
 var cursor
 
@@ -26,6 +26,10 @@ func handle_key(game, event) -> void:
 		pass
 	elif event.is_action_pressed("confirm"):
 		choose(game)
+
+
+func handle_pointer(_game, position) -> void:
+	cursor.index = CursorScript.row_at(position, FIRST_Y, SPACING, PAUSE_OPTIONS.size(), 18.0, S.SCREEN_W / 2.0, S.SCREEN_W * 0.34)
 
 
 func handle_touch(game, action: String, position) -> void:

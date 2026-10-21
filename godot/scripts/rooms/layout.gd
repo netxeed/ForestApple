@@ -34,6 +34,9 @@ const ENEMY_LETTERS := {
 	"D": "peach",
 	"W": "watermelon",
 	"G": "grape",
+	"C": "cherries",
+	"M": "mango",
+	"O": "orange",
 }
 
 ## Distancia mínima (en casillas) entre cualquier enemigo y el punto donde aparece el jugador al
@@ -187,8 +190,8 @@ func _validate_room(room_id: String, valid_chars: String) -> Array:
 	if not (room_type is String) or not (room_type in ROOM_TYPES):
 		errors.append("[%s] tipo '%s' inválido (usar %s)." % [room_id, str(room_type), _list_text(ROOM_TYPES, true)])
 
-	if layout.size() != ROWS:
-		errors.append("[%s] tiene %d filas, debe tener %d." % [room_id, layout.size(), ROWS])
+	if layout.size() < 3:
+		errors.append("[%s] debe tener al menos 3 filas." % room_id)
 		return errors
 	var bad_rows: Array = []
 	for i in range(layout.size()):
@@ -198,11 +201,15 @@ func _validate_room(room_id: String, valid_chars: String) -> Array:
 		errors.append("[%s] las filas %s deben ser texto." % [room_id, _list_text(bad_rows)])
 		return errors
 	var bad_width: Array = []
+	var width: int = layout[0].length()
+	if width < 3:
+		errors.append("[%s] debe tener al menos 3 columnas." % room_id)
+		return errors
 	for i in range(layout.size()):
-		if layout[i].length() != COLS:
+		if layout[i].length() != width:
 			bad_width.append(i)
 	if not bad_width.is_empty():
-		errors.append("[%s] filas %s no miden %d caracteres." % [room_id, _list_text(bad_width), COLS])
+		errors.append("[%s] filas %s no miden lo mismo." % [room_id, _list_text(bad_width)])
 		return errors
 
 	for row in range(layout.size()):
@@ -211,16 +218,35 @@ func _validate_room(room_id: String, valid_chars: String) -> Array:
 			var ch := line[col]
 			if not (ch in valid_chars):
 				errors.append("[%s] carácter desconocido '%s' en fila %d, col %d." % [room_id, ch, row, col])
-			var on_border: bool = row == 0 or row == ROWS - 1 or col == 0 or col == COLS - 1
+			var on_border: bool = row == 0 or row == layout.size() - 1 or col == 0 or col == width - 1
 			if on_border and ch != "#":
 				errors.append("[%s] el borde debe ser '#' (fila %d, col %d)." % [room_id, row, col])
 
-	for direction in APPROACH_TILE:
-		var tile: Vector2i = APPROACH_TILE[direction]
+	for direction in DIRECTIONS:
+		var tile: Vector2i = _room_approach_tile(direction, width, layout.size())
 		var found: String = layout[tile.y][tile.x]
 		if found != ".":
 			errors.append("[%s] la baldosa de entrada '%s' (fila %d, col %d) debe ser '.', hay '%s'." % [room_id, direction, tile.y, tile.x, found])
 	return errors
+
+
+static func _room_door_tile(direction: String, width: int, height: int) -> Vector2i:
+	match direction:
+		"up": return Vector2i(width / 2, 0)
+		"down": return Vector2i(width / 2, height - 1)
+		"left": return Vector2i(0, height / 2)
+		"right": return Vector2i(width - 1, height / 2)
+	return Vector2i.ZERO
+
+
+static func _room_approach_tile(direction: String, width: int, height: int) -> Vector2i:
+	var tile := _room_door_tile(direction, width, height)
+	match direction:
+		"up": tile.y += 1
+		"down": tile.y -= 1
+		"left": tile.x += 1
+		"right": tile.x -= 1
+	return tile
 
 
 ## Ningún enemigo puede quedar pegado al punto de entrada de una puerta real.
@@ -234,7 +260,9 @@ func _validate_enemy_spacing(room_ids: Array, letters: Array) -> Array:
 		var directions: Array = doors(cell)
 		directions.sort()
 		for direction in directions:
-			var tile: Vector2i = DOOR_TILE[direction]
+			var room_width: int = layout[0].length()
+			var room_height: int = layout.size()
+			var tile: Vector2i = _room_door_tile(direction, room_width, room_height)
 			var step: Vector2i = DIRECTIONS[direction]
 			# Igual que Room.entry_point: 2 casillas hacia adentro de la puerta
 			var spawn := Vector2(tile.x + 0.5 - step.x * 2, tile.y + 0.5 - step.y * 2)

@@ -21,11 +21,8 @@ func draw_main(game, canvas, options: Array, selected) -> void:
 
 
 func draw_options(game, canvas, rows: Array, selected) -> void:
-	_background(game, canvas)
-	var title_y := 78.0
-	game.text("OPCIONES", "section", S.SEED, Vector2(S.SCREEN_W / 2.0, title_y), "center")
-	_underline(canvas, title_y)
-	var row_height := 15.0 if game.is_mobile else 27.0
+	_background(game, canvas, false)
+	var row_height := 20.0 if game.is_mobile else 34.0
 	var left := 34.0 if game.is_mobile else 72.0
 	var width := S.SCREEN_W - left * 2.0
 	for i in range(rows.size()):
@@ -39,22 +36,17 @@ func draw_options(game, canvas, rows: Array, selected) -> void:
 		var color: Color = Color8(255, 239, 177) if active else Color8(218, 214, 226)
 		var kind := "footer" if game.is_mobile or str(rows[i]).length() > 42 else "menu"
 		game.text(rows[i], kind, color, Vector2(S.SCREEN_W / 2.0, row_y), "center")
-	game.text("Toca una fila para elegir · ◀ ▶ para ajustar", "footer", Color8(154, 146, 166),
-		Vector2(S.SCREEN_W / 2.0, 107), "center")
 	_footer(game)
 
 
 func draw_pause(game, canvas, options: Array, selected) -> void:
 	canvas.draw_rect(Rect2(0, 0, S.SCREEN_W, S.SCREEN_H), Color(0, 0, 0, 170.0 / 255.0))
-	var panel := Rect2(S.SCREEN_W / 2.0 - 152.0, S.SCREEN_H / 2.0 - 92.0, 304.0, 184.0)
+	var panel := Rect2(S.SCREEN_W / 2.0 - 152.0, S.SCREEN_H / 2.0 - 66.0, 304.0, 132.0)
 	_draw_card(canvas, panel, Color(0.09, 0.08, 0.13, 0.97), Color(0.66, 0.57, 0.75, 0.8), true)
-	var title_y := S.SCREEN_H / 2.0 - 60.0
-	game.text("PAUSA", "section", S.SEED, Vector2(S.SCREEN_W / 2.0, title_y), "center")
-	_underline(canvas, title_y)
 	for i in range(options.size()):
-		var row_y := S.SCREEN_H / 2.0 - 12.0 + i * 32.0
+		var row_y := S.SCREEN_H / 2.0 - 34.0 + i * 34.0
 		var active: bool = i == selected
-		var rect := Rect2(S.SCREEN_W / 2.0 - 112.0, row_y - 13.0, 224.0, 26.0)
+		var rect := Rect2(S.SCREEN_W / 2.0 - 112.0, row_y - 15.0, 224.0, 30.0)
 		_draw_card(canvas, rect, Color(0.27, 0.19, 0.32, 0.96) if active else Color(0.12, 0.10, 0.16, 0.6),
 			S.SEED if active else Color(0.43, 0.36, 0.48, 0.5), active)
 		var color: Color = Color8(255, 239, 177) if active else S.WHITE
@@ -79,13 +71,14 @@ func draw_game_over(game, canvas, options: Array, selected, first_y: float, spac
 		game.text(options[i], "menu", color, Vector2(S.SCREEN_W / 2.0, row_y), "center")
 
 
-func _background(game, canvas) -> void:
+func _background(game, canvas, show_title: bool = true) -> void:
 	canvas.draw_rect(Rect2(0, 0, S.SCREEN_W, S.SCREEN_H), S.BG)
 	canvas.draw_rect(Rect2(0, 0, S.SCREEN_W, 3), Color8(147, 104, 177))
-	canvas.draw_rect(Rect2(0, 102, S.SCREEN_W, 1), Color(1.0, 1.0, 1.0, 0.08))
 	canvas.draw_circle(Vector2(-18, 98), 82, Color(0.48, 0.23, 0.43, 0.08))
 	canvas.draw_circle(Vector2(S.SCREEN_W + 20, 160), 104, Color(0.18, 0.42, 0.34, 0.08))
-	game.text("ForestApple", "title", S.WHITE, Vector2(S.SCREEN_W / 2.0, 46), "center")
+	if show_title:
+		canvas.draw_rect(Rect2(0, 102, S.SCREEN_W, 1), Color(1.0, 1.0, 1.0, 0.08))
+		game.text("ForestApple", "title", S.WHITE, Vector2(S.SCREEN_W / 2.0, 46), "center")
 
 
 func _underline(canvas, title_y: float) -> void:
@@ -93,14 +86,16 @@ func _underline(canvas, title_y: float) -> void:
 
 
 func _draw_card(canvas: CanvasItem, rect: Rect2, fill: Color, border: Color, highlighted: bool) -> void:
+	# Las filas inactivas quedan despejadas; la activa gana un halo suave y un borde fino.
+	if not highlighted:
+		return
 	var card := StyleBoxFlat.new()
-	card.bg_color = fill
-	card.border_color = border
-	card.set_border_width_all(1 if highlighted else 0)
-	card.set_corner_radius_all(4)
-	if highlighted:
-		card.shadow_color = Color(0.95, 0.75, 0.28, 0.18)
-		card.shadow_size = 3
+	card.bg_color = Color(fill.r, fill.g, fill.b, 0.16)
+	card.border_color = Color(border.r, border.g, border.b, 0.72)
+	card.set_border_width_all(1)
+	card.set_corner_radius_all(7)
+	card.shadow_color = Color(0.95, 0.75, 0.28, 0.22)
+	card.shadow_size = 7
 	canvas.draw_style_box(card, rect)
 
 
