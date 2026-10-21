@@ -25,8 +25,11 @@ class FakeGame extends RefCounted:
 	func option_entries() -> Array:
 		return [["fullscreen", "Pantalla completa: No"], ["fps", "FPS: 60"], ["debug", "Modo debug: Sí"], ["back", "Volver"]]
 
+	## Igual que Game.option_row_y: filas centradas en la pantalla (espaciado 42 en escritorio, 23 en móvil).
 	func option_row_y(index: int) -> float:
-		return 132.0 + index * 30.0
+		var spacing := 23.0 if is_mobile else 42.0
+		var first_y: float = 270.0 / 2.0 - spacing * (option_entries().size() - 1) / 2.0
+		return first_y + index * spacing
 
 	func start_run() -> void:
 		calls.append("start_run")
@@ -206,7 +209,7 @@ func test_pausa_toques() -> void:
 	game.states.push(MenuStateScript.new(game))
 	var pause = PauseStateScript.new()
 	game.states.push(pause)
-	pause.handle_touch(game, "tap", Vector2(240, 132 + 32))  # segunda fila: Reiniciar
+	pause.handle_touch(game, "tap", Vector2(240, PauseStateScript.FIRST_Y + PauseStateScript.SPACING))  # segunda fila: Reiniciar
 	check_eq(game.calls, ["start_run"], "tocar Reiniciar")
 	pause.handle_touch(game, "tap", Vector2(240, 10))
 	check_eq(game.calls, ["start_run"], "tocar lejos no hace nada")

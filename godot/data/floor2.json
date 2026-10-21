@@ -1,5 +1,5 @@
 {
-  "name": "Piso 2: El Invernadero",
+  "name": "Piso 2",
   "start": [
     1,
     1
@@ -11,7 +11,7 @@
       "naranjal"
     ],
     [
-      "invernadero",
+      "salon",
       "inicio2",
       "cocina"
     ],

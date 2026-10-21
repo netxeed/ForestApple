@@ -19,8 +19,8 @@
   "sandia_fase3": {
     "speaker": "Gutenberg",
     "lines": [
-      "Mira manzana...{pause=0.6} estoy abierta.{pause=0.4} Por dentro soy dulce.",
-      "Mátame, manzana.{pause=0.5} Así se acaba esto.",
+      "Mira...{pause=0.6} estoy abierta.{pause=0.4} Por dentro soy dulce.",
+      "Mátame.{pause=0.5} Así se acaba esto.",
       "INTÉNTALO."
     ]
   },
@@ -33,7 +33,7 @@
   "uva_intro": {
     "speaker": "Uva",
     "lines": [
-      "Así que vos sos quien vino a cerrar el invernadero.",
+      "Así que vos sos quien va a escapar.{pause=0.6} No te lo voy a permitir.",
       "Cada vez que me rompés, somos más.",
       "A ver cuánto aguantás."
     ]
