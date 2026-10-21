@@ -57,7 +57,7 @@ func take_damage(amount: float) -> void:
 func kill() -> void:
 	var was_alive := alive
 	super.kill()
-	if was_alive and room != null:
+	if was_alive and room != null and room.has_method("drop_trinket"):
 		room.drop_trinket("dash", pos)
 
 

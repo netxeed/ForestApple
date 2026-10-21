@@ -10,6 +10,7 @@ const PauseStateScript = preload("res://scripts/states/pause_state.gd")
 const GameOverStateScript = preload("res://scripts/states/gameover_state.gd")
 const DialogueStateScript = preload("res://scripts/states/dialogue_state.gd")
 const ParserScript = preload("res://scripts/dialogue/dialogue_parser.gd")
+const ControlsIntroStateScript = preload("res://scripts/states/controls_intro_state.gd")
 
 
 ## Juego de mentira: no dibuja nada, solo anota las llamadas.
@@ -65,6 +66,8 @@ func test_menu_enter_empieza_la_partida() -> void:
 	var game := _setup()
 	var menu = MenuStateScript.new(game)
 	menu.handle_key(game, make_key(KEY_ENTER))
+	check_eq(game.states.top().get_script(), ControlsIntroStateScript, "primero muestra los controles")
+	game.states.handle_key(make_key(KEY_ENTER))
 	check_eq(game.calls, ["start_run"], "Jugar es la primera opción")
 
 
@@ -90,6 +93,8 @@ func test_menu_tactil_no_resalta_nada_hasta_tocar() -> void:
 	var menu = MenuStateScript.new(game)
 	check_eq(menu.cursor.index, null, "ninguna opción resaltada")
 	menu.handle_key(game, make_key(KEY_ENTER))  # elegir sin nada resaltado cuenta como la primera
+	check_eq(game.states.top().get_script(), ControlsIntroStateScript, "primero muestra los controles")
+	game.states.handle_key(make_key(KEY_ENTER))
 	check_eq(game.calls, ["start_run"], "Enter sin resaltado elige la primera")
 
 

@@ -42,7 +42,7 @@ func handle_pointer(_game, position) -> void:
 
 func handle_touch(game, action: String, position) -> void:
 	if action == "tap":
-		if game.register_creator_name_click(position):
+		if game.has_method("register_creator_name_click") and game.register_creator_name_click(position):
 			return
 		cursor.index = _row_at(position)
 		if cursor.index != null:
