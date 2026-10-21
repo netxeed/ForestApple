@@ -7,6 +7,7 @@ const Banana = preload("res://scripts/entities/banana.gd")
 const Lemon = preload("res://scripts/entities/lemon.gd")
 const Peach = preload("res://scripts/entities/peach.gd")
 const Watermelon = preload("res://scripts/entities/watermelon.gd")
+const Grape = preload("res://scripts/entities/grape.gd")
 
 const TYPES := {
 	"strawberry": Strawberry,
@@ -15,6 +16,7 @@ const TYPES := {
 	"lemon": Lemon,
 	"peach": Peach,
 	"watermelon": Watermelon,
+	"grape": Grape,
 }
 
 
@@ -22,6 +24,6 @@ static func create(kind: String, pos: Vector2, enemy_shots: Array, acid_puddles:
 	if not TYPES.has(kind):
 		push_error("Tipo de enemigo desconocido: %s" % kind)
 		return null
-	if kind == "lemon":
+	if kind == "lemon" or kind == "grape":
 		return TYPES[kind].new(pos, enemy_shots, acid_puddles)
 	return TYPES[kind].new(pos, enemy_shots)

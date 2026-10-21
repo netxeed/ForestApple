@@ -84,7 +84,9 @@ func test_recorrido_completo_llave_jefe_dialogo_y_agujero() -> void:
 	check(game.states.top() is DialogueStateScript, "se abre el diálogo para continuar")
 	check(game.states.top().dark, "el diálogo del agujero oscurece el fondo")
 	_finish_dialogue(game)
-	check(game.states.top().get_script().resource_path.ends_with("menu_state.gd"), "cerrar el diálogo vuelve al menú")
+	check_eq(game.floor_name, "floor2", "cerrar el diálogo baja al piso 2")
+	check(game.states.top() is PlayStateScript, "se sigue jugando en el piso 2")
+	check_eq(game.banner[0], "Piso 2", "el piso 2 se anuncia")
 	game.free()
 
 

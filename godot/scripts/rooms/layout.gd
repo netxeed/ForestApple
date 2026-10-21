@@ -33,6 +33,7 @@ const ENEMY_LETTERS := {
 	"L": "lemon",
 	"D": "peach",
 	"W": "watermelon",
+	"G": "grape",
 }
 
 ## Distancia mínima (en casillas) entre cualquier enemigo y el punto donde aparece el jugador al

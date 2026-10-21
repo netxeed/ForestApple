@@ -45,7 +45,10 @@ func _interact(game) -> void:
 	if game.room.kind == "boss" and game.room.cleared() and not game.hole_dialogue_shown \
 			and _inflate(game.room.hole_rect, 28).intersects(game.player.rect):
 		game.hole_dialogue_shown = true
-		game.say("hole_continue", true, Callable(game, "return_to_menu"))
+		if game.next_floor_name() != "":
+			game.say("hole_piso2", true, Callable(game, "descend"))
+		else:
+			game.say("hole_continue", true, Callable(game, "return_to_menu"))
 		return
 	if game.floor.boss_unlocked or not game.player.has_trinket("key"):
 		return
