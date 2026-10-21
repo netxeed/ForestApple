@@ -16,7 +16,7 @@ const ACTIONS := {
 	"air_roll": [KEY_C],
 	"switch_character": [KEY_L],
 	"block": [KEY_F],
-	"debug_restart": [KEY_R], "debug_clear": [KEY_F3],
+	"debug_restart": [KEY_R], "debug_clear": [KEY_K],
 }
 
 

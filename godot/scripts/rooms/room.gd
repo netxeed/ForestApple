@@ -22,6 +22,8 @@ var acid_puddles: Array = []
 var pending_dialogues: Array[String] = []
 var key_drop := false
 var key_rect := Rect2()
+var trinket_drop_id := ""
+var trinket_drop_rect := Rect2()
 var hole_rect := Rect2()
 var wake_timer := 0.0
 var announced := false
@@ -138,6 +140,22 @@ func collect_key(player) -> bool:
 	return true
 
 
+func drop_trinket(trinket_id: String, center: Vector2) -> void:
+	if trinket_drop_id != "":
+		return
+	trinket_drop_id = trinket_id
+	trinket_drop_rect = Rect2(center - Vector2(8, 8), Vector2(16, 16))
+
+
+func collect_trinket(player) -> bool:
+	if trinket_drop_id == "" or not _inflate(trinket_drop_rect, 28).intersects(player.rect):
+		return false
+	player.add_trinket(trinket_drop_id)
+	trinket_drop_id = ""
+	trinket_drop_rect = Rect2()
+	return true
+
+
 func enter() -> void:
 	enemy_shots.clear()
 	acid_puddles.clear()
@@ -224,13 +242,20 @@ func _overlaps_any(rect: Rect2, other_rects: Array) -> bool:
 	return false
 
 
-func draw(canvas: CanvasItem) -> void:
+func draw(canvas: CanvasItem, active_player = null) -> void:
 	_draw_backdrop(canvas)
+	if active_player != null:
+		active_player.draw_dash_effect(canvas)
 	if key_drop:
 		canvas.draw_rect(key_rect.grow(2), S.BG)
 		canvas.draw_rect(key_rect, Color8(218, 222, 230))
 		canvas.draw_rect(Rect2(key_rect.position + Vector2(3, 3), Vector2(10, 10)), Color8(160, 166, 177))
 		canvas.draw_rect(Rect2(key_rect.position + Vector2(3, 3), Vector2(2, 2)), Color8(242, 244, 248))
+	if trinket_drop_id == "dash":
+		canvas.draw_rect(trinket_drop_rect.grow(2), Color8(18, 37, 67))
+		canvas.draw_rect(trinket_drop_rect, Color8(52, 142, 230))
+		canvas.draw_rect(Rect2(trinket_drop_rect.position + Vector2(3, 3), Vector2(10, 10)), Color8(95, 192, 255))
+		canvas.draw_rect(Rect2(trinket_drop_rect.position + Vector2(3, 3), Vector2(3, 3)), Color8(205, 241, 255))
 	if kind == "boss" and cleared():
 		canvas.draw_rect(hole_rect, Color8(29, 23, 35))
 		canvas.draw_circle(hole_rect.position + Vector2(14, 14), 14, Color8(13, 11, 19))

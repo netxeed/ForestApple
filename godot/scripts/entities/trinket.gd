@@ -15,5 +15,7 @@ func _init(trinket_id: String, display_name: String, can_consume: bool = false) 
 static func create(trinket_id: String):
 	if trinket_id == "key":
 		return load("res://scripts/entities/trinket.gd").new("key", "Llave", true)
+	if trinket_id == "dash":
+		return load("res://scripts/entities/trinket.gd").new("dash", "Dash", false)
 	push_error("Trinket desconocido: %s" % trinket_id)
 	return null

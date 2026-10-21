@@ -20,7 +20,7 @@ func handle_key(game, event: InputEvent) -> void:
 		game.open_pause()
 	elif S.DEBUG_KEYS and event.is_action_pressed("debug_restart"):
 		game.start_run()
-	elif S.DEBUG_KEYS and event.is_action_pressed("debug_clear"):
+	elif event.is_action_pressed("debug_clear"):
 		for enemy in game.room.enemies.duplicate():
 			enemy.kill()
 	elif event.is_action_pressed("switch_character"):
@@ -42,6 +42,9 @@ func _interact(game) -> void:
 	if game.floor.collect_key(game.player):
 		game.banner = ["¡Recogiste la llave!", S.BANNER_TIME]
 		return
+	if game.room.collect_trinket(game.player):
+		game.banner = ["¡Obtuviste el trinket de Dash!", S.BANNER_TIME]
+		return
 	if game.room.kind == "boss" and game.room.cleared() and not game.hole_dialogue_shown \
 			and _inflate(game.room.hole_rect, 28).intersects(game.player.rect):
 		game.hole_dialogue_shown = true
@@ -62,6 +65,7 @@ func _interact(game) -> void:
 
 
 func update(game, dt: float) -> void:
+	game.hud_view.update_health(game, dt)
 	game.character_switch_cooldown = maxf(0.0, game.character_switch_cooldown - dt)
 	if not game.player.alive:
 		death_time += dt
@@ -81,6 +85,8 @@ func update(game, dt: float) -> void:
 		return
 
 	var room = game.room
+	game.apple.update_health_regeneration(dt, game.player == game.apple)
+	game.kid.update_health_regeneration(dt, game.player == game.kid)
 	room.current_player = game.player
 	var melee_direction := Vector2(
 		(1.0 if Input.is_action_pressed("aim_right") else 0.0) - (1.0 if Input.is_action_pressed("aim_left") else 0.0),
@@ -88,7 +94,7 @@ func update(game, dt: float) -> void:
 	)
 	game.player.update(dt, room.solids(), game.touch_controls.move, game.touch_controls.aim,
 		null, null, melee_direction, Input.is_action_pressed("block") or game.touch_controls.block_pressed
-		or game.touch_controls.block_just_pressed)
+		or game.touch_controls.block_just_pressed, Input.is_action_just_pressed("boost"))
 	game.touch_controls.block_just_pressed = false
 	for shot in game.player_shots.duplicate():
 		if shot.alive:
@@ -148,7 +154,7 @@ func _update_transition(game, dt: float) -> void:
 
 
 func draw(game, canvas: CanvasItem) -> void:
-	game.room.draw(canvas)
+	game.room.draw(canvas, game.player if game.player.alive else null)
 	for shot in game.player_shots:
 		shot.draw(canvas)
 	if game.player.alive:

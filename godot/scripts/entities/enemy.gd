@@ -6,6 +6,7 @@ const Geo = preload("res://scripts/core/geo.gd")
 const SpritesScript = preload("res://scripts/sprites.gd")
 const WALK_POSES := ["1", "idle", "2", "idle"]
 const WALK_FRAME_DISTANCE := 10.0
+const KNOCKBACK_DURATION := 0.3
 
 static var _enemy_data: Dictionary = {}
 
@@ -27,6 +28,9 @@ var facing := "s"
 var _walk_frame := 0
 var _walk_distance := 0.0
 var _walking := false
+var _knockback_direction := Vector2.ZERO
+var _knockback_distance := 0.0
+var _knockback_elapsed := 0.0
 var _room_ref: WeakRef
 var room:
 	get:
@@ -72,9 +76,11 @@ func kill() -> void:
 	alive = false
 
 
-func apply_knockback(direction: Vector2, distance: float, walls: Array) -> void:
+func apply_knockback(direction: Vector2, distance: float, _walls: Array) -> void:
 	if alive and direction.length_squared() > 0.0:
-		_move(direction.normalized() * distance, walls)
+		_knockback_direction = direction.normalized()
+		_knockback_distance = distance
+		_knockback_elapsed = 0.0
 
 
 func update(dt: float, player, walls: Array) -> void:
@@ -82,6 +88,7 @@ func update(dt: float, player, walls: Array) -> void:
 		return
 	var previous_pos := pos
 	update_behavior(dt, player, walls)
+	_update_knockback(dt, walls)
 	var movement := pos - previous_pos
 	_walking = movement.length_squared() > 0.0001
 	if _walking:
@@ -101,6 +108,17 @@ func update(dt: float, player, walls: Array) -> void:
 		_flash -= dt
 	else:
 		flash_visible = false
+
+
+func _update_knockback(dt: float, walls: Array) -> void:
+	if _knockback_elapsed >= KNOCKBACK_DURATION or _knockback_distance <= 0.0:
+		return
+	var previous_progress := _knockback_elapsed / KNOCKBACK_DURATION
+	_knockback_elapsed = minf(KNOCKBACK_DURATION, _knockback_elapsed + dt)
+	var progress := _knockback_elapsed / KNOCKBACK_DURATION
+	var previous_eased := 1.0 - pow(1.0 - previous_progress, 2.0)
+	var eased := 1.0 - pow(1.0 - progress, 2.0)
+	_move(_knockback_direction * _knockback_distance * (eased - previous_eased), walls)
 
 
 func update_behavior(_dt: float, _player, _walls: Array) -> void:

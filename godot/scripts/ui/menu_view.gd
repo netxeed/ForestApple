@@ -106,4 +106,12 @@ func _draw_card(canvas: CanvasItem, rect: Rect2, fill: Color, border: Color, hig
 
 func _footer(game) -> void:
 	game.text("Versión 0.0", "footer", S.WHITE, Vector2(8, S.SCREEN_H - 6), "bottomleft")
-	game.text("Santino Zerda, Gael Ledesma y Ara Prociuk", "footer", S.WHITE, Vector2(S.SCREEN_W - 8, S.SCREEN_H - 6), "bottomright")
+	var creator_names := "gael ledesma organisetion" if game.creator_easter_egg else "Santino Zerda, Gael Ledesma y Ara Prociuk"
+	game.text(creator_names, "footer", S.WHITE, Vector2(S.SCREEN_W - 8, S.SCREEN_H - 6), "bottomright")
+
+
+func creator_names_rect(game) -> Rect2:
+	var label := "Santino Zerda, Gael Ledesma y Ara Prociuk"
+	var font_size: int = game.font_size("footer")
+	var size: Vector2 = game.font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	return Rect2(Vector2(S.SCREEN_W - 8 - size.x, S.SCREEN_H - 6 - size.y), size)

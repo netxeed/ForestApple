@@ -23,7 +23,7 @@ func handle_key(game, event: InputEvent) -> void:
 		_interact(game)
 	elif S.DEBUG_KEYS and event.is_action_pressed("debug_restart"):
 		game.start_run()
-	elif S.DEBUG_KEYS and event.is_action_pressed("debug_clear"):
+	elif event.is_action_pressed("debug_clear"):
 		for enemy in game.room.enemies:
 			enemy.kill()
 

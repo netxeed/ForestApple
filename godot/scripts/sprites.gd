@@ -101,6 +101,8 @@ static func _folder_name(key: String) -> String:
 			return "Apple"
 		"pineapple":
 			return "Pineapple"
+		"kid":
+			return "Kid"
 	return key
 
 

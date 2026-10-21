@@ -42,6 +42,8 @@ func handle_pointer(game, position) -> void:
 
 func handle_touch(game, action: String, position) -> void:
 	if action == "tap":
+		if game.register_creator_name_click(position):
+			return
 		cursor.index = _row_at(game, position)
 		if cursor.index != null:
 			choose(game, game.option_entries()[cursor.index][0])
