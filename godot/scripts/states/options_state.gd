@@ -63,7 +63,7 @@ func choose(game, option_name: String) -> void:
 
 
 static func _row_at(game, position):
-	var spacing := 16.0 if game.is_mobile else 30.0
+	var spacing := 23.0 if game.is_mobile else 42.0
 	var tolerance := 7.0 if game.is_mobile else 15.0
 	return MenuStateScript.row_hit(position, game.option_row_y(0), spacing, game.option_entries().size(), tolerance)
 

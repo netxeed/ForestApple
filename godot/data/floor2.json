@@ -1,9 +1,24 @@
 {
-  "name": "Piso 2",
-  "start": [1, 1],
+  "name": "Piso 2: El Invernadero",
+  "start": [
+    1,
+    1
+  ],
   "grid": [
-    ["limon",   "cruz",   null],
-    ["pilares", "inicio", "pasillo"],
-    ["durazno", "ventana", "jefe_uva"]
+    [
+      "semillero",
+      "galeria",
+      "naranjal"
+    ],
+    [
+      "invernadero",
+      "inicio2",
+      "cocina"
+    ],
+    [
+      "manglar",
+      "despensa",
+      "jefe_uva"
+    ]
   ]
 }

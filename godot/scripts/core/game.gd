@@ -368,9 +368,10 @@ func option_entries() -> Array:
 
 
 func option_row_y(index: int) -> float:
-	if is_mobile:
-		return 126.0 + index * 16.0
-	return 132.0 + index * 30.0
+	var count: int = option_entries().size()
+	var spacing := 23.0 if is_mobile else 42.0
+	var first_y := S.SCREEN_H / 2.0 - spacing * (count - 1) / 2.0
+	return first_y + index * spacing
 
 
 # ---------- ciclo del juego ----------
@@ -457,10 +458,10 @@ func _input(event: InputEvent) -> void:
 	elif motion != null:
 		var position := (make_input_local(motion) as InputEventMouseMotion).position
 		pointer_position = position
+		states.handle_pointer(position)
 		if (motion.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0 or (is_mobile and touch_controls.fingers.has(MOUSE_TOUCH_ID)):
 			if is_mobile:
 				touch_controls.handle_motion(MOUSE_TOUCH_ID, position)
-			states.handle_pointer(position)
 
 
 func _notification(what: int) -> void:

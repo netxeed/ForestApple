@@ -219,7 +219,7 @@ func _draw_dash_icon(canvas: CanvasItem, position: Vector2, size: float) -> void
 
 func _trinket_description(trinket_id: String) -> String:
 	match trinket_id:
-		"key": return "Abre la puerta de Gutenberg."
+		"key": return "Abre la puerta"
 		"dash": return "Shift para dashear (3 s de recarga)."
 		_: return ""
 

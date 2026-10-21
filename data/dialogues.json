@@ -1,15 +1,15 @@
 {
   "_nota": "Textos provisorios. Cada clave es un diálogo: 'speaker' es quien habla (texto vacío si no tiene nombre) y 'lines' son las cajas de texto, en orden. Una línea puede ser un objeto {\"text\", \"speaker\", \"speed\"} para cambiar quien habla o la velocidad solo en esa caja; dentro del texto valen {pause=0.5} (pausa) y \\n (salto de renglón).",
   "sandia_intro": {
-    "speaker": "Sandía",
+    "speaker": "Gutenberg",
     "lines": [
-      "Así que vos sos la manzana negacionista.",
+      "Así que vos sos la manzana rebelde.",
       "Qué tontería. Todos vamos al cielo de las frutas.",
       "Déjame mostrarte cómo se ve."
     ]
   },
   "sandia_fase2": {
-    "speaker": "Sandía",
+    "speaker": "Gutenberg",
     "lines": [
       "¡Basta!",
       "El cielo de las frutas existe.",
@@ -17,7 +17,7 @@
     ]
   },
   "sandia_fase3": {
-    "speaker": "Sandía",
+    "speaker": "Gutenberg",
     "lines": [
       "Mira manzana...{pause=0.6} estoy abierta.{pause=0.4} Por dentro soy dulce.",
       "Mátame, manzana.{pause=0.5} Así se acaba esto.",
@@ -25,7 +25,36 @@
     ]
   },
   "sandia_death": {
-    "speaker": "Sandía",
+    "speaker": "Gutenberg",
+    "lines": [
+      "..."
+    ]
+  },
+  "uva_intro": {
+    "speaker": "Uva",
+    "lines": [
+      "Así que vos sos quien vino a cerrar el invernadero.",
+      "Cada vez que me rompés, somos más.",
+      "A ver cuánto aguantás."
+    ]
+  },
+  "uva_fase2": {
+    "speaker": "Uva",
+    "lines": [
+      "¡No se terminó! ¡Divídanse!",
+      "¡Banana y naranja, ahora!",
+      "¡Que no llegue hasta nosotras!"
+    ]
+  },
+  "uva_fase3": {
+    "speaker": "Uva",
+    "lines": [
+      "Una más... y nos multiplicamos.",
+      "¡No dejen que se acerque!"
+    ]
+  },
+  "uva_death": {
+    "speaker": "Uva",
     "lines": [
       "..."
     ]

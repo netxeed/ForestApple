@@ -3,6 +3,7 @@ extends "res://scripts/entities/enemy.gd"
 ## uvas más chicas, rápidas y con explosiones menores. Los números están en data/enemies.json.
 
 const Explosion = preload("res://scripts/entities/explosion.gd")
+const S = preload("res://scripts/core/settings.gd")
 
 var is_boss := true
 ## Para la barra de jefe de la interfaz: una uva siempre está "en fase" (nunca 0).
@@ -38,6 +39,30 @@ func configure(new_generation: int) -> void:
 	state = "walk"
 	timer = float(stats.walk_time)
 	grace = float(stats.grace_after_split) if generation > 0 else 0.0
+	_keep_inside_room()
+
+
+func attach(owner) -> void:
+	super.attach(owner)
+	_keep_inside_room()
+
+
+func update(dt: float, player, walls: Array) -> void:
+	super.update(dt, player, walls)
+	_keep_inside_room()
+
+
+func _keep_inside_room() -> void:
+	if room == null:
+		return
+	var half_size := float(size) / 2.0
+	var min_x: float = S.TILE + half_size
+	var min_y: float = S.TILE + half_size
+	var max_x: float = float(room.room_width * S.TILE - S.TILE) - half_size
+	var max_y: float = float(room.room_height * S.TILE - S.TILE) - half_size
+	pos.x = clampf(pos.x, min_x, max_x)
+	pos.y = clampf(pos.y, min_y, max_y)
+	rect = Geo.rect_from_center(pos, Vector2i(size, size))
 
 
 func last_generation() -> bool:
@@ -58,8 +83,25 @@ func kill() -> void:
 		return
 	if bool(stats.death_explosion):
 		_add_explosion(pos)
-	if last_generation():
+	if not last_generation():
+		if generation == 0:
+			if not room.grape_phase2_shown:
+				room.grape_phase2_shown = true
+				room.say("uva_fase2")
+			_spawn_children()
+			_spawn_reinforcements()
+		elif generation == 1:
+			if not room.grape_phase3_shown:
+				room.grape_phase3_shown = true
+				room.say("uva_fase3")
+			_spawn_children()
 		return
+	if not room.grape_death_shown and not _has_living_grapes():
+		room.grape_death_shown = true
+		room.say("uva_death")
+
+
+func _spawn_children() -> void:
 	for i in range(int(stats.split_children)):
 		var side := -1.0 if i % 2 == 0 else 1.0
 		var offset := Vector2(side * float(stats.split_offset), 0.0)
@@ -70,8 +112,46 @@ func kill() -> void:
 			child.configure(generation + 1)
 
 
+func _spawn_reinforcements() -> void:
+	if room.grape_reinforcements_spawned:
+		return
+	room.grape_reinforcements_spawned = true
+	var candidates: Array[Vector2] = []
+	var player_pos: Vector2 = room.current_player.rect.get_center() if room.current_player != null else pos
+	for row in range(room.layout.size()):
+		var line: String = room.layout[row]
+		for col in range(line.length()):
+			if line.substr(col, 1) != ".":
+				continue
+			var candidate := Vector2((col + 0.5) * S.TILE, (row + 0.5) * S.TILE)
+			if candidate.distance_to(player_pos) >= 4.0 * S.TILE:
+				candidates.append(candidate)
+	for enemy_kind in stats.get("reinforcements", []):
+		if candidates.is_empty():
+			break
+		var best_index := 0
+		var best_distance := -1.0
+		for index in range(candidates.size()):
+			var distance := candidates[index].distance_squared_to(player_pos)
+			if distance > best_distance:
+				best_distance = distance
+				best_index = index
+		var spawn_pos: Vector2 = candidates.pop_at(best_index)
+		room.spawn_enemy(str(enemy_kind), spawn_pos)
+
+
+func _has_living_grapes() -> bool:
+	for enemy in room.enemies:
+		if enemy.get("kind") == "grape" and enemy.get("alive") == true:
+			return true
+	return false
+
+
 func update_behavior(dt: float, player, walls: Array) -> void:
 	grace = maxf(0.0, grace - dt)
+	if generation == 0 and room != null and not room.grape_intro_shown:
+		room.grape_intro_shown = true
+		room.say("uva_intro")
 	match state:
 		"walk":
 			var to_player: Vector2 = player.rect.get_center() - pos
