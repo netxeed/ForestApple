@@ -10,8 +10,8 @@ const SpritesScript = preload("res://scripts/sprites.gd")
 const SIZE := 20
 const HIT_FLASH_TIME := 0.08
 const WALK_POSES := ["1", "idle", "2", "idle"]
-const MELEE_DURATION := 0.24
-const MELEE_COOLDOWN := 0.34
+const MELEE_DURATION := 0.30
+const MELEE_COOLDOWN := 0.40
 const MELEE_RANGE := 39.0
 const MELEE_KNOCKBACK := 42.0
 const BLOCK_SPEED_FACTOR := 0.42
@@ -51,6 +51,7 @@ var _hit_flash_time := 0.0
 var blocking := false
 var _melee_time := 0.0
 var _melee_cooldown := 0.0
+var _melee_direction := Vector2.DOWN
 var _melee_hit_enemies: Dictionary = {}
 var dash_cooldown := 0.0
 var _dash_time := 0.0
@@ -238,6 +239,7 @@ func update(dt: float, walls: Array, touch_move: Variant = null, touch_aim: Vari
 	if character == "manzana" and melee_direction.length_squared() > 0.0 \
 			and not blocking and _melee_cooldown <= 0.0:
 		facing = _direction(melee_direction)
+		_melee_direction = _facing_vector()
 		_melee_time = MELEE_DURATION
 		_melee_cooldown = MELEE_COOLDOWN
 		_melee_hit_enemies.clear()
@@ -253,7 +255,7 @@ func update(dt: float, walls: Array, touch_move: Variant = null, touch_aim: Vari
 func resolve_melee(enemies: Array, walls: Array) -> void:
 	if character != "manzana" or _melee_time <= 0.0:
 		return
-	var forward := _facing_vector()
+	var forward := _melee_direction
 	for enemy in enemies:
 		if enemy.get("alive") != true or _melee_hit_enemies.has(enemy.get_instance_id()):
 			continue
@@ -411,19 +413,19 @@ func _draw_block_guard(canvas: CanvasItem) -> void:
 
 func _draw_melee_sweep(canvas: CanvasItem, progress: float) -> void:
 	var eased := progress * progress * (3.0 - 2.0 * progress)
-	var fade := pow(1.0 - progress, 1.35)
-	var base_angle := _facing_vector().angle()
-	# Capas desplazadas forman un arco con brillo concentrado en la punta.
+	var fade := pow(1.0 - progress, 0.62)
+	var base_angle := _melee_direction.angle()
+	# Capas opacas y cálidas forman un arco brillante con estela persistente.
 	for trail in range(4, -1, -1):
 		var trail_progress := maxf(0.0, eased - float(trail) * 0.085)
-		var trail_angle := _facing_vector().angle() + lerpf(-1.08, 1.08, trail_progress)
+		var trail_angle := base_angle + lerpf(-1.08, 1.08, trail_progress)
 		var trail_alpha := fade * (1.0 - float(trail) * 0.16)
-		_draw_sweep_band(canvas, trail_angle, 0.48, 15.0, 49.0, 0.11 * trail_alpha)
-		_draw_sweep_band(canvas, trail_angle, 0.32, 20.0, 46.0, 0.22 * trail_alpha)
-		_draw_sweep_band(canvas, trail_angle, 0.18, 27.0, 42.0, 0.34 * trail_alpha)
-		_draw_sweep_arc(canvas, trail_angle, 0.48, 49.0, 0.24 * trail_alpha, 1.2)
+		_draw_sweep_band(canvas, trail_angle, 0.48, 14.0, 50.0, 0.20 * trail_alpha)
+		_draw_sweep_band(canvas, trail_angle, 0.32, 19.0, 47.0, 0.42 * trail_alpha)
+		_draw_sweep_band(canvas, trail_angle, 0.18, 26.0, 43.0, 0.68 * trail_alpha)
+		_draw_sweep_arc(canvas, trail_angle, 0.48, 49.0, 0.62 * trail_alpha, 2.0)
 		if trail == 0:
-			_draw_sweep_edge(canvas, trail_angle, 27.0, 48.0, 0.9 * trail_alpha)
+			_draw_sweep_edge(canvas, trail_angle, 25.0, 49.0, trail_alpha)
 	_draw_sweep_sparks(canvas, base_angle, eased, fade)
 
 
@@ -437,7 +439,7 @@ func _draw_sweep_band(canvas: CanvasItem, center_angle: float, half_angle: float
 	for index in range(segments, -1, -1):
 		var angle := center_angle - half_angle + 2.0 * half_angle * float(index) / float(segments)
 		points.append(rect.get_center() + Vector2.RIGHT.rotated(angle) * inner_radius)
-	canvas.draw_colored_polygon(points, Color(1.0, 1.0, 1.0, alpha * float(image_alpha) / 255.0))
+	canvas.draw_colored_polygon(points, Color(1.0, 0.91, 0.57, alpha * float(image_alpha) / 255.0))
 
 
 func _draw_sweep_edge(canvas: CanvasItem, center_angle: float,
@@ -459,7 +461,7 @@ func _draw_sweep_arc(canvas: CanvasItem, center_angle: float, half_angle: float,
 	for index in range(13):
 		var angle := center_angle - half_angle + 2.0 * half_angle * float(index) / 12.0
 		points.append(rect.get_center() + Vector2.RIGHT.rotated(angle) * radius)
-	canvas.draw_polyline(points, Color(1.0, 1.0, 1.0, alpha * float(image_alpha) / 255.0), width, true)
+	canvas.draw_polyline(points, Color(1.0, 0.97, 0.78, alpha * float(image_alpha) / 255.0), width, true)
 
 
 func _draw_sweep_sparks(canvas: CanvasItem, base_angle: float, progress: float, fade: float) -> void:

@@ -9,7 +9,6 @@ const CONTROL_LINES := [
 	"Apuntar, atacar o disparar: flechas",
 	"Interactuar, recoger objetos y usar llave: E",
 	"Cambiar personaje: L    Bloquear con manzana: F",
-	"Dash: Shift (cuando obtengas el trinket)",
 	"Pausa: Esc",
 ]
 

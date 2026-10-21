@@ -5,6 +5,16 @@ extends RefCounted
 
 const S = preload("res://scripts/core/settings.gd")
 const LayoutScript = preload("res://scripts/rooms/layout.gd")
+const FLOOR_TEXTURES: Array[Texture2D] = [
+	preload("res://assets/Map/tile.png"),
+	preload("res://assets/Map/tile_nails.png"),
+]
+const WALL_TEXTURE = preload("res://assets/Map/tile_vertical.png")
+const OBSTACLE_TEXTURES: Array[Texture2D] = [
+	preload("res://assets/Obstacles/mayonesa.png"),
+	preload("res://assets/Obstacles/mostaza.png"),
+	preload("res://assets/Obstacles/yerba.png"),
+]
 
 const LETTERS := LayoutScript.ENEMY_LETTERS
 
@@ -103,6 +113,47 @@ func solids() -> Array[Rect2]:
 			if not cleared() or locked_doors.has(direction):
 				_solids.append(door_rects[direction])
 	return _solids
+
+
+func solids_for_player(player) -> Array[Rect2]:
+	if player.character != "nino" or not cleared():
+		return solids()
+	var result: Array[Rect2] = []
+	for wall in walls:
+		var adjusted_wall: Rect2 = wall
+		for direction in door_rects:
+			if locked_doors.has(direction):
+				continue
+			adjusted_wall = _trim_wall_at_open_door(adjusted_wall, direction, door_rects[direction])
+		result.append(adjusted_wall)
+	result.append_array(obstacles)
+	for direction in door_rects:
+		if locked_doors.has(direction):
+			result.append(door_rects[direction])
+	return result
+
+
+func _trim_wall_at_open_door(wall: Rect2, direction: String, door: Rect2) -> Rect2:
+	# Ensancha solo la colisión de la boca de la puerta; la pared visible conserva su forma.
+	const EXTRA_CLEARANCE := 8.0
+	match direction:
+		"left", "right":
+			if not is_equal_approx(wall.position.x, door.position.x) or not is_equal_approx(wall.size.x, door.size.x):
+				return wall
+			if is_equal_approx(wall.end.y, door.position.y):
+				wall.size.y = maxf(0.0, wall.size.y - EXTRA_CLEARANCE)
+			elif is_equal_approx(wall.position.y, door.end.y):
+				wall.position.y += EXTRA_CLEARANCE
+				wall.size.y = maxf(0.0, wall.size.y - EXTRA_CLEARANCE)
+		"up", "down":
+			if not is_equal_approx(wall.position.y, door.position.y) or not is_equal_approx(wall.size.y, door.size.y):
+				return wall
+			if is_equal_approx(wall.end.x, door.position.x):
+				wall.size.x = maxf(0.0, wall.size.x - EXTRA_CLEARANCE)
+			elif is_equal_approx(wall.position.x, door.end.x):
+				wall.position.x += EXTRA_CLEARANCE
+				wall.size.x = maxf(0.0, wall.size.x - EXTRA_CLEARANCE)
+	return wall
 
 
 func set_locked_doors(directions: Array) -> void:
@@ -275,20 +326,18 @@ func _draw_backdrop(canvas: CanvasItem) -> void:
 	var seed := 0
 	for index in range(id.length()):
 		seed += (index + 1) * id.unicode_at(index)
-	var shades := [Color8(43, 58, 64), Color8(49, 65, 69), Color8(39, 53, 61)]
 	for row in range(S.ROOM_ROWS):
 		for col in range(S.ROOM_COLS):
 			var tile := Rect2(col * S.TILE, row * S.TILE, S.TILE, S.TILE)
-			var shade := posmod(seed + col * 3 + row * 5, shades.size())
-			canvas.draw_rect(tile, shades[shade])
-			canvas.draw_line(tile.position + Vector2(0, S.TILE - 1), tile.position + Vector2(S.TILE, S.TILE - 1), Color8(31, 44, 51))
-			canvas.draw_line(tile.position, tile.position + Vector2(S.TILE, 0), Color8(62, 78, 81))
+			var floor_variant := posmod(seed + col + row, FLOOR_TEXTURES.size())
+			canvas.draw_texture_rect(FLOOR_TEXTURES[floor_variant], tile, false)
 	for wall in walls:
-		canvas.draw_rect(wall, Color8(22, 32, 40))
-		canvas.draw_rect(wall.grow(-2), Color8(40, 55, 62))
+		canvas.draw_texture_rect(WALL_TEXTURE, wall, false)
 	for obstacle in obstacles:
-		canvas.draw_rect(obstacle, Color8(18, 28, 34))
-		canvas.draw_rect(Rect2(obstacle.position + Vector2(3, 4), obstacle.size - Vector2(6, 8)), S.OBSTACLE)
+		var col := int(obstacle.position.x / S.TILE)
+		var row := int(obstacle.position.y / S.TILE)
+		var variant := posmod(seed + col * 3 + row * 5, OBSTACLE_TEXTURES.size())
+		canvas.draw_texture_rect(OBSTACLE_TEXTURES[variant], obstacle, false)
 
 
 func _draw_doors(canvas: CanvasItem) -> void:
