@@ -39,10 +39,15 @@ func handle_touch(game, action: String, _position) -> void:
 
 
 func _interact(game) -> void:
+	var key_position: Vector2 = game.room.key_rect.get_center()
 	if game.floor.collect_key(game.player):
+		game.hud_view.start_trinket_pickup("key", key_position)
 		game.banner = ["¡Recogiste la llave!", S.BANNER_TIME]
 		return
+	var trinket_id: String = game.room.trinket_drop_id
+	var trinket_position: Vector2 = game.room.trinket_drop_rect.get_center()
 	if game.room.collect_trinket(game.player):
+		game.hud_view.start_trinket_pickup(trinket_id, trinket_position)
 		game.banner = ["¡Obtuviste el trinket de Dash!", S.BANNER_TIME]
 		return
 	if game.room.kind == "boss" and game.room.cleared() and not game.hole_dialogue_shown \
@@ -66,6 +71,7 @@ func _interact(game) -> void:
 
 func update(game, dt: float) -> void:
 	game.hud_view.update_health(game, dt)
+	game.hud_view.update_trinket_animation(dt)
 	game.character_switch_cooldown = maxf(0.0, game.character_switch_cooldown - dt)
 	if not game.player.alive:
 		death_time += dt
@@ -88,11 +94,12 @@ func update(game, dt: float) -> void:
 	game.apple.update_health_regeneration(dt, game.player == game.apple)
 	game.kid.update_health_regeneration(dt, game.player == game.kid)
 	room.current_player = game.player
+	_align_player_to_open_door(room, game.player, game.touch_controls.move, dt)
 	var melee_direction := Vector2(
 		(1.0 if Input.is_action_pressed("aim_right") else 0.0) - (1.0 if Input.is_action_pressed("aim_left") else 0.0),
 		(1.0 if Input.is_action_pressed("aim_down") else 0.0) - (1.0 if Input.is_action_pressed("aim_up") else 0.0)
 	)
-	game.player.update(dt, room.solids(), game.touch_controls.move, game.touch_controls.aim,
+	game.player.update(dt, room.solids_for_player(game.player), game.touch_controls.move, game.touch_controls.aim,
 		null, null, melee_direction, Input.is_action_pressed("block") or game.touch_controls.block_pressed
 		or game.touch_controls.block_just_pressed, Input.is_action_just_pressed("boost"))
 	game.touch_controls.block_just_pressed = false
@@ -138,6 +145,64 @@ func _prune_dead(shots: Array) -> void:
 	for index in range(shots.size() - 1, -1, -1):
 		if not shots[index].alive:
 			shots.remove_at(index)
+
+
+func _align_player_to_open_door(room, player, touch_move: Vector2, dt: float) -> void:
+	if player.character != "nino" or not room.cleared():
+		return
+	var movement := touch_move + Vector2(
+		(1.0 if Input.is_action_pressed("move_right") else 0.0) - (1.0 if Input.is_action_pressed("move_left") else 0.0),
+		(1.0 if Input.is_action_pressed("move_down") else 0.0) - (1.0 if Input.is_action_pressed("move_up") else 0.0)
+	)
+	if movement.is_zero_approx():
+		movement = player.velocity
+	if movement.is_zero_approx():
+		return
+	const ALIGN_RANGE := 48.0
+	const APPROACH_DISTANCE := 80.0
+	const ALIGN_SPEED := 220.0
+	for direction in room.door_rects:
+		if room.locked_doors.has(direction):
+			continue
+		var door: Rect2 = room.door_rects[direction]
+		var center := door.get_center()
+		var axis := -1
+		var target := 0.0
+		var current := 0.0
+		var approaching := false
+		match direction:
+			"left":
+				axis = 1
+				target = center.y
+				current = player.pos.y
+				approaching = movement.x < 0.0 and player.pos.x <= center.x + APPROACH_DISTANCE and player.pos.x >= center.x - APPROACH_DISTANCE
+			"right":
+				axis = 1
+				target = center.y
+				current = player.pos.y
+				approaching = movement.x > 0.0 and player.pos.x >= center.x - APPROACH_DISTANCE and player.pos.x <= center.x + APPROACH_DISTANCE
+			"up":
+				axis = 0
+				target = center.x
+				current = player.pos.x
+				approaching = movement.y < 0.0 and player.pos.y <= center.y + APPROACH_DISTANCE and player.pos.y >= center.y - APPROACH_DISTANCE
+			"down":
+				axis = 0
+				target = center.x
+				current = player.pos.x
+				approaching = movement.y > 0.0 and player.pos.y >= center.y - APPROACH_DISTANCE and player.pos.y <= center.y + APPROACH_DISTANCE
+		if not approaching or absf(current - target) > ALIGN_RANGE:
+			continue
+		var aligned := move_toward(current, target, ALIGN_SPEED * dt)
+		if axis == 0:
+			player.pos.x = aligned
+			player.velocity.x = move_toward(player.velocity.x, 0.0, ALIGN_SPEED * dt)
+			player._set_rect_center_axis(0)
+		else:
+			player.pos.y = aligned
+			player.velocity.y = move_toward(player.velocity.y, 0.0, ALIGN_SPEED * dt)
+			player._set_rect_center_axis(1)
+		return
 
 
 func _update_transition(game, dt: float) -> void:

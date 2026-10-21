@@ -53,7 +53,11 @@ func choose(game) -> void:
 	if cursor.index == null:
 		cursor.index = 0
 	if cursor.index == 0:
-		game.states.push(ControlsIntroStateScript.new(Callable(game, "start_run")))
+		if game.has_method("needs_controls_intro") and not game.needs_controls_intro():
+			game.start_run()
+		else:
+			var on_confirm := Callable(game, "confirm_controls_intro") if game.has_method("confirm_controls_intro") else Callable(game, "start_run")
+			game.states.push(ControlsIntroStateScript.new(on_confirm))
 	elif cursor.index == 1:
 		game.open_options()
 	else:

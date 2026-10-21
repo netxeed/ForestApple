@@ -4,6 +4,7 @@ extends "res://scripts/entities/player.gd"
 
 const StoneColor := Color8(139, 143, 151)
 const SPRITE_SCALE := 0.75
+# Hitbox rectangular al 75 % del tamaño de los sprites del Niño.
 const KID_COLLISION_SIZE := Vector2i(28, 36)
 
 

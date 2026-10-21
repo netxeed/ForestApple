@@ -41,6 +41,7 @@ var menu_view
 var hud_view
 var touch_controls
 var touch_consumed: Dictionary = {}
+var pointer_position := Vector2(-1000, -1000)
 var font: Font = ThemeDB.fallback_font
 ## Dónde se guardan las preferencias (los tests lo cambian para no tocar las reales).
 var prefs_path: String = Preferences.DEFAULT_PATH
@@ -57,6 +58,7 @@ var banner
 var hole_dialogue_shown := false
 var creator_name_clicks := 0
 var creator_easter_egg := false
+var controls_intro_seen := false
 ## Verdadero mientras se juega el Acto 1: «Reiniciar» del menú de pausa lo reinicia a él.
 var in_act1 := false
 
@@ -91,6 +93,9 @@ func load_preferences() -> void:
 	var debug_keys = prefs.get("debug_keys")
 	if typeof(debug_keys) == TYPE_BOOL:
 		S.DEBUG_KEYS = debug_keys
+	var intro_seen = prefs.get("controls_intro_seen")
+	if typeof(intro_seen) == TYPE_BOOL:
+		controls_intro_seen = intro_seen
 
 	var full = prefs.get("fullscreen")
 	if typeof(full) == TYPE_BOOL:
@@ -117,6 +122,7 @@ func save_preferences() -> bool:
 		"fullscreen": fullscreen,
 		"fps": S.FPS,
 		"debug_keys": S.DEBUG_KEYS,
+		"controls_intro_seen": controls_intro_seen,
 		"move_mode": touch_controls.move_mode,
 		"aim_mode": touch_controls.aim_mode,
 		"dynamic_base_enabled": touch_controls.dynamic_base_enabled,
@@ -132,6 +138,16 @@ func start_run() -> void:
 		start_act1()
 		return
 	_start_act2()
+
+
+func needs_controls_intro() -> bool:
+	return not controls_intro_seen
+
+
+func confirm_controls_intro() -> void:
+	controls_intro_seen = true
+	save_preferences()
+	start_run()
 
 
 func _start_act2() -> void:
@@ -438,14 +454,13 @@ func _input(event: InputEvent) -> void:
 					states.handle_touch(action, touch_controls.current_tap_position())
 				elif not touch_controls.touch_active:
 					states.handle_touch("tap", position)
-	elif motion != null and (
-			(motion.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0
-			or (is_mobile and touch_controls.fingers.has(MOUSE_TOUCH_ID))
-	):
+	elif motion != null:
 		var position := (make_input_local(motion) as InputEventMouseMotion).position
-		if is_mobile:
-			touch_controls.handle_motion(MOUSE_TOUCH_ID, position)
-		states.handle_pointer(position)
+		pointer_position = position
+		if (motion.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0 or (is_mobile and touch_controls.fingers.has(MOUSE_TOUCH_ID)):
+			if is_mobile:
+				touch_controls.handle_motion(MOUSE_TOUCH_ID, position)
+			states.handle_pointer(position)
 
 
 func _notification(what: int) -> void:
