@@ -54,13 +54,15 @@ func choose(game, option_name: String) -> void:
 		game.toggle_debug()
 	elif option_name in ADJUSTABLE:
 		game.change_option(option_name, 1)
+	elif option_name == "sideswipe":
+		game.start_sideswipe()
 	else:  # "back"
 		game.states.pop()
 
 
 static func _row_at(game, position):
-	var spacing := 20.0 if game.is_mobile else 30.0
-	var tolerance := 10.0 if game.is_mobile else 15.0
+	var spacing := 16.0 if game.is_mobile else 30.0
+	var tolerance := 7.0 if game.is_mobile else 15.0
 	return MenuStateScript.row_hit(position, game.option_row_y(0), spacing, game.option_entries().size(), tolerance)
 
 

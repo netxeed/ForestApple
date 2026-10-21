@@ -525,6 +525,195 @@
    ],
    "speaker": "Gala"
   },
+  "acto1_introducción": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "..."
+    },
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ],
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Dicen que, antes de nacer, uno no es nada."
+    },
+    {
+     "pauses": [
+      [
+       23,
+       0.5
+      ],
+      [
+       37,
+       0.5
+      ],
+      [
+       48,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Que no hay pensamientos, ni recuerdos, ni miedo. Que simplemente no se existe."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Supongo que eso es lo que me paso a mí."
+    },
+    {
+     "pauses": [
+      [
+       25,
+       0.5
+      ],
+      [
+       65,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "No recuerdo haber nacido. No recuerdo haber llegado a este mundo. Ni siquiera recuerdo la primera vez que abrí los ojos."
+    },
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ],
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Dicen que, antes de nacer, uno no es nada."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "..."
+    },
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ],
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Dicen que, antes de nacer, uno no es nada."
+    },
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ],
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Dicen que, antes de nacer, uno no es nada."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "..."
+    },
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ],
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Dicen que, antes de nacer, uno no es nada."
+    },
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ],
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Dicen que, antes de nacer, uno no es nada."
+    },
+    {
+     "pauses": [],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "..."
+    },
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ],
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Dicen que, antes de nacer, uno no es nada."
+    },
+    {
+     "pauses": [
+      [
+       9,
+       0.5
+      ],
+      [
+       25,
+       0.5
+      ]
+     ],
+     "speaker": "Manzana",
+     "speed": 45.0,
+     "text": "Dicen que, antes de nacer, uno no es nada."
+    }
+   ],
+   "speaker": ""
+  },
   "acto1_isolde": {
    "lines": [
     {
@@ -3985,6 +4174,168 @@
     [
      48,
      67
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     42
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     48
+    ],
+    [
+     49,
+     78
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     39
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 4,
+   "spans": [
+    [
+     0,
+     43
+    ],
+    [
+     44,
+     89
+    ],
+    [
+     90,
+     120
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 5,
+   "spans": [
+    [
+     0,
+     42
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 6,
+   "spans": [
+    [
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 7,
+   "spans": [
+    [
+     0,
+     42
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 8,
+   "spans": [
+    [
+     0,
+     42
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 9,
+   "spans": [
+    [
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 10,
+   "spans": [
+    [
+     0,
+     42
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 11,
+   "spans": [
+    [
+     0,
+     42
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 12,
+   "spans": [
+    [
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 13,
+   "spans": [
+    [
+     0,
+     42
+    ]
+   ]
+  },
+  {
+   "key": "acto1_introducción",
+   "line": 14,
+   "spans": [
+    [
+     0,
+     42
     ]
    ]
   },

@@ -77,6 +77,71 @@
       }
     ]
   },
+  "acto1_introducción": {
+    "speaker": "",
+    "lines": [
+      {
+        "text": "...",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Dicen que{pause=0.5}, antes de nacer{pause=0.5}, uno no es nada.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Que no hay pensamientos{pause=0.5}, ni recuerdos{pause=0.5}, ni miedo.{pause=0.5} Que simplemente no se existe.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Supongo que eso es lo que me paso a mí.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "No recuerdo haber nacido.{pause=0.5} No recuerdo haber llegado a este mundo.{pause=0.5} Ni siquiera recuerdo la primera vez que abrí los ojos.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Dicen que{pause=0.5}, antes de nacer{pause=0.5}, uno no es nada.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "...",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Dicen que{pause=0.5}, antes de nacer{pause=0.5}, uno no es nada.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Dicen que{pause=0.5}, antes de nacer{pause=0.5}, uno no es nada.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "...",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Dicen que{pause=0.5}, antes de nacer{pause=0.5}, uno no es nada.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Dicen que{pause=0.5}, antes de nacer{pause=0.5}, uno no es nada.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "...",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Dicen que{pause=0.5}, antes de nacer{pause=0.5}, uno no es nada.",
+        "speaker": "Manzana"
+      },
+      {
+        "text": "Dicen que{pause=0.5}, antes de nacer{pause=0.5}, uno no es nada.",
+        "speaker": "Manzana"
+      }
+    ]
+  },
   "acto1_nino_llega": {
     "speaker": "",
     "lines": [

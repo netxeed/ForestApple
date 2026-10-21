@@ -7,6 +7,10 @@ const Geo = preload("res://scripts/core/geo.gd")
 
 const INTERACT_CENTER := Vector2(S.SCREEN_W - 140, S.SCREEN_H - 28)
 const PAUSE_CENTER := Vector2(S.SCREEN_W / 2.0, 44)
+const SWITCH_CENTER := Vector2(S.SCREEN_W - 82.0, 88.0)
+const BLOCK_CENTER := Vector2(S.SCREEN_W - 34.0, 88.0)
+const JUMP_CENTER := Vector2(S.SCREEN_W - 132.0, S.SCREEN_H - 58.0)
+const BOOST_CENTER := Vector2(S.SCREEN_W - 48.0, S.SCREEN_H - 98.0)
 const BUTTON_RADIUS := 19.0
 const JOYSTICK_RADIUS := 42.0
 const DEADZONE := 9.0
@@ -30,6 +34,14 @@ var aim := Vector2.ZERO
 var last_tap = null
 var last_position = null
 var touch_active := false
+var last_released_role = null
+var block_pressed := false
+var block_just_pressed := false
+var jump_pressed := false
+var jump_just_pressed := false
+var boost_pressed := false
+var boost_just_pressed := false
+var sideswipe_mode := false
 var move_mode := "flechas"
 var aim_mode := "flechas"
 var dynamic_base_enabled := true
@@ -51,12 +63,26 @@ func reset_dynamic_bases() -> void:
 	_rebuild()
 
 
+func clear_inputs() -> void:
+	fingers.clear()
+	finger_roles.clear()
+	finger_bases.clear()
+	finger_origins.clear()
+	touch_active = false
+	last_released_role = null
+	block_just_pressed = false
+	jump_just_pressed = false
+	boost_just_pressed = false
+	_rebuild()
+
+
 func handle_down(finger: int, position: Vector2) -> void:
 	touch_active = true
+	last_released_role = null
 	last_position = position
 	var role = _control_at(position)
 	finger_roles[finger] = role
-	if role != null and _mode(role) == "joystick":
+	if (role == "move" or role == "aim") and _mode(role) == "joystick":
 		var center: Vector2 = _control_layout()[role][0]
 		finger_origins[finger] = center
 		finger_bases[finger] = center
@@ -75,21 +101,33 @@ func handle_motion(finger: int, position: Vector2) -> void:
 func handle_up(finger: int, position: Vector2) -> void:
 	# Mantener el indicador solo mientras quede otro dedo apoyado. Este estado también
 	# distingue los clics de mouse emulados de los toques reales.
-	touch_active = fingers.size() > 1
+	last_released_role = finger_roles.get(finger)
 	last_position = position
 	fingers.erase(finger)
 	finger_roles.erase(finger)
 	finger_bases.erase(finger)
 	finger_origins.erase(finger)
+	touch_active = not fingers.is_empty()
 	_rebuild()
 
 
 func release_action(position: Vector2):
-	touch_active = true
 	last_position = position
+	var released_role = last_released_role
+	last_released_role = null
+	if Rect2(Vector2.ZERO, Vector2(S.SCREEN_W, S.SCREEN_H)).has_point(position):
+		match released_role:
+			"pause_button":
+				return "pause"
+			"switch_button":
+				return "switch_character"
+			"interact_button":
+				return "interact"
 	var action = null
 	if _inside(position, PAUSE_CENTER, 28.0):
 		action = "pause"
+	elif _inside(position, SWITCH_CENTER, BUTTON_RADIUS + 5.0):
+		action = "switch_character"
 	elif _inside(position, INTERACT_CENTER, 23.0):
 		action = "interact"
 	elif Rect2(Vector2.ZERO, Vector2(S.SCREEN_W, S.SCREEN_H)).has_point(position):
@@ -109,8 +147,22 @@ func _inside(position: Vector2, center: Vector2, radius: float) -> bool:
 
 
 func _control_at(position: Vector2):
-	if _inside(position, INTERACT_CENTER, 28.0) or _inside(position, PAUSE_CENTER, 32.0):
-		return null
+	if sideswipe_mode:
+		if _inside(position, JUMP_CENTER, BUTTON_RADIUS + 10.0):
+			return "jump_button"
+		if _inside(position, BOOST_CENTER, BUTTON_RADIUS + 10.0):
+			return "boost_button"
+		if _inside(position, PAUSE_CENTER, 32.0):
+			return "pause_button"
+		return "move" if position.x < S.SCREEN_W * 0.48 else null
+	if _inside(position, BLOCK_CENTER, BUTTON_RADIUS + 5.0):
+		return "block_button"
+	if _inside(position, PAUSE_CENTER, 32.0):
+		return "pause_button"
+	if _inside(position, SWITCH_CENTER, BUTTON_RADIUS + 5.0):
+		return "switch_button"
+	if _inside(position, INTERACT_CENTER, 28.0):
+		return "interact_button"
 	var layout := _control_layout()
 	var role := "move" if position.x < S.SCREEN_W / 2.0 else "aim"
 	var center: Vector2 = layout[role][0]
@@ -121,15 +173,34 @@ func _control_at(position: Vector2):
 
 
 func _mode(role: String) -> String:
+	if sideswipe_mode and role == "move":
+		return "joystick"
 	return move_mode if role == "move" else aim_mode
 
 
 func _rebuild() -> void:
+	var was_block_pressed := block_pressed
+	var was_jump_pressed := jump_pressed
+	var was_boost_pressed := boost_pressed
 	move = Vector2.ZERO
 	aim = Vector2.ZERO
+	block_pressed = false
+	jump_pressed = false
+	boost_pressed = false
 	var layout := _control_layout()
 	for finger in fingers:
 		var role = finger_roles.get(finger)
+		if role == "pause_button" or role == "switch_button" or role == "interact_button":
+			continue
+		if role == "block_button":
+			block_pressed = true
+			continue
+		if role == "jump_button":
+			jump_pressed = true
+			continue
+		if role == "boost_button":
+			boost_pressed = true
+			continue
 		if role != "move" and role != "aim":
 			continue
 		var position: Vector2 = fingers[finger]
@@ -175,6 +246,12 @@ func _rebuild() -> void:
 		move = move.normalized()
 	if aim.length_squared() > 1.0:
 		aim = aim.normalized()
+	if block_pressed and not was_block_pressed:
+		block_just_pressed = true
+	if jump_pressed and not was_jump_pressed:
+		jump_just_pressed = true
+	if boost_pressed and not was_boost_pressed:
+		boost_just_pressed = true
 
 
 func _clamp_base(center: Vector2, role: String, layout: Dictionary, origin: Vector2) -> Vector2:
@@ -192,7 +269,8 @@ func _clamp_base(center: Vector2, role: String, layout: Dictionary, origin: Vect
 func _control_layout() -> Dictionary:
 	var scale := 1.0
 	var joystick_scale: float = scale * float(JOYSTICK_SIZE_OPTIONS[joystick_size_index])
-	var move_extent: float = 55.0 * scale if move_mode == "flechas" else JOYSTICK_RADIUS * joystick_scale
+	var move_is_joystick := sideswipe_mode or move_mode == "joystick"
+	var move_extent: float = JOYSTICK_RADIUS * joystick_scale if move_is_joystick else 55.0 * scale
 	var aim_extent: float = 55.0 * scale if aim_mode == "flechas" else JOYSTICK_RADIUS * joystick_scale
 	var move_x := maxf(move_extent, 0.0)
 	var aim_x := minf(S.SCREEN_W - aim_extent, S.SCREEN_W)
@@ -206,8 +284,23 @@ func _control_layout() -> Dictionary:
 
 
 func draw(canvas: CanvasItem) -> void:
-	_draw_button(canvas, INTERACT_CENTER, "E", 1.0)
-	_draw_button(canvas, PAUSE_CENTER, "Ⅱ", 1.0)
+	if sideswipe_mode:
+		_draw_button(canvas, PAUSE_CENTER, "Ⅱ", 1.0, _role_is_down("pause_button"))
+		_draw_button(canvas, JUMP_CENTER, "J", 0.8, jump_pressed or jump_just_pressed)
+		_draw_button(canvas, BOOST_CENTER, "B", 0.8, boost_pressed or boost_just_pressed)
+		var font: Font = ThemeDB.fallback_font
+		canvas.draw_string(font, Vector2(JUMP_CENTER.x, JUMP_CENTER.y - 25.0), "SALTO",
+			HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 1.0, 1.0, 0.82))
+		canvas.draw_string(font, Vector2(BOOST_CENTER.x, BOOST_CENTER.y - 25.0), "BOOST",
+			HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 1.0, 1.0, 0.82))
+		canvas.draw_string(font, Vector2(S.SCREEN_W / 2.0, S.SCREEN_H - 4.0),
+			"2.º SALTO + DIRECCIÓN = DODGE", HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 1.0, 1.0, 0.72))
+		_draw_control(canvas, _control_layout().move[0], "joystick", "move", _control_layout())
+		return
+	_draw_button(canvas, INTERACT_CENTER, "E", 1.0, _role_is_down("interact_button"))
+	_draw_button(canvas, PAUSE_CENTER, "Ⅱ", 1.0, _role_is_down("pause_button"))
+	_draw_button(canvas, SWITCH_CENTER, "L", 0.82, _role_is_down("switch_button"))
+	_draw_button(canvas, BLOCK_CENTER, "F", 0.82, block_pressed or block_just_pressed)
 	var layout := _control_layout()
 	_draw_control(canvas, layout.move[0], move_mode, "move", layout)
 	_draw_control(canvas, layout.aim[0], aim_mode, "aim", layout)
@@ -239,10 +332,19 @@ func _draw_control(canvas: CanvasItem, center: Vector2, mode: String, role: Stri
 		canvas.draw_circle(knob, knob_radius, Color(0.94, 0.90, 0.98, 0.45))
 
 
-func _draw_button(canvas: CanvasItem, center: Vector2, label: String, scale: float) -> void:
+func _role_is_down(role: String) -> bool:
+	for finger in finger_roles:
+		if finger_roles[finger] == role:
+			return true
+	return false
+
+
+func _draw_button(canvas: CanvasItem, center: Vector2, label: String, scale: float, pressed: bool = false) -> void:
 	var radius := BUTTON_RADIUS * scale
-	canvas.draw_circle(center, radius, Color(0.09, 0.07, 0.13, 0.49))
-	canvas.draw_arc(center, radius, 0.0, TAU, 32, Color(0.94, 0.90, 0.98, 0.69), maxf(1.0, 2.0 * scale))
+	var fill := Color(0.70, 0.54, 0.25, 0.76) if pressed else Color(0.09, 0.07, 0.13, 0.49)
+	var outline := Color(1.0, 0.88, 0.54, 0.96) if pressed else Color(0.94, 0.90, 0.98, 0.69)
+	canvas.draw_circle(center, radius, fill)
+	canvas.draw_arc(center, radius, 0.0, TAU, 32, outline, maxf(1.0, 2.0 * scale))
 	var font_size := maxi(1, roundi(23.0 * scale))
 	var size: Vector2 = ThemeDB.fallback_font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 	canvas.draw_string(ThemeDB.fallback_font, center - Vector2(size.x / 2.0, -size.y * 0.35), label,

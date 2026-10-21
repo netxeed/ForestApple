@@ -30,7 +30,8 @@ teléfono e instalarlo manualmente. La configuración usa una receta de
 incluida en la rama principal de esa herramienta. El empaquetado debe probarse
 en un dispositivo Android antes de darlo por listo.
 
-En el juego, usa el pad izquierdo para moverte y el derecho para disparar. El
+En el juego, usa el pad izquierdo para moverte y el derecho para orientar la
+espada de la manzana o apuntar las piedras del niño. El
 botón `E` interactúa y `Ⅱ` pausa. Toca la zona central para confirmar en los
 menús. Los controles táctiles solo se muestran con el controlador de pantalla
 Android; en computadora siguen disponibles teclado y ventana.
@@ -40,7 +41,9 @@ Android; en computadora siguen disponibles teclado y ventana.
 | Acción | Tecla |
 |---|---|
 | Moverse | W A S D |
-| Disparar | Flechas |
+| Ataque de espada (manzana) / disparar piedras (niño) | Flechas |
+| Bloquear en cualquier dirección (manzana) | F |
+| Alternar manzana/niño | L (en partida; cooldown de 15 s) |
 | Reiniciar | R |
 | Salir | Esc |
 | Menú de pausa / continuar | Esc |
@@ -49,7 +52,7 @@ Android; en computadora siguen disponibles teclado y ventana.
 | Salir | Desde el menú de pausa |
 | Avanzar un diálogo (la primera pulsación muestra la línea completa) | Espacio, Enter o Z |
 | Recoger/usar la llave o entrar al agujero tras el jefe | E |
-| (debug) Eliminar enemigos de la sala | K |
+| (debug) Eliminar enemigos de la sala | F3 |
 
 La tecla de debug se apaga con `DEBUG_KEYS = False` en `core/settings.py`.
 

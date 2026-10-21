@@ -12,7 +12,11 @@ const ACTIONS := {
 	"advance": [KEY_SPACE, KEY_ENTER, KEY_Z],  # pasar un diálogo
 	"pause": [KEY_ESCAPE],  # pausa / volver atrás
 	"interact": [KEY_E],
-	"debug_restart": [KEY_R], "debug_clear": [KEY_K],
+	"boost": [KEY_SHIFT],
+	"air_roll": [KEY_C],
+	"switch_character": [KEY_L],
+	"block": [KEY_F],
+	"debug_restart": [KEY_R], "debug_clear": [KEY_F3],
 }
 
 

@@ -31,7 +31,8 @@ func test_constantes_y_controles_de_interfaz() -> void:
 	_check_variant({
 		"interact": controls._control_at(TouchControlsScript.INTERACT_CENTER),
 		"pause": controls._control_at(TouchControlsScript.PAUSE_CENTER),
-	}, data.ui_roles, "botones excluidos del control de movimiento")
+	}, {"interact": "interact_button", "pause": "pause_button"}, "botones excluidos del control de movimiento")
+	# El Python no tiene estos roles: en Godot E y Pausa son botones propios (la rama del partido secreto los usa).
 
 
 func test_trazas_doradas_de_dedos() -> void:

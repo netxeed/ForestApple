@@ -8,8 +8,8 @@ const CursorScript = preload("res://scripts/states/cursor.gd")
 const GAME_OVER_OPTIONS := ["Reintentar", "Salir al menú"]
 
 # Filas (para tocarlas con el dedo)
-const FIRST_Y := S.SCREEN_H / 2 + 26  # 170
-const SPACING := 32
+const FIRST_Y := S.SCREEN_H / 2.0 + 14.0  # 158
+const SPACING := 36.0
 
 var cursor
 
@@ -32,7 +32,7 @@ func handle_key(game, event) -> void:
 func handle_touch(game, action: String, position) -> void:
 	if action != "tap":
 		return
-	var row = CursorScript.row_at(position, FIRST_Y, SPACING, GAME_OVER_OPTIONS.size(), 16.0, S.SCREEN_W / 2.0, S.SCREEN_W * 0.44)
+	var row = CursorScript.row_at(position, FIRST_Y, SPACING, GAME_OVER_OPTIONS.size(), 18.0, S.SCREEN_W / 2.0, S.SCREEN_W * 0.44)
 	if row != null:
 		cursor.index = row
 		choose(game)

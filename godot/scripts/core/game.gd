@@ -14,8 +14,10 @@ const PauseStateScript = preload("res://scripts/states/pause_state.gd")
 const GameOverStateScript = preload("res://scripts/states/gameover_state.gd")
 const DialogueStateScript = preload("res://scripts/states/dialogue_state.gd")
 const PlayStateScript = preload("res://scripts/states/play_state.gd")
+const SideswipeStateScript = preload("res://scripts/states/sideswipe_state.gd")
 const Act1StateScript = preload("res://scripts/states/act1_state.gd")
 const PlayerScript = preload("res://scripts/entities/player.gd")
+const KidScript = preload("res://scripts/entities/kid.gd")
 const EnemyTypesScript = preload("res://scripts/entities/enemy_types.gd")
 const TouchControlsScript = preload("res://scripts/core/touch_controls.gd")
 const FloorScript = preload("res://scripts/rooms/floor.gd")
@@ -34,6 +36,7 @@ var states
 var menu_view
 var hud_view
 var touch_controls
+var touch_consumed: Dictionary = {}
 var font: Font = ThemeDB.fallback_font
 ## Dónde se guardan las preferencias (los tests lo cambian para no tocar las reales).
 var prefs_path: String = Preferences.DEFAULT_PATH
@@ -41,6 +44,9 @@ var prefs_path: String = Preferences.DEFAULT_PATH
 var dialogues: Dictionary = {}
 var floor
 var player
+var apple
+var kid
+var character_switch_cooldown := 0.0
 var player_shots: Array = []
 var banner
 var hole_dialogue_shown := false
@@ -133,6 +139,11 @@ func start_act1() -> void:
 	states.switch_to(Act1StateScript.new(self))
 
 
+## Minijuego secreto disponible solo en dispositivos móviles.
+func start_sideswipe() -> void:
+	states.switch_to(SideswipeStateScript.new())
+
+
 ## El Acto 1 terminó: sigue el Acto 2 (el juego de salas).
 func finish_act1() -> void:
 	in_act1 = false
@@ -140,15 +151,31 @@ func finish_act1() -> void:
 
 
 func _reset_run() -> bool:
+	touch_controls.sideswipe_mode = false
+	touch_controls.clear_inputs()
 	var errors: Array = []
 	floor = FloorScript.load_floor("floor1", errors, Callable(self, "_make_enemy"))
 	if floor == null:
 		push_error("No se pudo cargar el piso:\n- " + "\n- ".join(errors))
 		return false
 	player_shots = []
-	player = PlayerScript.new(Vector2(S.SCREEN_W / 2.0, S.SCREEN_H / 2.0), player_shots)
+	var start := Vector2(S.SCREEN_W / 2.0, S.SCREEN_H / 2.0)
+	apple = PlayerScript.new(start, player_shots)
+	kid = KidScript.new(start, player_shots)
+	player = apple
+	character_switch_cooldown = 0.0
 	banner = null
 	hole_dialogue_shown = false
+	return true
+
+
+func switch_character() -> bool:
+	if player == null or character_switch_cooldown > 0.0:
+		return false
+	var next = kid if player == apple else apple
+	player.copy_runtime_to(next)
+	player = next
+	character_switch_cooldown = 15.0
 	return true
 
 
@@ -162,10 +189,12 @@ var room:
 
 
 func open_pause() -> void:
+	touch_controls.clear_inputs()
 	states.push(PauseStateScript.new())
 
 
 func open_game_over() -> void:
+	touch_controls.clear_inputs()
 	states.push(GameOverStateScript.new())
 
 
@@ -175,6 +204,8 @@ func open_options() -> void:
 
 func return_to_menu() -> void:
 	in_act1 = false
+	touch_controls.sideswipe_mode = false
+	touch_controls.clear_inputs()
 	states.switch_to(MenuStateScript.new(self))
 
 
@@ -260,18 +291,19 @@ func option_entries() -> Array:
 	entries.append(["fps", "FPS: %d  (izq./der. o Enter)" % S.FPS])
 	entries.append(["debug", "Modo debug: %s" % ("Sí" if S.DEBUG_KEYS else "No")])
 	if is_mobile:
-		entries.append(["move", "Movimiento: %s  (izq./der. o Enter)" % touch_controls.move_mode.capitalize()])
-		entries.append(["aim", "Disparo: %s  (izq./der. o Enter)" % touch_controls.aim_mode.capitalize()])
-		entries.append(["dynamic", "Joystick dinámico: %s  (Enter)" % ("Sí" if touch_controls.dynamic_base_enabled else "No")])
-		entries.append(["travel", "Recorrido de joystick: %s  (izq./der.)" % touch_controls.base_travel_label])
-		entries.append(["size", "Tamaño joystick: %s  (izq./der.)" % touch_controls.joystick_size_label])
+		entries.append(["sideswipe", "Partido secreto · Manzana vs. Niño"])
+		entries.append(["move", "Movimiento · %s" % touch_controls.move_mode.capitalize()])
+		entries.append(["aim", "Disparo · %s" % touch_controls.aim_mode.capitalize()])
+		entries.append(["dynamic", "Joystick dinámico · %s" % ("Sí" if touch_controls.dynamic_base_enabled else "No")])
+		entries.append(["travel", "Recorrido · %s" % touch_controls.base_travel_label])
+		entries.append(["size", "Tamaño del joystick · %s" % touch_controls.joystick_size_label])
 	entries.append(["back", "Volver"])
 	return entries
 
 
 func option_row_y(index: int) -> float:
 	if is_mobile:
-		return 120.0 + index * 20.0
+		return 126.0 + index * 16.0
 	return 132.0 + index * 30.0
 
 
@@ -304,15 +336,23 @@ func _input(event: InputEvent) -> void:
 	elif screen_touch != null:
 		var position := (make_input_local(screen_touch) as InputEventScreenTouch).position
 		if screen_touch.pressed:
+			touch_consumed.erase(screen_touch.index)
 			touch_controls.handle_down(screen_touch.index, position)
 			states.handle_pointer(position)
 			# Android puede no entregar el evento de soltado tras una pulsación dentro de
 			# la pantalla. Los elementos del menú se activan al tocar, como botones nativos.
 			if states.top() is MenuStateScript and MenuStateScript._row_at(position) != null:
+				touch_consumed[screen_touch.index] = true
+				states.handle_touch("tap", position)
+			elif states.top() is OptionsStateScript and OptionsStateScript._row_at(self, position) != null:
+				# En algunos Android no llega el evento de soltar; ejecutar la fila al tocarla.
+				touch_consumed[screen_touch.index] = true
 				states.handle_touch("tap", position)
 		else:
+			var consumed := touch_consumed.has(screen_touch.index)
+			touch_consumed.erase(screen_touch.index)
 			touch_controls.handle_up(screen_touch.index, position)
-			if not states.handle_release(position, "finger"):
+			if not consumed and not states.handle_release(position, "finger"):
 				var action = touch_controls.release_action(position)
 				if action != null:
 					states.handle_touch(action, touch_controls.current_tap_position())
@@ -323,16 +363,25 @@ func _input(event: InputEvent) -> void:
 	elif button != null and button.button_index == MOUSE_BUTTON_LEFT:
 		var position := (make_input_local(button) as InputEventMouseButton).position
 		if button.pressed:
+			touch_consumed.erase(MOUSE_TOUCH_ID)
 			if is_mobile:
 				touch_controls.handle_down(MOUSE_TOUCH_ID, position)
 			states.handle_pointer(position)
 			# Algunos dispositivos/controladores entregan el toque como botón izquierdo.
 			# Activar aquí también evita depender del evento release en Android.
 			if states.top() is MenuStateScript and MenuStateScript._row_at(position) != null:
+				touch_consumed[MOUSE_TOUCH_ID] = true
+				states.handle_touch("tap", position)
+			elif is_mobile and states.top() is OptionsStateScript and OptionsStateScript._row_at(self, position) != null:
+				touch_consumed[MOUSE_TOUCH_ID] = true
 				states.handle_touch("tap", position)
 		else:
+			var consumed := touch_consumed.has(MOUSE_TOUCH_ID)
+			touch_consumed.erase(MOUSE_TOUCH_ID)
 			if is_mobile:
 				touch_controls.handle_up(MOUSE_TOUCH_ID, position)
+			if consumed:
+				return
 			if not states.handle_release(position, "mouse"):
 				var action = touch_controls.release_action(position)
 				if action != null:

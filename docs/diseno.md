@@ -136,7 +136,9 @@ jugador a una de ellas (y a una fruta de otra especie) y siembra un tema.
 ## 4. Mecánicas
 
 ### Ya decidido
-- Controles: movimiento con WASD, disparo con flechas, una sala a la vez.
+- Controles: movimiento con WASD y combate en salas.
+- La manzana ataca cuerpo a cuerpo con las flechas: cada pulsación hace un barrido en esa dirección que daña y empuja a los enemigos. Con `F` bloquea proyectiles desde cualquier dirección y se mueve más lento; la banana todavía puede dañarla por contacto mientras bloquea. La banana se lanza hacia ella y puede ser frenada si el barrido conecta durante la carga.
+- En el combate del Acto 2 se puede alternar entre la manzana y el niño con `L`; cada cambio tiene 15 segundos de enfriamiento. El niño usa por ahora un cuadrado gris y ataca con piedras de tirachinas apuntadas con las flechas.
 - El niño como apoyo: curación o escudo.
 - Algunas frutas podrán volverse **ítems acompañantes** (como en Isaac) que
   disparan o curan. *(Futuro)*

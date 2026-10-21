@@ -257,14 +257,16 @@ de la rebanada, para no depender del formato de `project.godot`):
 | Acción | Teclas (igual que Python) | Uso |
 |---|---|---|
 | `move_up/down/left/right` | W/A/S/D | Mover (solo en partida) |
-| `aim_up/down/left/right` | Flechas | Disparar (solo en partida) |
+| `aim_up/down/left/right` | Flechas | Ataque de espada con la manzana; apuntar/disparar con el niño |
 | `menu_up`, `menu_down` | Flechas arriba/abajo y W/S | Cursor de los menús |
 | `menu_left`, `menu_right` | Flechas izq./der. y A/D | Cambiar opciones |
 | `confirm` | Enter, Espacio | Elegir en un menú |
 | `advance` | Espacio, Enter, Z | Pasar un diálogo |
 | `pause` | Esc | Pausa / volver atrás |
 | `interact` | E | Recoger llave, usar llave, agujero |
-| `debug_restart`, `debug_clear` | R, K | Solo con `DEBUG_KEYS` |
+| `block` | F | Bloqueo de la manzana |
+| `switch_character` | L | Alternar manzana/niño; cooldown de 15 s |
+| `debug_restart`, `debug_clear` | R, F3 | Solo con `DEBUG_KEYS` |
 
 Trampa: en Python **las flechas** disparan en partida *y* mueven el cursor en menús, y **W/A/S/D**
 mueven al jugador *y* el cursor. No es un problema porque lo decide el estado que está arriba de la
@@ -309,7 +311,7 @@ múltiplos enteros (2×, 3×…), dejando franjas negras más grandes. Este proy
 entero para priorizar los píxeles nítidos.
 
 **`core/touch_controls.py` → `scripts/core/touch_controls.gd`** (294 líneas; la parte más ancha)
-Controles para Android: flechas o joystick virtual para mover y disparar, botón de interactuar
+Controles para Android: flechas o joystick virtual para mover; el stick derecho orienta a la manzana y apunta las piedras del niño; botón de interactuar
 (`E`, centro `(340, 260)`, radio 19) y de pausa (centro `(240, 44)`, radio 19), con zona muerta de 9 px,
 base dinámica y tamaños configurables. `Game` recibe `InputEventScreenTouch` y `InputEventScreenDrag`
 (con el índice del dedo en lugar de `finger`) y delega el cálculo a una clase `RefCounted`. Conservar:
