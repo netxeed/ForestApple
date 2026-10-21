@@ -4,6 +4,7 @@ extends "res://scripts/states/state.gd"
 const S = preload("res://scripts/core/settings.gd")
 const Controls = preload("res://scripts/core/controls.gd")
 const CursorScript = preload("res://scripts/states/cursor.gd")
+const ControlsIntroStateScript = preload("res://scripts/states/controls_intro_state.gd")
 
 const MENU_OPTIONS := ["Jugar", "Opciones", "Salir"]
 
@@ -41,6 +42,8 @@ func handle_pointer(_game, position) -> void:
 
 func handle_touch(game, action: String, position) -> void:
 	if action == "tap":
+		if game.has_method("register_creator_name_click") and game.register_creator_name_click(position):
+			return
 		cursor.index = _row_at(position)
 		if cursor.index != null:
 			choose(game)
@@ -50,7 +53,7 @@ func choose(game) -> void:
 	if cursor.index == null:
 		cursor.index = 0
 	if cursor.index == 0:
-		game.start_run()
+		game.states.push(ControlsIntroStateScript.new(Callable(game, "start_run")))
 	elif cursor.index == 1:
 		game.open_options()
 	else:

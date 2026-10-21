@@ -16,13 +16,23 @@ const MELEE_RANGE := 39.0
 const MELEE_KNOCKBACK := 42.0
 const BLOCK_SPEED_FACTOR := 0.42
 const FACING_DOT_LIMIT := 0.55
+const HEALTH_REGEN_DELAY := 6.0
+const HEALTH_REGEN_INTERVAL := 1.0
+const DASH_COOLDOWN := 3.0
+const DASH_DURATION := 0.14
+const DASH_SPEED := 360.0
+const DASH_SPARKLE_INTERVAL := 0.035
+const DASH_SPARKLE_LIFETIME := 0.22
 
 var character := "manzana"
 var pos: Vector2
 var velocity := Vector2.ZERO
 var rect: Rect2
+var collision_size := Vector2i(SIZE, SIZE)
 var max_hp := S.PLAYER_HP
 var hp := S.PLAYER_HP
+var _time_since_active := 0.0
+var _health_regen_progress := 0.0
 var speed := S.PLAYER_SPEED
 var acceleration := S.PLAYER_SPEED * 8.0
 var friction := S.PLAYER_SPEED * 8.0
@@ -42,6 +52,12 @@ var blocking := false
 var _melee_time := 0.0
 var _melee_cooldown := 0.0
 var _melee_hit_enemies: Dictionary = {}
+var dash_cooldown := 0.0
+var _dash_time := 0.0
+var _dash_direction := Vector2.ZERO
+var _dash_sparkle_timer := 0.0
+var _dash_sparkle_index := 0
+var _dash_sparkles: Array[Dictionary] = []
 
 const WALK_FRAME_TIME := 0.14
 
@@ -49,7 +65,7 @@ const WALK_FRAME_TIME := 0.14
 func _init(start: Vector2, shots_group: Array = []) -> void:
 	pos = start
 	shots = shots_group
-	rect = Geo.rect_from_center(pos, Vector2i(SIZE, SIZE))
+	rect = Geo.rect_from_center(pos, collision_size)
 
 
 var alive: bool:
@@ -60,7 +76,15 @@ var alive: bool:
 func teleport(center: Vector2) -> void:
 	pos = center
 	velocity = Vector2.ZERO
-	rect = Geo.rect_from_center(pos, Vector2i(SIZE, SIZE))
+	rect = Geo.rect_from_center(pos, collision_size)
+
+
+func can_fit_at(center: Vector2, walls: Array) -> bool:
+	var candidate := Geo.rect_from_center(center, collision_size)
+	for wall in walls:
+		if Geo.overlaps(candidate, wall):
+			return false
+	return true
 
 
 func take_damage(amount: int) -> void:
@@ -69,6 +93,24 @@ func take_damage(amount: int) -> void:
 	hp = maxi(0, hp - amount)
 	_invuln = S.PLAYER_INVULN_TIME
 	_hit_flash_time = HIT_FLASH_TIME
+
+
+## Recupera 1 punto de vida por segundo tras seis segundos sin usar este personaje.
+func update_health_regeneration(dt: float, is_active: bool) -> void:
+	if is_active:
+		_time_since_active = 0.0
+		return
+	if hp >= max_hp:
+		_time_since_active = 0.0
+		_health_regen_progress = 0.0
+		return
+	_time_since_active += dt
+	if _time_since_active < HEALTH_REGEN_DELAY:
+		return
+	_health_regen_progress += dt
+	while _health_regen_progress >= HEALTH_REGEN_INTERVAL and hp < max_hp:
+		_health_regen_progress -= HEALTH_REGEN_INTERVAL
+		hp += 1
 
 
 func has_trinket(trinket_id: String) -> bool:
@@ -89,9 +131,7 @@ func add_trinket(trinket_id: String) -> void:
 func copy_runtime_to(other) -> void:
 	other.pos = pos
 	other.velocity = velocity
-	other.rect = rect
-	other.hp = hp
-	other.max_hp = max_hp
+	other.rect = Geo.rect_from_center(pos, other.collision_size)
 	other.speed = speed
 	other.acceleration = acceleration
 	other.friction = friction
@@ -107,6 +147,9 @@ func copy_runtime_to(other) -> void:
 	other._walk_frame = _walk_frame
 	other._walk_elapsed = _walk_elapsed
 	other._hit_flash_time = _hit_flash_time
+	other.dash_cooldown = dash_cooldown
+	other._dash_time = _dash_time
+	other._dash_direction = _dash_direction
 
 
 func consume_trinket(trinket_id: String) -> bool:
@@ -120,7 +163,7 @@ func consume_trinket(trinket_id: String) -> bool:
 
 ## `move_input` y `aim_input` permiten inyectar el estado del teclado en los tests dorados.
 ## En la partida se leen las mismas acciones creadas por Controls.
-func update(dt: float, walls: Array, touch_move: Variant = null, touch_aim: Variant = null, move_input: Variant = null, aim_input: Variant = null, melee_direction: Vector2 = Vector2.ZERO, block_pressed: bool = false) -> void:
+func update(dt: float, walls: Array, touch_move: Variant = null, touch_aim: Variant = null, move_input: Variant = null, aim_input: Variant = null, melee_direction: Vector2 = Vector2.ZERO, block_pressed: bool = false, dash_pressed: bool = false) -> void:
 	_hit_flash_time = maxf(0.0, _hit_flash_time - dt)
 	_melee_time = maxf(0.0, _melee_time - dt)
 	_melee_cooldown = maxf(0.0, _melee_cooldown - dt)
@@ -133,7 +176,19 @@ func update(dt: float, walls: Array, touch_move: Variant = null, touch_aim: Vari
 		move += touch_move
 	if move.length_squared() > 1.0:
 		move = move.normalized()
-	if move.length_squared() > 0.0:
+	dash_cooldown = maxf(0.0, dash_cooldown - dt)
+	if dash_pressed and dash_cooldown <= 0.0 and has_trinket("dash"):
+		_dash_direction = move.normalized() if move.length_squared() > 0.0 else _facing_vector()
+		_dash_time = DASH_DURATION
+		dash_cooldown = DASH_COOLDOWN
+		_dash_sparkle_timer = 0.0
+	var dashing := _dash_time > 0.0
+	var dash_step := minf(dt, _dash_time) if dashing else 0.0
+	if dashing:
+		_dash_time = maxf(0.0, _dash_time - dt)
+		velocity = _dash_direction * DASH_SPEED
+		facing = _direction(_dash_direction)
+	elif move.length_squared() > 0.0:
 		var movement_factor := BLOCK_SPEED_FACTOR if blocking else 1.0
 		velocity += move.normalized() * acceleration * movement_factor * dt
 		facing = _direction(move)
@@ -144,9 +199,20 @@ func update(dt: float, walls: Array, touch_move: Variant = null, touch_aim: Vari
 		elif current_speed > 0.0:
 			velocity = velocity.normalized() * (current_speed - friction * dt)
 	var speed_limit := speed * (BLOCK_SPEED_FACTOR if blocking else 1.0)
-	if velocity.length_squared() > speed_limit * speed_limit:
+	if not dashing and velocity.length_squared() > speed_limit * speed_limit:
 		velocity = velocity.normalized() * speed_limit
-	_move(velocity * dt, walls)
+	_move(velocity * (dash_step if dashing else dt), walls)
+	if dashing:
+		if absf(velocity.x) < 0.001:
+			_dash_direction.x = 0.0
+		if absf(velocity.y) < 0.001:
+			_dash_direction.y = 0.0
+		if _dash_direction.is_zero_approx():
+			_dash_time = 0.0
+			velocity = Vector2.ZERO
+		elif _dash_time <= 0.0:
+			velocity = _dash_direction * speed
+	_update_dash_sparkles(dt, dashing)
 	if velocity.length_squared() > 0.0:
 		_walk_elapsed += dt
 		while _walk_elapsed >= WALK_FRAME_TIME:
@@ -220,7 +286,7 @@ func _move(delta: Vector2, walls: Array) -> void:
 				rect.position.x = wall.position.x - rect.size.x
 			elif delta.x < 0.0:
 				rect.position.x = wall.end.x
-			pos.x = rect.position.x + float(SIZE >> 1)
+			pos.x = rect.position.x + float(collision_size.x >> 1)
 			velocity.x = 0.0
 
 	pos.y += delta.y
@@ -231,15 +297,15 @@ func _move(delta: Vector2, walls: Array) -> void:
 				rect.position.y = wall.position.y - rect.size.y
 			elif delta.y < 0.0:
 				rect.position.y = wall.end.y
-			pos.y = rect.position.y + float(SIZE >> 1)
+			pos.y = rect.position.y + float(collision_size.y >> 1)
 			velocity.y = 0.0
 
 
 func _set_rect_center_axis(axis: int) -> void:
 	if axis == 0:
-		rect.position.x = Geo.round_py(pos.x) - (SIZE >> 1)
+		rect.position.x = Geo.round_py(pos.x) - (collision_size.x >> 1)
 	else:
-		rect.position.y = Geo.round_py(pos.y) - (SIZE >> 1)
+		rect.position.y = Geo.round_py(pos.y) - (collision_size.y >> 1)
 
 
 func _shoot(aim: Vector2) -> void:
@@ -291,6 +357,48 @@ func _facing_vector() -> Vector2:
 		"s": return Vector2.DOWN
 		"o": return Vector2.LEFT
 		_: return Vector2.RIGHT
+
+
+func _update_dash_sparkles(dt: float, dashing: bool) -> void:
+	for index in range(_dash_sparkles.size() - 1, -1, -1):
+		_dash_sparkles[index]["life"] = float(_dash_sparkles[index]["life"]) - dt
+		if float(_dash_sparkles[index]["life"]) <= 0.0:
+			_dash_sparkles.remove_at(index)
+	if not dashing:
+		_dash_sparkle_timer = 0.0
+		return
+	_dash_sparkle_timer -= dt
+	var side := Vector2(-_dash_direction.y, _dash_direction.x)
+	while _dash_sparkle_timer <= 0.0:
+		var color := Color8(125, 224, 255) if _dash_sparkle_index % 2 == 0 else Color8(255, 232, 157)
+		var offset := side * (3.0 if _dash_sparkle_index % 2 == 0 else -3.0)
+		_dash_sparkles.append({
+			"position": pos - _dash_direction * 10.0 + offset,
+			"life": DASH_SPARKLE_LIFETIME,
+			"max_life": DASH_SPARKLE_LIFETIME,
+			"size": 2.0 + float(_dash_sparkle_index % 3) * 0.6,
+			"color": color,
+		})
+		_dash_sparkle_index += 1
+		_dash_sparkle_timer += DASH_SPARKLE_INTERVAL
+
+
+func draw_dash_effect(canvas: CanvasItem) -> void:
+	for sparkle in _dash_sparkles:
+		var life_ratio := clampf(float(sparkle["life"]) / float(sparkle["max_life"]), 0.0, 1.0)
+		var center: Vector2 = sparkle["position"]
+		var color: Color = sparkle["color"]
+		var radius: float = float(sparkle["size"]) * (0.45 + 0.55 * life_ratio)
+		var glow := color
+		glow.a = 0.16 * life_ratio
+		canvas.draw_circle(center, radius * 2.0, glow)
+		var glint := Color(color.r, color.g, color.b, 0.9 * life_ratio)
+		var diamond := PackedVector2Array([
+			center + Vector2(0, -radius), center + Vector2(radius * 0.55, 0),
+			center + Vector2(0, radius), center + Vector2(-radius * 0.55, 0),
+		])
+		canvas.draw_colored_polygon(diamond, glint)
+		canvas.draw_line(center - Vector2(radius * 1.7, 0), center + Vector2(radius * 1.7, 0), glint, 1.0)
 
 
 func _draw_block_guard(canvas: CanvasItem) -> void:

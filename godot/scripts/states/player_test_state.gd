@@ -36,6 +36,9 @@ func _init() -> void:
 func handle_key(game, event) -> void:
 	if event.is_action_pressed("pause"):
 		game.open_pause()
+	elif S.DEBUG_KEYS and event.is_action_pressed("debug_clear"):
+		for enemy in enemies.duplicate():
+			enemy.kill()
 	elif S.DEBUG_KEYS and event.is_action_pressed("debug_restart"):
 		game.start_run()
 

@@ -55,6 +55,8 @@ var character_switch_cooldown := 0.0
 var player_shots: Array = []
 var banner
 var hole_dialogue_shown := false
+var creator_name_clicks := 0
+var creator_easter_egg := false
 ## Verdadero mientras se juega el Acto 1: «Reiniciar» del menú de pausa lo reinicia a él.
 var in_act1 := false
 
@@ -209,6 +211,8 @@ func switch_character() -> bool:
 	if player == null or character_switch_cooldown > 0.0:
 		return false
 	var next = kid if player == apple else apple
+	if room != null and not next.can_fit_at(player.pos, room.solids()):
+		return false
 	player.copy_runtime_to(next)
 	player = next
 	character_switch_cooldown = 15.0
@@ -265,6 +269,16 @@ func quit() -> void:
 ## Opción resaltada al abrir un menú: ninguna en táctil, la primera con teclado.
 func idle_selection():
 	return null if is_mobile else 0
+
+
+func register_creator_name_click(position: Variant) -> bool:
+	if creator_easter_egg or not (position is Vector2) or not menu_view.creator_names_rect(self).has_point(position):
+		return false
+	creator_name_clicks += 1
+	if creator_name_clicks >= 17:
+		creator_easter_egg = true
+	queue_redraw()
+	return true
 
 
 func _load_dialogues() -> Dictionary:

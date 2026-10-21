@@ -54,6 +54,13 @@ func take_damage(amount: float) -> void:
 	super.take_damage(amount)
 
 
+func kill() -> void:
+	var was_alive := alive
+	super.kill()
+	if was_alive and room != null and room.has_method("drop_trinket"):
+		room.drop_trinket("dash", pos)
+
+
 func update_behavior(dt: float, player, walls: Array) -> void:
 	grace = maxf(0.0, grace - dt)
 	if phase == 0:
