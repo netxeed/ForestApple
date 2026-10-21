@@ -197,6 +197,20 @@ Entre fases se frena la pelea y habla (diálogo, hoy provisorio en
 `data/dialogues.json`). Al morir dice sus últimas palabras y recién después
 aparece el aviso de piso completado. Los números son provisorios.
 
+### Piso 2 y la uva (jefa) [Implementada, sin balancear]
+
+Se baja al piso 2 por el agujero que deja la sandía (diálogo `hole_piso2`). Por ahora reusa las
+mismas salas normales que el piso 1 (`data/floor2.json`); las salas y enemigos nuevos del piso 2
+los diseña el equipo.
+
+La **uva** (`entities/grape.gd`) es una jefa que se divide:
+- Lanza **explosiones de daño en área** (`entities/explosion.gd`): un círculo que se avisa y crece
+  durante unos instantes, estalla una sola vez y se desvanece. La primera cae donde está el
+  jugador y las demás en un anillo alrededor, para obligarlo a moverse.
+- Al morir **se divide en dos** uvas más chicas, rápidas y con explosiones menores (tres
+  generaciones: grande, mediana, chica) y deja una explosión en el punto de la división.
+- La sala se despeja cuando mueren todas. Números provisorios en `data/enemies.json` (`grape`).
+
 ## 6. Estado del demo
 
 El primer demo se concentra en completar el piso 1 del acto 2: ocho salas,

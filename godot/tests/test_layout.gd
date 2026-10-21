@@ -29,7 +29,11 @@ func test_constantes() -> void:
 		check_eq(LayoutScript.DOOR_TILE[direction], _vec(c["door_tile"][direction]), "baldosa de la puerta " + direction)
 		check_eq(LayoutScript.APPROACH_TILE[direction], _vec(c["approach_tile"][direction]), "baldosa de entrada " + direction)
 	check_eq(LayoutScript.DIRECTIONS.size(), c["directions"].size(), "cantidad de direcciones")
-	check_eq(LayoutScript.ENEMY_LETTERS, c["enemy_letters"], "letras de enemigos")
+	# Las letras del Python se conservan; las de enemigos nuevos de Godot (uva del piso 2) se suman.
+	var godot_only := {"G": "grape"}
+	var expected_letters: Dictionary = c["enemy_letters"].duplicate()
+	expected_letters.merge(godot_only)
+	check_eq(LayoutScript.ENEMY_LETTERS, expected_letters, "letras de enemigos")
 	for direction in LayoutScript.OPPOSITE:
 		check_eq(LayoutScript.DIRECTIONS[direction], -LayoutScript.DIRECTIONS[LayoutScript.OPPOSITE[direction]], "opuesta de " + direction)
 

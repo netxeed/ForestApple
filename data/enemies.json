@@ -81,5 +81,26 @@
     "juice_interval": 0.6,
     "juice_lifetime": 6.0,
     "phase3_reinforcements": ["banana", "banana", "lemon"]
+  },
+  "grape": {
+    "_nota": "Jefe del piso 2: una uva que se divide en dos al morir y lanza explosiones de daño en área. Números PROVISORIOS: ajustar jugando. Tiempos en segundos, velocidades en px/s, radios en px.",
+    "hp": 50,
+    "speed": 28,
+    "contact_damage": 1,
+    "size": 34,
+    "color": [132, 70, 168],
+    "keep_distance": 70,
+    "walk_time": 1.2,
+    "explosion_damage": 1,
+    "explosion_linger": 0.25,
+    "grace_after_split": 0.6,
+    "split_children": 2,
+    "split_offset": 16,
+    "death_explosion": true,
+    "generations": [
+      {"hp": 50, "size": 34, "speed": 28, "explosions": 3, "radius": 40, "telegraph": 1.0, "cooldown": 2.0, "color": [132, 70, 168]},
+      {"hp": 20, "size": 26, "speed": 42, "explosions": 2, "radius": 32, "telegraph": 0.8, "cooldown": 1.6, "color": [150, 88, 184]},
+      {"hp": 8, "size": 18, "speed": 60, "explosions": 1, "radius": 24, "telegraph": 0.6, "cooldown": 1.2, "color": [176, 120, 204]}
+    ]
   }
 }

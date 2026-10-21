@@ -1570,6 +1570,35 @@
    ],
    "speaker": ""
   },
+  "hole_piso2": {
+   "lines": [
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "..."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "La sandía ya no es más que una cáscara."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "Del agujero sube un olor dulce, casi a vino."
+    },
+    {
+     "pauses": [],
+     "speaker": "",
+     "speed": 45.0,
+     "text": "La manzana baja."
+    }
+   ],
+   "speaker": ""
+  },
   "sandia_death": {
    "lines": [
     {
@@ -5598,6 +5627,46 @@
     [
      0,
      11
+    ]
+   ]
+  },
+  {
+   "key": "hole_piso2",
+   "line": 0,
+   "spans": [
+    [
+     0,
+     3
+    ]
+   ]
+  },
+  {
+   "key": "hole_piso2",
+   "line": 1,
+   "spans": [
+    [
+     0,
+     39
+    ]
+   ]
+  },
+  {
+   "key": "hole_piso2",
+   "line": 2,
+   "spans": [
+    [
+     0,
+     44
+    ]
+   ]
+  },
+  {
+   "key": "hole_piso2",
+   "line": 3,
+   "spans": [
+    [
+     0,
+     16
     ]
    ]
   },

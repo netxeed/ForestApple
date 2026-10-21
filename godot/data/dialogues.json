@@ -728,5 +728,14 @@
         "speaker": "Manzana"
       }
     ]
+  },
+  "hole_piso2": {
+    "speaker": "",
+    "lines": [
+      "...",
+      "La sandía ya no es más que una cáscara.",
+      "Del agujero sube un olor dulce, casi a vino.",
+      "La manzana baja."
+    ]
   }
 }

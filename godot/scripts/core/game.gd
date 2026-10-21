@@ -3,6 +3,10 @@ extends Node2D
 ## dibuja el estado de arriba y reparte las teclas y los toques. Es el `ctx` de todos los estados.
 
 const S = preload("res://scripts/core/settings.gd")
+
+## Pisos del acto 2, en orden; cada uno es data/<nombre>.json.
+const FLOORS := ["floor1", "floor2"]
+const FIRST_FLOOR := "floor1"
 const Controls = preload("res://scripts/core/controls.gd")
 const Preferences = preload("res://scripts/core/preferences.gd")
 const DataPaths = preload("res://scripts/core/data_paths.gd")
@@ -43,6 +47,7 @@ var prefs_path: String = Preferences.DEFAULT_PATH
 ## Diálogos por clave. Si está vacío se leen de data/dialogues.json la primera vez que hacen falta.
 var dialogues: Dictionary = {}
 var floor
+var floor_name := "floor1"
 var player
 var apple
 var kid
@@ -154,7 +159,8 @@ func _reset_run() -> bool:
 	touch_controls.sideswipe_mode = false
 	touch_controls.clear_inputs()
 	var errors: Array = []
-	floor = FloorScript.load_floor("floor1", errors, Callable(self, "_make_enemy"))
+	floor_name = FIRST_FLOOR
+	floor = FloorScript.load_floor(floor_name, errors, Callable(self, "_make_enemy"))
 	if floor == null:
 		push_error("No se pudo cargar el piso:\n- " + "\n- ".join(errors))
 		return false
@@ -167,6 +173,36 @@ func _reset_run() -> bool:
 	banner = null
 	hole_dialogue_shown = false
 	return true
+
+
+## Piso que sigue al actual ("" si era el último).
+func next_floor_name() -> String:
+	var index := FLOORS.find(floor_name)
+	return FLOORS[index + 1] if index >= 0 and index + 1 < FLOORS.size() else ""
+
+
+## Baja por el agujero del jefe: carga el piso siguiente conservando a la manzana (vida, ítems).
+## Si no hay otro piso, vuelve al menú como antes.
+func descend() -> void:
+	var next_name := next_floor_name()
+	if next_name == "":
+		return_to_menu()
+		return
+	var errors: Array = []
+	var next_floor = FloorScript.load_floor(next_name, errors, Callable(self, "_make_enemy"))
+	if next_floor == null:
+		push_error("No se pudo cargar el piso:\n- " + "\n- ".join(errors))
+		return_to_menu()
+		return
+	floor_name = next_name
+	floor = next_floor
+	player_shots.clear()
+	var start := Vector2(S.SCREEN_W / 2.0, S.SCREEN_H / 2.0)
+	for character in [apple, kid]:
+		character.pos = start
+		character.rect.position = start - character.rect.size / 2.0
+	banner = [floor.layout.name, S.BANNER_TIME]
+	hole_dialogue_shown = false
 
 
 func switch_character() -> bool:

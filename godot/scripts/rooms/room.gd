@@ -186,7 +186,12 @@ func update(dt: float, player) -> void:
 				player.take_damage(shot.damage)
 			shot.kill()
 	for puddle in acid_puddles:
-		if puddle.get("alive") == true and puddle.rect.intersects(player.rect):
+		if puddle.get("alive") != true:
+			continue
+		# Las explosiones calculan su propio área circular y golpean una sola vez.
+		var touched: bool = puddle.hits(player.rect) if puddle.has_method("hits") \
+			else puddle.rect.intersects(player.rect)
+		if touched:
 			player.take_damage(puddle.damage)
 	_prune(enemies)
 	_prune(enemy_shots)
