@@ -1,28 +1,29 @@
+## Naranja aliada del Acto 1; configura su identidad y comportamiento como personaje no hostil.
 extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Naranja estacionaria que dispara tres proyectiles teledirigidos y capaces de rodear obstáculos.
 
-const HomingSeed = preload("res://scripts/entities/homing_seed.gd") # Define un dato, constante o propiedad usada por el script.
-const S = preload("res://scripts/core/settings.gd") # Define un dato, constante o propiedad usada por el script.
+const HomingSeed = preload("res://scripts/entities/homing_seed.gd")
+const S = preload("res://scripts/core/settings.gd")
 
-var _cooldown := 0.0 # Define un dato, constante o propiedad usada por el script.
-
-
-func _init(start: Vector2, shots: Array) -> void: # Declara una función y el punto de entrada de esta operación.
-	super("orange", start, shots) # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-	_cooldown = float(stats.attack_interval) # Calcula y asigna el resultado al estado o dato indicado.
+var _cooldown := 0.0
 
 
-func update_behavior(dt: float, player, walls: Array) -> void: # Declara una función y el punto de entrada de esta operación.
-	_cooldown -= dt # Calcula y asigna el resultado al estado o dato indicado.
-	if _cooldown > 0.0: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		return # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-	_cooldown = float(stats.attack_interval) # Calcula y asigna el resultado al estado o dato indicado.
-	var target: Vector2 = player.rect.get_center() # Define un dato, constante o propiedad usada por el script.
-	for index in range(3): # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		var angle := TAU * float(index) / 3.0 # Define un dato, constante o propiedad usada por el script.
-		var direction := Vector2.RIGHT.rotated(angle) # Define un dato, constante o propiedad usada por el script.
-		var shot = HomingSeed.new(rect.get_center(), direction, player, walls, # Define un dato, constante o propiedad usada por el script.
-			float(stats.projectile_start_speed), float(stats.projectile_acceleration), # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-			float(stats.projectile_max_speed), int(stats.shot_damage)) # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-		shot.color = Color8(255, 186, 64) if index % 2 == 0 else S.SEED # Calcula y asigna el resultado al estado o dato indicado.
-		enemy_shots.append(shot) # Ejecuta esta instrucción para implementar el comportamiento del bloque.
+func _init(start: Vector2, shots: Array) -> void:
+	super("orange", start, shots)
+	_cooldown = float(stats.attack_interval)
+
+
+func update_behavior(dt: float, player, walls: Array) -> void:
+	_cooldown -= dt
+	if _cooldown > 0.0:
+		return
+	_cooldown = float(stats.attack_interval)
+	var target: Vector2 = player.rect.get_center()
+	for index in range(3):
+		var angle := TAU * float(index) / 3.0
+		var direction := Vector2.RIGHT.rotated(angle)
+		var shot = HomingSeed.new(rect.get_center(), direction, player, walls,
+			float(stats.projectile_start_speed), float(stats.projectile_acceleration),
+			float(stats.projectile_max_speed), int(stats.shot_damage))
+		shot.color = Color8(255, 186, 64) if index % 2 == 0 else S.SEED
+		enemy_shots.append(shot)

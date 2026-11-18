@@ -2,79 +2,79 @@ extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Explosión de daño en área: se avisa con un círculo que crece, estalla una vez y se desvanece.
 ## Vive en la misma lista que los charcos (`room.acid_puddles`); la sala le pregunta `hits()`.
 
-const Geo = preload("res://scripts/core/geo.gd") # Define un dato, constante o propiedad usada por el script.
-const WARNING := Color8(255, 196, 70) # Define un dato, constante o propiedad usada por el script.
-const BLAST := Color8(255, 120, 60) # Define un dato, constante o propiedad usada por el script.
+const Geo = preload("res://scripts/core/geo.gd")
+const WARNING := Color8(255, 196, 70)
+const BLAST := Color8(255, 120, 60)
 
-var pos: Vector2 # Define un dato, constante o propiedad usada por el script.
-var radius: float # Define un dato, constante o propiedad usada por el script.
-var damage := 1 # Define un dato, constante o propiedad usada por el script.
-var telegraph: float # Define un dato, constante o propiedad usada por el script.
-var telegraph_total: float # Define un dato, constante o propiedad usada por el script.
-var linger: float # Define un dato, constante o propiedad usada por el script.
-var alive := true # Define un dato, constante o propiedad usada por el script.
+var pos: Vector2
+var radius: float
+var damage := 1
+var telegraph: float
+var telegraph_total: float
+var linger: float
+var alive := true
 ## Cuando estalla, `rect` cubre el área para que cualquier código que solo mire `rect` lo vea.
-var rect := Rect2() # Define un dato, constante o propiedad usada por el script.
-var exploded := false # Define un dato, constante o propiedad usada por el script.
-var _damage_pending := false # Define un dato, constante o propiedad usada por el script.
-var _fade := 0.0 # Define un dato, constante o propiedad usada por el script.
+var rect := Rect2()
+var exploded := false
+var _damage_pending := false
+var _fade := 0.0
 
 
-func _init(center: Vector2, blast_radius: float, warning_time: float, linger_time: float = 0.25, # Declara una función y el punto de entrada de esta operación.
-		blast_damage: int = 1) -> void: # Calcula y asigna el resultado al estado o dato indicado.
-	pos = center # Calcula y asigna el resultado al estado o dato indicado.
-	radius = blast_radius # Calcula y asigna el resultado al estado o dato indicado.
-	telegraph = warning_time # Calcula y asigna el resultado al estado o dato indicado.
-	telegraph_total = maxf(warning_time, 0.001) # Calcula y asigna el resultado al estado o dato indicado.
-	linger = linger_time # Calcula y asigna el resultado al estado o dato indicado.
-	damage = blast_damage # Calcula y asigna el resultado al estado o dato indicado.
+func _init(center: Vector2, blast_radius: float, warning_time: float, linger_time: float = 0.25,
+		blast_damage: int = 1) -> void:
+	pos = center
+	radius = blast_radius
+	telegraph = warning_time
+	telegraph_total = maxf(warning_time, 0.001)
+	linger = linger_time
+	damage = blast_damage
 
 
-func update(dt: float) -> void: # Declara una función y el punto de entrada de esta operación.
-	if not alive: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		return # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-	if not exploded: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		telegraph -= dt # Calcula y asigna el resultado al estado o dato indicado.
-		if telegraph <= 0.0: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-			exploded = true # Calcula y asigna el resultado al estado o dato indicado.
-			_damage_pending = true # Calcula y asigna el resultado al estado o dato indicado.
-			_fade = linger # Calcula y asigna el resultado al estado o dato indicado.
-			rect = Geo.rect_from_center(pos, Vector2i(int(radius * 2.0), int(radius * 2.0))) # Calcula y asigna el resultado al estado o dato indicado.
-		return # Ejecuta esta instrucción para implementar el comportamiento del bloque.
+func update(dt: float) -> void:
+	if not alive:
+		return
+	if not exploded:
+		telegraph -= dt
+		if telegraph <= 0.0:
+			exploded = true
+			_damage_pending = true
+			_fade = linger
+			rect = Geo.rect_from_center(pos, Vector2i(int(radius * 2.0), int(radius * 2.0)))
+		return
 	# Tras el primer cuadro del estallido ya no hace daño: es un golpe, no un charco.
-	if not _damage_pending: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		rect = Rect2() # Calcula y asigna el resultado al estado o dato indicado.
-	_fade -= dt # Calcula y asigna el resultado al estado o dato indicado.
-	if _fade <= 0.0: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		kill() # Ejecuta esta instrucción para implementar el comportamiento del bloque.
+	if not _damage_pending:
+		rect = Rect2()
+	_fade -= dt
+	if _fade <= 0.0:
+		kill()
 
 
 ## Daño en área circular, una sola vez por explosión.
-func hits(target: Rect2) -> bool: # Declara una función y el punto de entrada de esta operación.
-	if not alive or not exploded or not _damage_pending: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		return false # Controla el flujo y selecciona el caso de ejecución correspondiente.
-	_damage_pending = false # Calcula y asigna el resultado al estado o dato indicado.
-	var nearest := Vector2(clampf(pos.x, target.position.x, target.end.x), # Define un dato, constante o propiedad usada por el script.
-		clampf(pos.y, target.position.y, target.end.y)) # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-	return nearest.distance_to(pos) <= radius # Controla el flujo y selecciona el caso de ejecución correspondiente.
+func hits(target: Rect2) -> bool:
+	if not alive or not exploded or not _damage_pending:
+		return false
+	_damage_pending = false
+	var nearest := Vector2(clampf(pos.x, target.position.x, target.end.x),
+		clampf(pos.y, target.position.y, target.end.y))
+	return nearest.distance_to(pos) <= radius
 
 
-func kill() -> void: # Declara una función y el punto de entrada de esta operación.
-	alive = false # Calcula y asigna el resultado al estado o dato indicado.
+func kill() -> void:
+	alive = false
 
 
-func draw(canvas: CanvasItem) -> void: # Declara una función y el punto de entrada de esta operación.
-	if not alive: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		return # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-	if not exploded: # Controla el flujo y selecciona el caso de ejecución correspondiente.
-		var progress := clampf(1.0 - telegraph / telegraph_total, 0.0, 1.0) # Define un dato, constante o propiedad usada por el script.
-		var warning := WARNING # Define un dato, constante o propiedad usada por el script.
-		warning.a = 0.18 + 0.2 * progress # Calcula y asigna el resultado al estado o dato indicado.
-		canvas.draw_circle(pos, radius * progress, warning) # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-		warning.a = 0.9 # Calcula y asigna el resultado al estado o dato indicado.
-		canvas.draw_arc(pos, radius, 0.0, TAU, 28, warning, 1.5) # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-		return # Ejecuta esta instrucción para implementar el comportamiento del bloque.
-	var fade := clampf(_fade / maxf(linger, 0.001), 0.0, 1.0) # Define un dato, constante o propiedad usada por el script.
-	var blast := BLAST # Define un dato, constante o propiedad usada por el script.
-	blast.a = 0.35 + 0.55 * fade # Calcula y asigna el resultado al estado o dato indicado.
-	canvas.draw_circle(pos, radius, blast) # Ejecuta esta instrucción para implementar el comportamiento del bloque.
+func draw(canvas: CanvasItem) -> void:
+	if not alive:
+		return
+	if not exploded:
+		var progress := clampf(1.0 - telegraph / telegraph_total, 0.0, 1.0)
+		var warning := WARNING
+		warning.a = 0.18 + 0.2 * progress
+		canvas.draw_circle(pos, radius * progress, warning)
+		warning.a = 0.9
+		canvas.draw_arc(pos, radius, 0.0, TAU, 28, warning, 1.5)
+		return
+	var fade := clampf(_fade / maxf(linger, 0.001), 0.0, 1.0)
+	var blast := BLAST
+	blast.a = 0.35 + 0.55 * fade
+	canvas.draw_circle(pos, radius, blast)

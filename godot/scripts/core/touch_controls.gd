@@ -1,3 +1,4 @@
+## Interpreta toques como movimiento, apuntado, interacción, bloqueo y pausa; también dibuja los controles.
 class_name TouchControls
 extends RefCounted
 ## Controles táctiles multipunto para móvil, portados de core/touch_controls.py.
