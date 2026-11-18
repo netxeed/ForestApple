@@ -1,5 +1,5 @@
-class_name State
-extends RefCounted
+class_name State # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Una pantalla del juego (equivale a `State` de states/base.py).
 ##
 ## Los estados viven en una pila (state_stack.gd): el de arriba recibe las teclas y se actualiza;
@@ -9,58 +9,58 @@ extends RefCounted
 
 ## Si es true, antes de dibujar este estado se dibuja el que tiene debajo
 ## (para menús o cajas que se ven encima de otra pantalla).
-var transparent := false
+var transparent := false # Define un dato, constante o propiedad usada por el script.
 
 ## Si es true, el estado de abajo NO se actualiza mientras este esté arriba.
-var pauses_below := true
+var pauses_below := true # Define un dato, constante o propiedad usada por el script.
 
 ## Si es true, en el celular se muestran los controles táctiles (flechas, botones).
-var touch_overlay := false
+var touch_overlay := false # Define un dato, constante o propiedad usada por el script.
 
 
 ## Se llama al agregar el estado a la pila.
-func enter(_ctx) -> void:
-	pass
+func enter(_ctx) -> void: # Declara una función y el punto de entrada de esta operación.
+	pass # Deja intencionalmente vacío este bloque.
 
 
 ## Se llama al sacar el estado de la pila.
-func exit(_ctx) -> void:
-	pass
+func exit(_ctx) -> void: # Declara una función y el punto de entrada de esta operación.
+	pass # Deja intencionalmente vacío este bloque.
 
 
 ## Se llama cuando el estado de arriba se saca y este vuelve a ser el tope.
-func resume(_ctx) -> void:
-	pass
+func resume(_ctx) -> void: # Declara una función y el punto de entrada de esta operación.
+	pass # Deja intencionalmente vacío este bloque.
 
 
 ## Tecla apretada (solo la recibe el estado de arriba). `key` es el `InputEvent`.
-func handle_key(_ctx, _key) -> void:
-	pass
+func handle_key(_ctx, _key) -> void: # Declara una función y el punto de entrada de esta operación.
+	pass # Deja intencionalmente vacío este bloque.
 
 
 ## Un dedo se apoya o se mueve. `position` es un `Vector2` en coordenadas del lienzo, o
 ## `null` si quedó fuera. Sirve para resaltar opciones de un menú.
-func handle_pointer(_ctx, _position) -> void:
-	pass
+func handle_pointer(_ctx, _position) -> void: # Declara una función y el punto de entrada de esta operación.
+	pass # Deja intencionalmente vacío este bloque.
 
 
 ## Toque ya interpretado por los controles táctiles: `action` es "tap", "pause" o "interact";
 ## `position` es donde se tocó (solo en "tap", si no es `null`).
-func handle_touch(_ctx, _action: String, _position) -> void:
-	pass
+func handle_touch(_ctx, _action: String, _position) -> void: # Declara una función y el punto de entrada de esta operación.
+	pass # Deja intencionalmente vacío este bloque.
 
 
 ## Se soltó un dedo (o el botón del mouse). Devuelve true si el estado se quedó con el toque;
 ## entonces no se interpreta como `handle_touch`.
-func handle_release(_ctx, _position, _event_type) -> bool:
-	return false
+func handle_release(_ctx, _position, _event_type) -> bool: # Declara una función y el punto de entrada de esta operación.
+	return false # Controla el flujo y selecciona el caso de ejecución correspondiente.
 
 
 ## Avanza `dt` segundos.
-func update(_ctx, _dt: float) -> void:
-	pass
+func update(_ctx, _dt: float) -> void: # Declara una función y el punto de entrada de esta operación.
+	pass # Deja intencionalmente vacío este bloque.
 
 
 ## Dibuja el estado. `canvas` es el `CanvasItem` sobre el que se dibuja (llamar `canvas.draw_*`).
-func draw(_ctx, _canvas) -> void:
-	pass
+func draw(_ctx, _canvas) -> void: # Declara una función y el punto de entrada de esta operación.
+	pass # Deja intencionalmente vacío este bloque.
