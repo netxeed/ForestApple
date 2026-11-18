@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Jefe uva: administra sus fases, ataques múltiples y división al recibir daño.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Jefa del piso 2: una uva que lanza explosiones de daño en área y, al morir, se divide en dos
 ## uvas más chicas, rápidas y con explosiones menores. Los números están en data/enemies.json.
 
@@ -43,12 +44,12 @@ func configure(new_generation: int) -> void:
 
 
 func attach(owner) -> void:
-	super.attach(owner)
+	super.attach(owner) # Llama o actualiza el comportamiento heredado del objeto.
 	_keep_inside_room()
 
 
 func update(dt: float, player, walls: Array) -> void:
-	super.update(dt, player, walls)
+	super.update(dt, player, walls) # Llama o actualiza el comportamiento heredado del objeto.
 	_keep_inside_room()
 
 
@@ -72,7 +73,7 @@ func last_generation() -> bool:
 func take_damage(amount: float) -> void:
 	if grace > 0.0:
 		return
-	super.take_damage(amount)
+	super.take_damage(amount) # Llama o actualiza el comportamiento heredado del objeto.
 
 
 func kill() -> void:

@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Base de los tests: cada archivo test_*.gd extiende esta clase y define métodos `test_*`.
 ## El ejecutor (run_tests.gd) los llama y junta los fallos.
 

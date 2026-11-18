@@ -1,4 +1,5 @@
-extends RefCounted
+## Jugador simplificado para probar movimiento y colisiones de una sala aislada.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Jugador temporal de etapa 2: permite recorrer el piso antes de integrar el combate.
 
 const S = preload("res://scripts/core/settings.gd")

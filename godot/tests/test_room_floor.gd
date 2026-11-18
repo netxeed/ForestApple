@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Paridad de rooms/room.py y rooms/floor.py contra tools/export_golden.py.
 
 const S = preload("res://scripts/core/settings.gd")
@@ -31,7 +31,7 @@ class EnemyStub extends RefCounted:
 		alive = false
 
 	func draw(_canvas: CanvasItem) -> void:
-		pass
+		pass # Deja intencionalmente vacío este bloque.
 
 
 class PlayerStub extends RefCounted:

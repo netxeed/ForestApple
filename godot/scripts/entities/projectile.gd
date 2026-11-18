@@ -1,4 +1,5 @@
-extends RefCounted
+## Proyectil genérico: actualiza trayectoria, colisión, tiempo de vida y dibujo.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Proyectil genérico (equivale a entities/projectile.py).
 
 const Geo = preload("res://scripts/core/geo.gd")

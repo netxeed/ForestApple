@@ -1,5 +1,6 @@
-class_name Floor
-extends RefCounted
+## Coordina el piso: carga habitaciones, conserva su progreso y controla llaves y puertas del jefe.
+class_name Floor # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Piso completo, con salas perezosas, llaves y puertas del jefe (rooms/floor.py).
 
 const LayoutScript = preload("res://scripts/rooms/layout.gd")

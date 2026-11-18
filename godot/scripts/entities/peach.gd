@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Enemigo durazno: usa el comportamiento común de enemigo con su tipo y animación propios.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Durazno rápido: fija su objetivo una vez y rebota con paredes.
 
 var velocity := Vector2.ZERO
@@ -20,7 +21,7 @@ func update_behavior(dt: float, player, walls: Array) -> void:
 
 
 func apply_knockback(_direction: Vector2, _distance: float, _walls: Array) -> void:
-	pass
+	pass # Deja intencionalmente vacío este bloque.
 
 
 func _move_and_bounce(dt: float, walls: Array) -> void:

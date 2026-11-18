@@ -1,5 +1,5 @@
-class_name MenuCursor
-extends RefCounted
+class_name MenuCursor # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Cursor de un menú (equivale a states/cursor.py): qué opción está resaltada.
 ##
 ## `index` puede ser `null` (ninguna resaltada, como en pantalla táctil hasta que se toca algo);

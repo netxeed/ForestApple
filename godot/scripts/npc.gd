@@ -1,5 +1,5 @@
-class_name Npc
-extends StaticBody2D
+class_name Npc # Declara la clase base o el nombre global de este script.
+extends StaticBody2D # Declara la clase base o el nombre global de este script.
 ## Una fruta con la que se puede hablar. `dialogue_key` es la clave en dialogues.json.
 
 @export var dialogue_key := ""

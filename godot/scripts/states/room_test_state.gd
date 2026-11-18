@@ -1,4 +1,5 @@
-extends "res://scripts/states/state.gd"
+## Estado de prueba para recorrer una sala y comprobar puertas, llave, jefe y agujero.
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Sala de prueba de etapa 2: conecta piso, puertas, llave, mapa y fundido.
 ## La partida real la reemplaza cuando se integran jugador y enemigos.
 
@@ -39,8 +40,7 @@ func _interact(game) -> void:
 	if game.floor.collect_key(game.player):
 		game.banner = ["¡Recogiste la llave!", S.BANNER_TIME]
 		return
-	if game.room.kind == "boss" and game.room.cleared() and not game.hole_dialogue_shown \
-			and _inflate(game.room.hole_rect, 28).intersects(game.player.rect):
+	if game.room.kind == "boss" and game.room.cleared() and not game.hole_dialogue_shown and _inflate(game.room.hole_rect, 28).intersects(game.player.rect): # Comprueba la interacción con el agujero.
 		game.hole_dialogue_shown = true
 		game.say("hole_continue", true, Callable(game, "return_to_menu"))
 		return

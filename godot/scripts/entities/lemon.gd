@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Enemigo limón: persigue al jugador y dispara proyectiles según sus estadísticas.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Limón perseguidor que lanza gotas de ácido.
 
 const AcidDrop = preload("res://scripts/entities/acid_drop.gd")

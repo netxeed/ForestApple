@@ -1,5 +1,6 @@
-class_name Player
-extends CharacterBody2D
+## Controlador de la manzana: movimiento, espada, bloqueo, daño, animación y estados del personaje.
+class_name Player # Declara la clase base o el nombre global de este script.
+extends CharacterBody2D # Declara la clase base o el nombre global de este script.
 ## La manzana: movimiento en 4 direcciones (8 con diagonal normalizada).
 
 const SPEED := 90.0

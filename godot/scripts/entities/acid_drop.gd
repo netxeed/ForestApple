@@ -1,4 +1,5 @@
-extends RefCounted
+## Gota de ácido: proyectil que cae y deja un charco dañino al tocar el suelo.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Gota rápida que deja charcos al recorrer la sala.
 
 const Geo = preload("res://scripts/core/geo.gd")

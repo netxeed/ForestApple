@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Anclas de texto como las de pygame (core/text_draw.gd).
 
 const TextDraw = preload("res://scripts/core/text_draw.gd")

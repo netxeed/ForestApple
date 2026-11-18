@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## El director (core/game.gd), sin abrir ventana: opciones, preferencias y cambios de pantalla.
 
 const GameScript = preload("res://scripts/core/game.gd")

@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Máquina de estados de la sandía comparada con entities/watermelon.py.
 
 const PlayerScript = preload("res://scripts/entities/player.gd")

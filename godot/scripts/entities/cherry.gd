@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Enemigo cereza: configura el ataque y las estadísticas propias sobre el enemigo base.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Dos cerezas conectadas. Al perder una, la otra entra en una persecución acelerada con inercia.
 
 const ProjectileScript = preload("res://scripts/entities/projectile.gd")
@@ -19,7 +20,7 @@ func _init(start: Vector2, shots: Array, buddy: bool = false) -> void:
 
 
 func attach(owner) -> void:
-	super.attach(owner)
+	super.attach(owner) # Llama o actualiza el comportamiento heredado del objeto.
 	if not is_buddy and partner == null and owner != null:
 		partner = owner.spawn_enemy("cherry_buddy", pos + Vector2(22.0, 0.0))
 		if partner != null:
@@ -68,7 +69,7 @@ func _move_with_skating_momentum(dt: float, walls: Array) -> void:
 
 
 func take_damage(amount: float) -> void:
-	super.take_damage(amount)
+	super.take_damage(amount) # Llama o actualiza el comportamiento heredado del objeto.
 	if not alive and partner != null and partner.alive:
 		partner.enter_rage()
 
@@ -79,7 +80,7 @@ func enter_rage() -> void:
 
 
 func apply_knockback(_direction: Vector2, _distance: float, _walls: Array) -> void:
-	pass
+	pass # Deja intencionalmente vacío este bloque.
 
 
 func draw(canvas: CanvasItem) -> void:

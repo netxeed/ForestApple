@@ -1,4 +1,4 @@
-extends "res://scripts/states/state.gd"
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Una conversación: se dibuja encima de lo que esté abajo, que queda congelado (states/dialogue.py).
 ## Se abre con `game.say("clave")`. `dark` oscurece el fondo; `on_close` se llama al terminar.
 ## Un toque o clic en cualquier lado pasa de línea. No hace falta el antirrebote de Python porque el

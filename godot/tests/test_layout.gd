@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Estructura del piso (scripts/rooms/layout.gd) comparada con lo que calcula Python (golden/layout.json).
 
 const LayoutScript = preload("res://scripts/rooms/layout.gd")

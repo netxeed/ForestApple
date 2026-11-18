@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Enemigo piña: adapta el comportamiento base a sus estadísticas y patrón de embestida.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Piña tanque, lenta y perseguidora.
 
 

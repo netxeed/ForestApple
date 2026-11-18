@@ -1,5 +1,5 @@
-class_name DialogueParser
-extends RefCounted
+class_name DialogueParser # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Lógica pura del diálogo (equivale a dialogue/text.py y lines.py del prototipo Python).
 ## Un diálogo es {"speaker": String, "lines": [String | {text, speaker, speed}]}.
 ## Dentro de un texto valen {pause=SEGUNDOS} y \n.

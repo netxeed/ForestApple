@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Acciones de teclado y movimiento del cursor (core/controls.gd).
 
 const Controls = preload("res://scripts/core/controls.gd")

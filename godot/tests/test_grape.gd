@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Jefa del piso 2: la uva que explota en área y se divide en dos al morir.
 
 const PlayerScript = preload("res://scripts/entities/player.gd")

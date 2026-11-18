@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Pila de estados (port de tests/test_states.py, clase StateStackTest).
 
 const StackScript = preload("res://scripts/states/state_stack.gd")

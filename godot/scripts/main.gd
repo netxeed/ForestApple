@@ -1,4 +1,5 @@
-extends Node2D
+## Punto de entrada del juego: crea el estado global, procesa eventos y dibuja la escena activa.
+extends Node2D # Declara la clase base o el nombre global de este script.
 ## Rebanada de prueba del Acto 1: un estante, la manzana y dos amigas (Gala y Aida).
 ## Lee los diálogos de ../data/dialogues.json (los mismos del prototipo Python).
 
@@ -53,7 +54,7 @@ func _ready() -> void:
 
 
 func _setup_input() -> void:
-	# Las acciones se crean aquí (no en project.godot) para no depender del formato del editor.
+	# Las acciones se crean acá (no en project.godot) para no depender del formato del editor.
 	var keys := {
 		"move_left": [KEY_LEFT, KEY_A],
 		"move_right": [KEY_RIGHT, KEY_D],

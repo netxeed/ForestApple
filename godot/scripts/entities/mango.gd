@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Enemigo mango: configura el tipo de enemigo y sus reglas de movimiento y ataque.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Mango marca tres zonas y hace estallar semillas en ellas.
 
 const Explosion = preload("res://scripts/entities/explosion.gd")

@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Guardado de preferencias (core/preferences.gd). Usa archivos de prueba en user://.
 
 const Preferences = preload("res://scripts/core/preferences.gd")

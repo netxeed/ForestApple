@@ -1,4 +1,4 @@
-extends SceneTree
+extends SceneTree # Declara la clase base o el nombre global de este script.
 ## Valida el piso desde la línea de comandos (equivale a `python -m rooms.layout`):
 ##
 ##   godot --headless --path godot --script res://scripts/tools/validate_floor.gd

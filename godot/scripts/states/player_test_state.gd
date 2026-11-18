@@ -1,4 +1,5 @@
-extends "res://scripts/states/state.gd"
+## Escena de prueba para inspeccionar el movimiento y las acciones del jugador.
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Arena temporal para comprobar el jugador y los disparos mientras se completa la integración del piso.
 
 const S = preload("res://scripts/core/settings.gd")

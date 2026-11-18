@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Pruebas de scripts/core/geo.gd. Los casos de redondeo salen del round() de Python.
 
 const GeoScript = preload("res://scripts/core/geo.gd")

@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Naranja aliada del Acto 1; configura su identidad y comportamiento como personaje no hostil.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Naranja estacionaria que dispara tres proyectiles teledirigidos y capaces de rodear obstáculos.
 
 const HomingSeed = preload("res://scripts/entities/homing_seed.gd")

@@ -1,4 +1,5 @@
-extends RefCounted
+## Charco de ácido: área temporal que detecta contacto y daña al jugador.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Charco de ácido en el suelo; hace daño al jugador mientras lo toca.
 
 const Geo = preload("res://scripts/core/geo.gd")

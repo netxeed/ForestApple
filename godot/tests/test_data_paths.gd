@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Los datos fuente se empaquetan dentro del proyecto para la exportación del juego.
 
 const DataPaths = preload("res://scripts/core/data_paths.gd")

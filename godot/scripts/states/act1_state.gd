@@ -1,4 +1,4 @@
-extends "res://scripts/states/state.gd"
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Acto 1: exploración libre del estante, sin combate. Se camina, se habla con las amigas y la historia
 ## avanza por etapas (la lógica está en story/act1_story.gd; acá solo se mueve, se consulta y se dibuja).
 ## Se abre desde el menú con F2 (`game.start_act1()`); al terminar sigue el Acto 2 (`game.finish_act1()`).

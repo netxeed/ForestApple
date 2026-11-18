@@ -1,4 +1,5 @@
-extends "res://scripts/states/state.gd"
+## Bucle de la partida: actualiza la sala, resuelve interacciones y coordina pausas y transiciones.
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Partida integrada: jugador, salas, enemigos, llave, jefe y fundidos (states/play.py).
 
 const S = preload("res://scripts/core/settings.gd")
@@ -50,8 +51,7 @@ func _interact(game) -> void:
 		game.hud_view.start_trinket_pickup(trinket_id, trinket_position)
 		game.banner = ["¡Obtuviste el trinket de Dash!", S.BANNER_TIME]
 		return
-	if game.room.kind == "boss" and game.room.cleared() and not game.hole_dialogue_shown \
-			and _inflate(game.room.hole_rect, 28).intersects(game.player.rect):
+	if game.room.kind == "boss" and game.room.cleared() and not game.hole_dialogue_shown and _inflate(game.room.hole_rect, 28).intersects(game.player.rect): # Detecta al jugador junto al agujero del jefe.
 		game.hole_dialogue_shown = true
 		if game.next_floor_name() != "":
 			game.say("hole_piso2", true, Callable(game, "descend"))

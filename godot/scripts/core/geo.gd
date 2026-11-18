@@ -1,5 +1,5 @@
-class_name Geo
-extends RefCounted
+class_name Geo # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Ayudantes para que la geometría de Godot dé los mismos resultados que la de pygame.
 ## Por qué existen cada uno: docs/migracion-godot.md, sección 4.
 

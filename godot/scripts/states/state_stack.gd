@@ -1,5 +1,5 @@
-class_name StateStack
-extends RefCounted
+class_name StateStack # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Pila de estados (equivale a `StateStack` de states/base.py).
 ##
 ##     [Partida]                       solo corre la partida

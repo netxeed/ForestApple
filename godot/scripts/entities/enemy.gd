@@ -1,4 +1,5 @@
-extends RefCounted
+## Clase base de enemigos: administra vida, movimiento, daño, colisiones y dibujo de respaldo.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Base de los enemigos (equivale a entities/enemy.py).
 
 const DataPaths = preload("res://scripts/core/data_paths.gd")
@@ -122,7 +123,7 @@ func _update_knockback(dt: float, walls: Array) -> void:
 
 
 func update_behavior(_dt: float, _player, _walls: Array) -> void:
-	pass
+	pass # Deja intencionalmente vacío este bloque.
 
 
 func _move(delta: Vector2, walls: Array) -> void:

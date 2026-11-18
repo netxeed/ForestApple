@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Flujo integrado de partida: puertas, combates, llave, jefe y salida.
 
 const S = preload("res://scripts/core/settings.gd")

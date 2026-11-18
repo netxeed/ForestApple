@@ -1,4 +1,5 @@
-extends RefCounted
+## Define umbrales y diálogos asociados a las fases de los jefes.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Lógica pura de fases según la proporción de vida (core/phases.py).
 
 const PHASE_DIALOGUE := {1: "sandia_intro", 2: "sandia_fase2", 3: "sandia_fase3"}

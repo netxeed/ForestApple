@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Jefe sandía: fases, ataques, vulnerabilidad, charcos y eventos de combate.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Jefa del piso 1. Conserva la máquina de fases y ataques de entities/watermelon.py.
 
 const S = preload("res://scripts/core/settings.gd")
@@ -51,12 +52,12 @@ func take_damage(amount: float) -> void:
 		_clear_hazards()
 		if room != null:
 			room.say(Phases.DEATH_DIALOGUE)
-	super.take_damage(amount)
+	super.take_damage(amount) # Llama o actualiza el comportamiento heredado del objeto.
 
 
 func kill() -> void:
 	var was_alive := alive
-	super.kill()
+	super.kill() # Llama o actualiza el comportamiento heredado del objeto.
 	if was_alive and room != null and room.has_method("drop_trinket"):
 		room.drop_trinket("dash", pos)
 

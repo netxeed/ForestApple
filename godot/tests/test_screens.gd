@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Pantallas: menú, opciones, pausa, game over y diálogo, con un juego de mentira que anota lo que le piden
 ## (equivale a tests/test_gameover.py y a lo que cubría test_states.py de Python).
 

@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Persistencia de preferencias (equivale a core/preferences.py): un ConfigFile en
 ## `user://settings.cfg`, sección [preferencias]. Godot elige la carpeta de cada plataforma.
 ## No se migran las preferencias viejas de Python (otro formato y otra carpeta).

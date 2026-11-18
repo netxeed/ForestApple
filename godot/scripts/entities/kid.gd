@@ -1,4 +1,4 @@
-extends "res://scripts/entities/player.gd"
+extends "res://scripts/entities/player.gd" # Declara la clase base o el nombre global de este script.
 ## Entidad jugable del niño. Comparte movimiento y estadísticas con Player,
 ## pero tiene su propio aspecto y dispara piedras de tirachinas.
 

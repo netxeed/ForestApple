@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Texto con anclas como las de pygame (`topleft`, `center`, `bottomright`...).
 ## `draw_string` de Godot recibe la línea de base, no la esquina: acá se convierte.
 

@@ -1,4 +1,4 @@
-extends "res://scripts/states/state.gd"
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Se abre encima de la partida cuando el jugador muere: reintentar o volver al menú (states/gameover.py).
 
 const S = preload("res://scripts/core/settings.gd")
@@ -24,7 +24,7 @@ func _init() -> void:
 func handle_key(game, event) -> void:
 	# Esc no hace nada acá: no hay nada que pausar
 	if Controls.move_cursor(cursor, event):
-		pass
+		pass # Deja intencionalmente vacío este bloque.
 	elif event.is_action_pressed("confirm"):
 		choose(game)
 

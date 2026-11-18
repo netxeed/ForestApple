@@ -1,4 +1,5 @@
-extends "res://scripts/states/state.gd"
+## Menú superpuesto de pausa con opciones para continuar, reiniciar o salir.
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Menú de pausa: se dibuja encima de lo que esté abajo, que queda congelado (states/pause.py).
 
 const S = preload("res://scripts/core/settings.gd")
@@ -23,7 +24,7 @@ func handle_key(game, event) -> void:
 	if event.is_action_pressed("pause"):
 		game.states.pop()
 	elif Controls.move_cursor(cursor, event):
-		pass
+		pass # Deja intencionalmente vacío este bloque.
 	elif event.is_action_pressed("confirm"):
 		choose(game)
 

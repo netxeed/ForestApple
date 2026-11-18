@@ -1,5 +1,5 @@
-class_name DialogueRunner
-extends RefCounted
+class_name DialogueRunner # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Avance de un diálogo: efecto de escritura, pausas y paso de línea (equivale a dialogue/runner.py).
 ##
 ## No sabe dibujar: solo lleva la cuenta de qué línea es, cuántas letras se ven y cuánto falta

@@ -1,4 +1,5 @@
-extends "res://scripts/states/state.gd"
+## Pantalla de introducción que enseña los controles antes de comenzar la partida.
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Instrucciones iniciales: detiene el menú hasta que el jugador confirma.
 
 const S = preload("res://scripts/core/settings.gd")

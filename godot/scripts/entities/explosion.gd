@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Explosión de daño en área: se avisa con un círculo que crece, estalla una vez y se desvanece.
 ## Vive en la misma lista que los charcos (`room.acid_puddles`); la sala le pregunta `hits()`.
 

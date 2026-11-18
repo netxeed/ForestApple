@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Enemigo frutilla: mantiene posición y ataca a distancia con el patrón definido para su tipo.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Fresa quieta que dispara semillas dirigidas al jugador.
 
 const S = preload("res://scripts/core/settings.gd")

@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## D-pad, multitáctil y joystick comparados con `core/touch_controls.py`.
 
 const TouchControlsScript = preload("res://scripts/core/touch_controls.gd")

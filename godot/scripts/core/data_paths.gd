@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Dónde están los archivos de data/ (dialogues.json, rooms.json, floor1.json...).
 ## Se busca, en este orden: junto al ejecutable (versión exportada, para que el equipo edite sin
 ## recompilar), en `../data` desde el proyecto (cuando se corre desde el repositorio) y en `res://data`.

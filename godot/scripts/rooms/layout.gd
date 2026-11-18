@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Estructura del piso: qué salas hay, dónde están y qué puertas tienen (equivale a rooms/layout.py).
 ## Lógica pura (sin nodos), comparada con Python mediante tests/golden/layout.json.
 ##

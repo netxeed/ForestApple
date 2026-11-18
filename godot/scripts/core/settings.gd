@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Constantes globales (equivale a core/settings.py). Se usa con
 ## `const S = preload("res://scripts/core/settings.gd")` y se lee como `S.SCREEN_W`.
 ## Lo fijo es `const`; lo que las opciones cambian en ejecución es `static var`.

@@ -1,4 +1,5 @@
-extends RefCounted
+## Puente de compatibilidad que expone la caja de diálogo usada por las escenas antiguas.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Caja de diálogo: nombre arriba, hasta 3 renglones con efecto de escritura (equivale a dialogue/box.py).
 ## Qué se muestra y cuándo lo decide `DialogueRunner`; acá solo se dibuja. Sin `class_name` a propósito:
 ## la rebanada tiene su propio `DialogueBox` (scripts/dialogue_box.gd) y los nombres chocarían.

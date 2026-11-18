@@ -1,4 +1,4 @@
-extends "res://scripts/states/state.gd"
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Partida PROVISORIA (etapa 1): sirve para probar el flujo menú → partida → pausa / diálogo / game over.
 ## Se reemplaza por `play_state.gd` en las etapas 2 y 3 de docs/migracion-godot.md.
 

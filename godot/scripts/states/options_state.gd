@@ -1,4 +1,5 @@
-extends "res://scripts/states/state.gd"
+## Administra la lista de opciones y traduce la selección a cambios de configuración.
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Opciones: se abre encima del menú principal y vuelve a él al salir (OptionsState de states/menu.py).
 ## Las filas salen de `game.option_entries()` (cambian según sea escritorio o móvil).
 
@@ -21,7 +22,7 @@ func handle_key(game, event) -> void:
 	if event.is_action_pressed("pause"):
 		game.states.pop()
 	elif Controls.move_cursor(cursor, event):
-		pass
+		pass # Deja intencionalmente vacío este bloque.
 	elif event.is_action_pressed("menu_left") or event.is_action_pressed("menu_right") or event.is_action_pressed("confirm"):
 		if cursor.index == null:
 			cursor.index = 0
@@ -56,8 +57,6 @@ func choose(game, option_name: String) -> void:
 		game.toggle_debug()
 	elif option_name in ADJUSTABLE:
 		game.change_option(option_name, 1)
-	elif option_name == "sideswipe":
-		game.start_sideswipe()
 	else:  # "back"
 		game.states.pop()
 

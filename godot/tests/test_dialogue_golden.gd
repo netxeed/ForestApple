@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Compara el parseo de diálogos de Godot con lo que calcula Python (golden/dialogue.json).
 
 const ParserScript = preload("res://scripts/dialogue/dialogue_parser.gd")

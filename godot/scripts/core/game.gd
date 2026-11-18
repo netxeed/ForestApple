@@ -1,4 +1,4 @@
-extends Node2D
+extends Node2D # Declara la clase base o el nombre global de este script.
 ## El director del juego (equivale a core/game.py): guarda las preferencias y la pila de estados,
 ## dibuja el estado de arriba y reparte las teclas y los toques. Es el `ctx` de todos los estados.
 
@@ -18,7 +18,6 @@ const PauseStateScript = preload("res://scripts/states/pause_state.gd")
 const GameOverStateScript = preload("res://scripts/states/gameover_state.gd")
 const DialogueStateScript = preload("res://scripts/states/dialogue_state.gd")
 const PlayStateScript = preload("res://scripts/states/play_state.gd")
-const SideswipeStateScript = preload("res://scripts/states/sideswipe_state.gd")
 const Act1StateScript = preload("res://scripts/states/act1_state.gd")
 const PlayerScript = preload("res://scripts/entities/player.gd")
 const KidScript = preload("res://scripts/entities/kid.gd")
@@ -163,8 +162,6 @@ func start_act1() -> void:
 
 
 ## Minijuego secreto disponible solo en dispositivos móviles.
-func start_sideswipe() -> void:
-	states.switch_to(SideswipeStateScript.new())
 
 
 ## El Acto 1 terminó: sigue el Acto 2 (el juego de salas).
@@ -174,7 +171,6 @@ func finish_act1() -> void:
 
 
 func _reset_run() -> bool:
-	touch_controls.sideswipe_mode = false
 	touch_controls.clear_inputs()
 	var errors: Array = []
 	floor_name = FIRST_FLOOR
@@ -260,7 +256,6 @@ func open_options() -> void:
 
 func return_to_menu() -> void:
 	in_act1 = false
-	touch_controls.sideswipe_mode = false
 	touch_controls.clear_inputs()
 	states.switch_to(MenuStateScript.new(self))
 
@@ -357,7 +352,6 @@ func option_entries() -> Array:
 	entries.append(["fps", "FPS: %d  (izq./der. o Enter)" % S.FPS])
 	entries.append(["debug", "Modo debug: %s" % ("Sí" if S.DEBUG_KEYS else "No")])
 	if is_mobile:
-		entries.append(["sideswipe", "Partido secreto · Manzana vs. Niño"])
 		entries.append(["move", "Movimiento · %s" % touch_controls.move_mode.capitalize()])
 		entries.append(["aim", "Disparo · %s" % touch_controls.aim_mode.capitalize()])
 		entries.append(["dynamic", "Joystick dinámico · %s" % ("Sí" if touch_controls.dynamic_base_enabled else "No")])

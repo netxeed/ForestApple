@@ -1,5 +1,6 @@
-class_name HUDView
-extends RefCounted
+## Dibuja la interfaz de partida: salud, minimapa, inventario, jefe, avisos y controles táctiles.
+class_name HUDView # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## HUD de combate, trinkets y mapa (equivale a ui/hud.py).
 
 const S = preload("res://scripts/core/settings.gd")

@@ -1,4 +1,5 @@
-extends RefCounted
+## Semilla teledirigida: corrige su dirección hacia el objetivo y aplica daño al impactar.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Semilla que gana velocidad, persigue al jugador y elige un rumbo libre junto a los obstáculos.
 
 const Geo = preload("res://scripts/core/geo.gd")

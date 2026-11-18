@@ -1,4 +1,5 @@
-extends "res://scripts/entities/enemy.gd"
+## Enemigo banana: configura su embestida y recuperación usando el controlador común.
+extends "res://scripts/entities/enemy.gd" # Declara la clase base o el nombre global de este script.
 ## Banana guardia: persigue y carga en línea recta dentro de su rango.
 
 var _charge_cooldown := 0.0
@@ -28,7 +29,7 @@ func update_behavior(dt: float, player, walls: Array) -> void:
 
 
 func apply_knockback(direction: Vector2, distance: float, walls: Array) -> void:
-	super.apply_knockback(direction, distance, walls)
+	super.apply_knockback(direction, distance, walls) # Llama o actualiza el comportamiento heredado del objeto.
 	if _charge_time > 0.0:
 		_charge_time = 0.0
 		_charge_cooldown = maxf(_charge_cooldown, 0.45)

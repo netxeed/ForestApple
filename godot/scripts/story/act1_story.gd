@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Lógica pura del Acto 1 (sin dibujo ni nodos, para poder probarla): en qué etapa está la historia,
 ## con quién se habló y qué diálogo toca. El estado `Act1State` solo la consulta y la dibuja.
 ##

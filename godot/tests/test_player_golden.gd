@@ -1,4 +1,4 @@
-extends "res://tests/test_base.gd"
+extends "res://tests/test_base.gd" # Declara la clase base o el nombre global de este script.
 ## Movimiento, vida y disparos comparados con `entities/player.py` y `projectile.py`.
 
 const PlayerScript = preload("res://scripts/entities/player.gd")

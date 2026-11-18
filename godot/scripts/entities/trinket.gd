@@ -1,4 +1,5 @@
-extends RefCounted
+## Objeto recogible que aplica una mejora o efecto al inventario del jugador.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Datos de un objeto pasivo/consumible del jugador (equivale a entities/trinkets.py).
 
 var id: String

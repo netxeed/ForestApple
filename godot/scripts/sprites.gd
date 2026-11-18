@@ -1,5 +1,5 @@
-class_name Sprites
-extends RefCounted
+class_name Sprites # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Carga PNG de assets/<personaje>/ sin requerir importación en el editor.
 ## También admite una imagen única con el nombre del personaje.
 

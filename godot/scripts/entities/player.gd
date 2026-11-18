@@ -1,4 +1,5 @@
-extends RefCounted
+## Controlador de la manzana: movimiento, espada, bloqueo, daño, animación y estados del personaje.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Jugador, portado de entities/player.py. Conserva rectángulos y movimiento por ejes.
 
 const S = preload("res://scripts/core/settings.gd")
@@ -236,8 +237,7 @@ func update(dt: float, walls: Array, touch_move: Variant = null, touch_aim: Vari
 			_shoot(aim)
 	elif character != "manzana" and velocity.length_squared() > 0.0:
 		facing = _direction(velocity)
-	if character == "manzana" and melee_direction.length_squared() > 0.0 \
-			and not blocking and _melee_cooldown <= 0.0:
+	if character == "manzana" and melee_direction.length_squared() > 0.0 and not blocking and _melee_cooldown <= 0.0: # Permite atacar cuando el golpe está listo y no se bloquea.
 		facing = _direction(melee_direction)
 		_melee_direction = _facing_vector()
 		_melee_time = MELEE_DURATION

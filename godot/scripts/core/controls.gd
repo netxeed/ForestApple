@@ -1,4 +1,4 @@
-extends RefCounted
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Teclas del juego, en un solo lugar (equivale a core/controls.py).
 ## Las acciones se crean por código (`Controls.setup()`), igual que en la rebanada, para no depender
 ## del formato de project.godot. Se usan `keycode` (la tecla lógica, como en pygame) y no la física.

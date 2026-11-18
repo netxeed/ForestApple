@@ -1,9 +1,10 @@
-class_name DialogueBox
-extends CanvasLayer
+## Puente de compatibilidad que expone la caja de diálogo usada por las escenas antiguas.
+class_name DialogueBox # Declara la clase base o el nombre global de este script.
+extends CanvasLayer # Declara la clase base o el nombre global de este script.
 ## Caja de diálogo estilo Undertale: nombre, texto con efecto de escritura y pausas.
 ## Z / Enter / Espacio: completar la línea o pasar a la siguiente.
 
-signal finished
+signal finished # Declara un evento que otros nodos pueden escuchar.
 
 var _lines: Array = []
 var _index := 0

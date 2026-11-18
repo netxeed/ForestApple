@@ -1,5 +1,5 @@
-class_name DialogueLines
-extends RefCounted
+class_name DialogueLines # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Carga y validación de data/dialogues.json (equivale a dialogue/lines.py).
 ##
 ## Cada diálogo tiene un `speaker` (quién habla; vacío si no tiene nombre) y `lines` (las cajas

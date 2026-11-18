@@ -1,4 +1,5 @@
-extends RefCounted
+## Funciones compartidas para generar abanicos y espirales de proyectiles de enemigos.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Patrones comunes de proyectiles, equivalentes a entities/patterns.py.
 
 const ProjectileScript = preload("res://scripts/entities/projectile.gd")

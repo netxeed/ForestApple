@@ -1,3 +1,4 @@
+## Interpreta toques como movimiento, apuntado, interacción, bloqueo y pausa; también dibuja los controles.
 class_name TouchControls
 extends RefCounted
 ## Controles táctiles multipunto para móvil, portados de core/touch_controls.py.
@@ -41,7 +42,6 @@ var jump_pressed := false
 var jump_just_pressed := false
 var boost_pressed := false
 var boost_just_pressed := false
-var sideswipe_mode := false
 var move_mode := "flechas"
 var aim_mode := "flechas"
 var dynamic_base_enabled := true
@@ -147,14 +147,6 @@ func _inside(position: Vector2, center: Vector2, radius: float) -> bool:
 
 
 func _control_at(position: Vector2):
-	if sideswipe_mode:
-		if _inside(position, JUMP_CENTER, BUTTON_RADIUS + 10.0):
-			return "jump_button"
-		if _inside(position, BOOST_CENTER, BUTTON_RADIUS + 10.0):
-			return "boost_button"
-		if _inside(position, PAUSE_CENTER, 32.0):
-			return "pause_button"
-		return "move" if position.x < S.SCREEN_W * 0.48 else null
 	if _inside(position, BLOCK_CENTER, BUTTON_RADIUS + 5.0):
 		return "block_button"
 	if _inside(position, PAUSE_CENTER, 32.0):
@@ -173,8 +165,6 @@ func _control_at(position: Vector2):
 
 
 func _mode(role: String) -> String:
-	if sideswipe_mode and role == "move":
-		return "joystick"
 	return move_mode if role == "move" else aim_mode
 
 
@@ -269,7 +259,7 @@ func _clamp_base(center: Vector2, role: String, layout: Dictionary, origin: Vect
 func _control_layout() -> Dictionary:
 	var scale := 1.0
 	var joystick_scale: float = scale * float(JOYSTICK_SIZE_OPTIONS[joystick_size_index])
-	var move_is_joystick := sideswipe_mode or move_mode == "joystick"
+	var move_is_joystick := move_mode == "joystick"
 	var move_extent: float = JOYSTICK_RADIUS * joystick_scale if move_is_joystick else 55.0 * scale
 	var aim_extent: float = 55.0 * scale if aim_mode == "flechas" else JOYSTICK_RADIUS * joystick_scale
 	var move_x := maxf(move_extent, 0.0)
@@ -284,19 +274,6 @@ func _control_layout() -> Dictionary:
 
 
 func draw(canvas: CanvasItem) -> void:
-	if sideswipe_mode:
-		_draw_button(canvas, PAUSE_CENTER, "Ⅱ", 1.0, _role_is_down("pause_button"))
-		_draw_button(canvas, JUMP_CENTER, "J", 0.8, jump_pressed or jump_just_pressed)
-		_draw_button(canvas, BOOST_CENTER, "B", 0.8, boost_pressed or boost_just_pressed)
-		var font: Font = ThemeDB.fallback_font
-		canvas.draw_string(font, Vector2(JUMP_CENTER.x, JUMP_CENTER.y - 25.0), "SALTO",
-			HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 1.0, 1.0, 0.82))
-		canvas.draw_string(font, Vector2(BOOST_CENTER.x, BOOST_CENTER.y - 25.0), "BOOST",
-			HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 1.0, 1.0, 0.82))
-		canvas.draw_string(font, Vector2(S.SCREEN_W / 2.0, S.SCREEN_H - 4.0),
-			"2.º SALTO + DIRECCIÓN = DODGE", HORIZONTAL_ALIGNMENT_CENTER, -1, 8, Color(1.0, 1.0, 1.0, 0.72))
-		_draw_control(canvas, _control_layout().move[0], "joystick", "move", _control_layout())
-		return
 	_draw_button(canvas, INTERACT_CENTER, "E", 1.0, _role_is_down("interact_button"))
 	_draw_button(canvas, PAUSE_CENTER, "Ⅱ", 1.0, _role_is_down("pause_button"))
 	_draw_button(canvas, SWITCH_CENTER, "L", 0.82, _role_is_down("switch_button"))

@@ -1,4 +1,5 @@
-extends "res://scripts/states/state.gd"
+## Estado del menú principal: navegación, selección de partida y acceso a opciones.
+extends "res://scripts/states/state.gd" # Declara la clase base o el nombre global de este script.
 ## Menú principal (equivale a MenuState de states/menu.py).
 
 const S = preload("res://scripts/core/settings.gd")
@@ -31,7 +32,7 @@ func handle_key(game, event) -> void:
 	elif event is InputEventKey and event.pressed and event.keycode == KEY_F2:
 		game.start_act1()  # Acto 1 (en construcción): todavía no está en las opciones del menú
 	elif Controls.move_cursor(cursor, event):
-		pass
+		pass # Deja intencionalmente vacío este bloque.
 	elif event.is_action_pressed("confirm"):
 		choose(game)
 

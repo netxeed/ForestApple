@@ -1,4 +1,4 @@
-extends SceneTree
+extends SceneTree # Declara la clase base o el nombre global de este script.
 ## Ejecutor de pruebas. Se corre desde la raíz del repositorio con:
 ##
 ##   godot --headless --path godot --script res://tests/run_tests.gd

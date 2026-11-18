@@ -1,4 +1,5 @@
-extends RefCounted
+## Dibuja las opciones del menú y adapta la selección a teclado, mouse y pantalla táctil.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Dibuja los menús (equivale a ui/menu.py). Qué opciones hay y cuál está resaltada lo deciden los estados.
 ## `canvas` es el CanvasItem donde se dibuja (el nodo Game); `game.text(...)` dibuja texto con anclas.
 

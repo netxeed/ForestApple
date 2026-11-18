@@ -1,5 +1,6 @@
-class_name Room
-extends RefCounted
+## Representa una sala activa: entidades, proyectiles, obstáculos, puertas y resolución de combate.
+class_name Room # Declara la clase base o el nombre global de este script.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Una sala de combate: geometría, puertas, objetos y actores (equivale a rooms/room.py).
 ## La fábrica de enemigos se inyecta para mantener esta clase desacoplada de entities/.
 
@@ -107,7 +108,7 @@ func spawn_enemy(enemy_kind: String, pos: Vector2):
 
 func cleared() -> bool:
 	for enemy in enemies:
-		if enemy.get("alive") == true:
+		if enemy.get("alive") == true: # Omite enemigos derrotados al revisar si la sala está despejada.
 			return false
 	return true
 
@@ -276,8 +277,7 @@ func update(dt: float, player) -> void:
 		if puddle.get("alive") != true:
 			continue
 		# Las explosiones calculan su propio área circular y golpean una sola vez.
-		var touched: bool = puddle.hits(player.rect) if puddle.has_method("hits") \
-			else puddle.rect.intersects(player.rect)
+		var touched: bool = puddle.hits(player.rect) if puddle.has_method("hits") else puddle.rect.intersects(player.rect) # Calcula si el charco alcanzó al jugador.
 		if touched:
 			player.take_damage(puddle.damage)
 	_prune(enemies)
@@ -287,8 +287,7 @@ func update(dt: float, player) -> void:
 
 func resolve_player_contacts(player) -> void:
 	for enemy in enemies:
-		if enemy.get("alive") == true and enemy.rect.intersects(player.rect) \
-				and not player.blocks_contact(enemy):
+		if enemy.get("alive") == true and enemy.rect.intersects(player.rect) and not player.blocks_contact(enemy): # Comprueba el contacto físico y respeta el bloqueo.
 			player.take_damage(enemy.contact_damage)
 
 

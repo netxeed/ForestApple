@@ -1,4 +1,5 @@
-extends RefCounted
+## Catálogo de estadísticas y parámetros que comparten los tipos de enemigo.
+extends RefCounted # Declara la clase base o el nombre global de este script.
 ## Registro de clases de enemigos (equivale a entities/__init__.py).
 
 const Strawberry = preload("res://scripts/entities/strawberry.gd")
